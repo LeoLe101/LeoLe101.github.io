@@ -24,6 +24,9 @@ function StartGame() {
     this.UITextBox = null;
     this.backButton = null;
     this.cameraFlip = false;
+    
+    //Hero and characters
+    this.mHero = null;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -32,12 +35,14 @@ StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kHealthBar);
     gEngine.Textures.loadTexture(this.kUIButton);
     gEngine.Textures.loadTexture(this.kBG);
+    gEngine.Textures.loadTexture(this.kCharacters);
 };
 
 StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kHealthBar);
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kBG);
+    gEngine.Textures.unloadTexture(this.kCharacters);
     gEngine.Core.startScene(new MyGame());
 };
 
@@ -58,6 +63,8 @@ StartGame.prototype.initialize = function () {
     this.bg.getXform().setSize(150,75);
     this.bg.getXform().setPosition(75,40);
     this.backButton = new UIButton(this.kUIButton,this.backSelect,this,[80,20],[160,40],"Go Back",4,[1,1,1,1],[1,1,1,1]);
+    
+    this.mHero = new Hero(this.kCharacters, 10, 22);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -70,6 +77,7 @@ StartGame.prototype.draw = function () {
     this.bg.draw(this.mCamera);
     this.UIText.draw(this.mCamera);
     this.backButton.draw(this.mCamera);
+    this.mHero.draw(this.mCamera);
 };
 
 StartGame.prototype.update = function () {
@@ -78,6 +86,13 @@ StartGame.prototype.update = function () {
         this.UITextBox.update(this.mCamera);
     }
 
+    this.mHero.update();
+    
+    if (this.mCamera.isMouseInViewport()) {
+        var newPosition = vec2.fromValues(this.mCamera.mouseWCX(), this.mCamera.mouseWCY());
+        //this.mHero.panTo(newPosition);
+    }
+    
     this.backButton.update();
     /*var center = this.mCamera.getWCCenter();
     if(this.cameraFlip===false){
