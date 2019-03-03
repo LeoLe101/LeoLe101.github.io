@@ -11,10 +11,10 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function UIDemo() {
+function StartGame() {
     this.kHealthBar = "assets/UI/healthbar.png";
     this.kUIButton = "assets/UI/button.png";
-    this.kBG = "assets/UI/bg.png";
+    this.kBG = "assets/Game/forest.png";
     
     // The camera to view the scene
     this.mCamera = null;
@@ -31,23 +31,23 @@ function UIDemo() {
     this.demoSelect = 0;
     this.cameraFlip = false;
 }
-gEngine.Core.inheritPrototype(UIDemo, Scene);
+gEngine.Core.inheritPrototype(StartGame, Scene);
 
 
-UIDemo.prototype.loadScene = function () {
+StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kHealthBar);
     gEngine.Textures.loadTexture(this.kUIButton);
     gEngine.Textures.loadTexture(this.kBG);
 };
 
-UIDemo.prototype.unloadScene = function () {
+StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kHealthBar);
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kBG);
     gEngine.Core.startScene(new MyGame());
 };
 
-UIDemo.prototype.initialize = function () {
+StartGame.prototype.initialize = function () {
     // Step A: set up the cameras
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
@@ -68,8 +68,8 @@ UIDemo.prototype.initialize = function () {
     this.radarbox.getXform().setSize(20,20);
     this.radarbox.setColor([1,1,1,1]);
     this.bg = new TextureRenderable(this.kBG);
-    this.bg.getXform().setSize(200,160);
-    this.bg.getXform().setPosition(30,20);
+    this.bg.getXform().setSize(150,75);
+    this.bg.getXform().setPosition(50,40);
     this.UIDDButton = new UIDropDown([400,500],"Pick",6,[0,0,0,1],[1,1,1,1]);
     this.UIDDButton.addToSet("HP Demo",[0,0,0,1],[1,0,0,1],this.hpSelect,this,this.mCamera);
     this.UIDDButton.addToSet("Text Demo",[0,0,0,1],[0,0,1,1],this.textBoxSelect,this,this.mCamera);
@@ -83,7 +83,7 @@ UIDemo.prototype.initialize = function () {
 
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
-UIDemo.prototype.draw = function () {
+StartGame.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
     
@@ -107,7 +107,7 @@ UIDemo.prototype.draw = function () {
     this.backButton.draw(this.mCamera);
 };
 
-UIDemo.prototype.update = function () {
+StartGame.prototype.update = function () {
     if(this.demoSelect===1||this.demoSelect===4){
         this.UIHealth.update();
         this.UIButton1.update();
@@ -137,46 +137,46 @@ UIDemo.prototype.update = function () {
     this.mCamera.update();
 };
 
-UIDemo.prototype.hpUp = function() {
+StartGame.prototype.hpUp = function() {
     this.UIHealth.incCurrentHP(10);
 };
 
-UIDemo.prototype.hpDown = function(){
+StartGame.prototype.hpDown = function(){
     this.UIHealth.incCurrentHP(-10);
 };
 
-UIDemo.prototype.setToRed = function() {
+StartGame.prototype.setToRed = function() {
     this.radarbox.setColor([1,0,0,1]);
 };
 
-UIDemo.prototype.setToBlue = function() {
+StartGame.prototype.setToBlue = function() {
     this.radarbox.setColor([0,0,1,1]);
 };
 
-UIDemo.prototype.setToGreen = function() {
+StartGame.prototype.setToGreen = function() {
     this.radarbox.setColor([0,1,0,1]);
 };
 
-UIDemo.prototype.hpSelect = function(){
+StartGame.prototype.hpSelect = function(){
     this.demoSelect=1;
 };
 
-UIDemo.prototype.textBoxSelect = function(){
+StartGame.prototype.textBoxSelect = function(){
     this.demoSelect=2;
 };
 
-UIDemo.prototype.radarSelect = function(){
+StartGame.prototype.radarSelect = function(){
     this.demoSelect=3;
 };
 
-UIDemo.prototype.allSelect = function(){
+StartGame.prototype.allSelect = function(){
     this.demoSelect=4;
 };
 
-UIDemo.prototype.UITextBoxTest = function(){
+StartGame.prototype.UITextBoxTest = function(){
     this.UIText.setText(this.UITextBox.getEnteredValue());
 };
 
-UIDemo.prototype.backSelect = function(){
+StartGame.prototype.backSelect = function(){
     gEngine.GameLoop.stop();
 };

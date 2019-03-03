@@ -37,8 +37,8 @@ MyGame.prototype.unloadScene = function () {
     else if(this.LevelSelect==="Physics"){
         gEngine.Core.startScene(new RigidShapeDemo());
     }
-    else if(this.LevelSelect==="UI"){
-        gEngine.Core.startScene(new UIDemo());
+    else if(this.LevelSelect==="start"){
+        gEngine.Core.startScene(new StartGame());
     }
 };
 
@@ -55,7 +55,7 @@ MyGame.prototype.initialize = function () {
     
     this.ParticleButton = new UIButton(this.kUIButton,this.particleSelect,this,[400,400],[600,100],"Particle Demos",8,[1,1,1,1],[0,0,0,1]);
     this.PhysicsButton = new UIButton(this.kUIButton,this.physicsSelect,this,[400,300],[500,100],"Physics Demo",8,[1,1,1,1],[0,0,0,1]);
-    this.UIButton =  new UIButton(this.kUIButton,this.uiSelect,this,[400,200],[320,100],"UI Demo",8,[1,1,1,1],[0,0,0,1]);
+    this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[400,200],[320,100],"START",8,[1,1,1,1],[0,0,0,1]);
     this.UIText = new UIText("Game Engine Tech Demo",[400,600],8,1,0,[0,0,0,1]);
 };
 
@@ -69,14 +69,14 @@ MyGame.prototype.draw = function () {
     this.mCamera.setupViewProjection();
     this.ParticleButton.draw(this.mCamera);
     this.PhysicsButton.draw(this.mCamera);
-    this.UIButton.draw(this.mCamera);
+    this.StartButton.draw(this.mCamera);
     this.UIText.draw(this.mCamera);
 };
 
 MyGame.prototype.update = function () {
     this.ParticleButton.update();
     this.PhysicsButton.update();
-    this.UIButton.update();
+    this.StartButton.update();
 };
 
 MyGame.prototype.particleSelect = function(){
@@ -89,7 +89,7 @@ MyGame.prototype.physicsSelect = function(){
     gEngine.GameLoop.stop();
 };
 
-MyGame.prototype.uiSelect= function(){
-    this.LevelSelect="UI";
+MyGame.prototype.startSelect= function(){
+    this.LevelSelect="start";
     gEngine.GameLoop.stop();
 };
