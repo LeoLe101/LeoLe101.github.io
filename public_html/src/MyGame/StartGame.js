@@ -58,10 +58,7 @@ StartGame.prototype.initialize = function () {
             // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     
-    this.UIHealth = new UIHealthBar(this.kHealthBar,[250,400],[480,40],0);
-    this.UIButton1 = new UIButton(this.kUIButton,this.hpDown,this,[200,310],[160,40],"HP-10",4,[1,1,1,1],[0,0,0,1]);
-    this.UIButton2 = new UIButton(this.kUIButton,this.hpUp,this,[200,350],[160,40],"HP+10",4,[1,1,1,1],[0,0,0,1]);
-    this.UIText = new UIText("UI Testing Ground",[400,600],8,1,0,[1,1,1,1]);
+    this.UIText = new UIText("Magic Run",[400,580],4,1,0,[1,1,1,1]);
     this.UITextBox = new UITextBox([500,200],6,35,[1,1,1,1],[0,0,0,1],this.UITextBoxTest,this);
     this.radarbox=new Renderable();
     this.radarbox.getXform().setPosition(40,30);
@@ -69,7 +66,7 @@ StartGame.prototype.initialize = function () {
     this.radarbox.setColor([1,1,1,1]);
     this.bg = new TextureRenderable(this.kBG);
     this.bg.getXform().setSize(150,75);
-    this.bg.getXform().setPosition(50,40);
+    this.bg.getXform().setPosition(75,40);
     this.UIDDButton = new UIDropDown([400,500],"Pick",6,[0,0,0,1],[1,1,1,1]);
     this.UIDDButton.addToSet("HP Demo",[0,0,0,1],[1,0,0,1],this.hpSelect,this,this.mCamera);
     this.UIDDButton.addToSet("Text Demo",[0,0,0,1],[0,0,1,1],this.textBoxSelect,this,this.mCamera);
@@ -86,40 +83,19 @@ StartGame.prototype.initialize = function () {
 StartGame.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
-    
-    
+
     this.mCamera.setupViewProjection();
     this.bg.draw(this.mCamera);
-    /*this.radarbox.draw(this.mCamera);
-    if(this.demoSelect===1||this.demoSelect===4){
-        this.UIHealth.draw(this.mCamera);
-        this.UIButton1.draw(this.mCamera);
-        this.UIButton2.draw(this.mCamera);
-    }
-    if(this.demoSelect===2||this.demoSelect===4){
-        this.UITextBox.draw(this.mCamera);
-    }
-    if(this.demoSelect===3||this.demoSelect===4){
-        this.UIRadio.draw(this.mCamera);
-    }
     this.UIText.draw(this.mCamera);
-    this.UIDDButton.draw(this.mCamera);
-    this.backButton.draw(this.mCamera);*/
+    this.backButton.draw(this.mCamera);
 };
 
 StartGame.prototype.update = function () {
-    if(this.demoSelect===1||this.demoSelect===4){
-        this.UIHealth.update();
-        this.UIButton1.update();
-        this.UIButton2.update();
-    }
+    
     if(this.demoSelect===2||this.demoSelect===4){
         this.UITextBox.update(this.mCamera);
     }
-    if(this.demoSelect===3||this.demoSelect===4){
-        this.UIRadio.update();
-    }
-    this.UIDDButton.update(this.mCamera);
+
     this.backButton.update();
     var center = this.mCamera.getWCCenter();
     if(this.cameraFlip===false){
