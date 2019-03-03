@@ -6,15 +6,21 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function Hero(spriteTexture, atX, atY) {
+function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
     this.kDelta = 0.2;
     this.mHero = new SpriteAnimateRenderable(spriteTexture);
     this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(atX, atY);
     this.mHero.getXform().setSize(8.8, 20);
     this.mCurrAlphaChannel = 0;
+    
+    this.spriteTexture = spriteTexture;
+    this.spriteTexture_i = spriteTexture_i;
 
     this.groundY = atY;
+    
+    this.minX = 5;
+    this.maxX = maxX - 5;
     
     // Set Animation of the top or bottom wing minion{
     this.mHero.setSpriteSequence(960, 210,
@@ -40,11 +46,18 @@ Hero.prototype.update = function (atHeadX, atHeadY) {
     this.getXform().updateInterpolation();
     
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
-        Xform.incXPosBy(delta);
+        //this.walkRight();
+        if (Xform.getXPos() <= this.maxX) {
+            Xform.incXPosBy(delta);
+        }
     }
     
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
-        Xform.incXPosBy(-delta);
+        //this.walkLeft();
+        this.mHero = new SpriteAnimateRenderable(this.spriteTexture_i);
+        if (Xform.getXPos() >= this.minX) {
+            Xform.incXPosBy(-delta);
+        }
     }
     
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
@@ -61,11 +74,31 @@ Hero.prototype.update = function (atHeadX, atHeadY) {
     
 };
 
-Hero.prototype.hitByDyePack = function (delta) {
+Hero.prototype.hitByMonster = function (delta) {
     this.mCurrAlphaChannel += delta;
     this.mHero.setColor([1, 1, 1, this.mCurrAlphaChannel]);
 };
 
 Hero.prototype.deleteYet = function () {
     return (this.mCurrAlphaChannel >= 1);
+};
+
+Hero.prototype.walkRight = function () {
+    this.mHero = new SpriteAnimateRenderable(this.spriteTexture);
+    this.mHero.setSpriteSequence(960, 210,
+        88, 200,
+        16,
+        0);
+    this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
+    this.mHero.setAnimationSpeed(3);
+};
+
+Hero.prototype.walkLeft = function () {
+    this.mHero = new SpriteAnimateRenderable(this.spriteTexture_i);
+    this.mHero.setSpriteSequence(960, 210,
+        88, 200,
+        16,
+        0);
+    this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
+    this.mHero.setAnimationSpeed(3);
 };
