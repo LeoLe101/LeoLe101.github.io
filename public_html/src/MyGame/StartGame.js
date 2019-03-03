@@ -15,20 +15,14 @@ function StartGame() {
     this.kHealthBar = "assets/UI/healthbar.png";
     this.kUIButton = "assets/UI/button.png";
     this.kBG = "assets/Game/forest.png";
+    this.kCharacters = "assets/Game/characters.png";
     
     // The camera to view the scene
     this.mCamera = null;
     this.bg = null;
-    this.UIHealth = null;
-    this.radarbox = null;
-    this.UIButton1 = null;
-    this.UIButton2 = null;
     this.UIText = null;
-    this.UIRadio = null;
     this.UITextBox = null;
-    this.UIDDButton = null;
     this.backButton = null;
-    this.demoSelect = 0;
     this.cameraFlip = false;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
@@ -60,21 +54,9 @@ StartGame.prototype.initialize = function () {
     
     this.UIText = new UIText("Magic Run",[400,580],4,1,0,[1,1,1,1]);
     this.UITextBox = new UITextBox([500,200],6,35,[1,1,1,1],[0,0,0,1],this.UITextBoxTest,this);
-    this.radarbox=new Renderable();
-    this.radarbox.getXform().setPosition(40,30);
-    this.radarbox.getXform().setSize(20,20);
-    this.radarbox.setColor([1,1,1,1]);
     this.bg = new TextureRenderable(this.kBG);
     this.bg.getXform().setSize(150,75);
     this.bg.getXform().setPosition(75,40);
-    this.UIDDButton = new UIDropDown([400,500],"Pick",6,[0,0,0,1],[1,1,1,1]);
-    this.UIDDButton.addToSet("HP Demo",[0,0,0,1],[1,0,0,1],this.hpSelect,this,this.mCamera);
-    this.UIDDButton.addToSet("Text Demo",[0,0,0,1],[0,0,1,1],this.textBoxSelect,this,this.mCamera);
-    this.UIDDButton.addToSet("Radio Demo",[0,0,0,1],[0,1,0,1],this.radarSelect,this,this.mCamera);
-    this.UIDDButton.addToSet("All Demos",[0,0,0,1],[1,1,1,1],this.allSelect,this,this.mCamera);
-    this.UIRadio=new UIRadio(this.setToRed,this,[200,200],"Red",2,[0.5,0.5,0.5,1],this.mCamera);
-    this.UIRadio.addToSet(this.setToBlue,this,"Blue",[0.5,0.5,0.5,1],this.mCamera);
-    this.UIRadio.addToSet(this.setToGreen,this,"Green",[0.5,0.5,0.5,1],this.mCamera);
     this.backButton = new UIButton(this.kUIButton,this.backSelect,this,[80,20],[160,40],"Go Back",4,[1,1,1,1],[1,1,1,1]);
 };
 
@@ -97,7 +79,7 @@ StartGame.prototype.update = function () {
     }
 
     this.backButton.update();
-    var center = this.mCamera.getWCCenter();
+    /*var center = this.mCamera.getWCCenter();
     if(this.cameraFlip===false){
         this.mCamera.setWCCenter(center[0]+.1,center[1]);
     }
@@ -109,7 +91,7 @@ StartGame.prototype.update = function () {
     }
     else if(center[0]<10){
         this.cameraFlip=false;
-    }
+    }*/
     this.mCamera.update();
 };
 
