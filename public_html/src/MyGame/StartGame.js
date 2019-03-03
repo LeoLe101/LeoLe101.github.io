@@ -90,7 +90,7 @@ StartGame.prototype.draw = function () {
     
     this.mCamera.setupViewProjection();
     this.bg.draw(this.mCamera);
-    this.radarbox.draw(this.mCamera);
+    /*this.radarbox.draw(this.mCamera);
     if(this.demoSelect===1||this.demoSelect===4){
         this.UIHealth.draw(this.mCamera);
         this.UIButton1.draw(this.mCamera);
@@ -104,7 +104,7 @@ StartGame.prototype.draw = function () {
     }
     this.UIText.draw(this.mCamera);
     this.UIDDButton.draw(this.mCamera);
-    this.backButton.draw(this.mCamera);
+    this.backButton.draw(this.mCamera);*/
 };
 
 StartGame.prototype.update = function () {
