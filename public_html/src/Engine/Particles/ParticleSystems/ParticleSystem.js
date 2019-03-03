@@ -25,25 +25,25 @@
  * @type ParticleSystem
  * @class ParticleSystem
  */
-function ParticleSystem(texture, xPos, yPos, width, yAcceleration, life, xVelocity, yVelocity, flicker, intensity, xAcceleration, size, yOffset, startColor, finalColor, yMultiplier){
+function ParticleSystem(texture, xPos, yPos, width, yAcceleration, life, xVelocity, yVelocity, flicker, intensity, xAcceleration, size, yOffset, startColor, finalColor, yMultiplier) {
     this.mAllParticles = new ParticleGameObjectSet();
-    this.texture=texture;
-    this.xPos=xPos;
-    this.yPos=yPos;
-    this.width=width;
-    this.yAcceleration=yAcceleration;
-    this.life=life;
-    this.xVelocity=xVelocity;
-    this.yVelocity=yVelocity;
-    this.flicker=flicker;
-    this.intensity=intensity;
-    this.xAcceleration=xAcceleration;
-    this.size=size;
-    this.yOffset=yOffset;
-    this.startColor=startColor;
-    this.finalColor=finalColor;
-    this.yMultiplier=yMultiplier;
-    this.sizeBase=3.5;
+    this.texture = texture;
+    this.xPos = xPos;
+    this.yPos = yPos;
+    this.width = width;
+    this.yAcceleration = yAcceleration;
+    this.life = life;
+    this.xVelocity = xVelocity;
+    this.yVelocity = yVelocity;
+    this.flicker = flicker;
+    this.intensity = intensity;
+    this.xAcceleration = xAcceleration;
+    this.size = size;
+    this.yOffset = yOffset;
+    this.startColor = startColor;
+    this.finalColor = finalColor;
+    this.yMultiplier = yMultiplier;
+    this.sizeBase = 3.5;
 }
 
 /**
@@ -51,8 +51,8 @@ function ParticleSystem(texture, xPos, yPos, width, yAcceleration, life, xVeloci
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incWidth = function(inc){
-    this.width+=inc;
+ParticleSystem.prototype.incWidth = function (inc) {
+    this.width += inc;
 };
 
 /**
@@ -60,8 +60,8 @@ ParticleSystem.prototype.incWidth = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incyOffset = function(inc){
-    this.yOffset+=inc;
+ParticleSystem.prototype.incyOffset = function (inc) {
+    this.yOffset += inc;
 };
 
 /**
@@ -69,8 +69,8 @@ ParticleSystem.prototype.incyOffset = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incyAcceleration = function(inc){
-    this.yAcceleration+=inc;
+ParticleSystem.prototype.incyAcceleration = function (inc) {
+    this.yAcceleration += inc;
 };
 
 /**
@@ -78,8 +78,8 @@ ParticleSystem.prototype.incyAcceleration = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incLife = function(inc){
-    this.life+=inc;
+ParticleSystem.prototype.incLife = function (inc) {
+    this.life += inc;
 };
 
 /**
@@ -87,8 +87,8 @@ ParticleSystem.prototype.incLife = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incxVelocity = function(inc){
-    this.xVelocity+=inc;
+ParticleSystem.prototype.incxVelocity = function (inc) {
+    this.xVelocity += inc;
 };
 
 /**
@@ -96,8 +96,8 @@ ParticleSystem.prototype.incxVelocity = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incParticleSize = function(inc){
-    this.size+=inc;
+ParticleSystem.prototype.incParticleSize = function (inc) {
+    this.size += inc;
 };
 
 /**
@@ -105,8 +105,8 @@ ParticleSystem.prototype.incParticleSize = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incyVelocity = function(inc){
-    this.yVelocity+=inc;
+ParticleSystem.prototype.incyVelocity = function (inc) {
+    this.yVelocity += inc;
 };
 
 /**
@@ -114,8 +114,8 @@ ParticleSystem.prototype.incyVelocity = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incFlicker = function(inc){
-    this.flicker+=inc;
+ParticleSystem.prototype.incFlicker = function (inc) {
+    this.flicker += inc;
 };
 
 /**
@@ -124,8 +124,8 @@ ParticleSystem.prototype.incFlicker = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incIntensity = function(inc){
-    this.intensity+=inc;
+ParticleSystem.prototype.incIntensity = function (inc) {
+    this.intensity += inc;
 };
 
 /**
@@ -133,8 +133,8 @@ ParticleSystem.prototype.incIntensity = function(inc){
  * @param {float} inc how much to increment by
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.incxAcceleration = function(inc){
-    this.xAcceleration+=inc;
+ParticleSystem.prototype.incxAcceleration = function (inc) {
+    this.xAcceleration += inc;
 };
 
 /**
@@ -142,7 +142,7 @@ ParticleSystem.prototype.incxAcceleration = function(inc){
  * @returns {float} this.width
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getWidth = function(){
+ParticleSystem.prototype.getWidth = function () {
     return this.width;
 };
 
@@ -151,7 +151,7 @@ ParticleSystem.prototype.getWidth = function(){
  * @returns {float} this.yOffset
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getyOffset = function(){
+ParticleSystem.prototype.getyOffset = function () {
     return this.yOffset;
 };
 
@@ -160,7 +160,7 @@ ParticleSystem.prototype.getyOffset = function(){
  * @returns {float} this.yAcceleration
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getyAcceleration = function(){
+ParticleSystem.prototype.getyAcceleration = function () {
     return this.yAcceleration;
 };
 
@@ -169,7 +169,7 @@ ParticleSystem.prototype.getyAcceleration = function(){
  * @returns {float} this.life
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getLife = function(){
+ParticleSystem.prototype.getLife = function () {
     return this.life;
 };
 
@@ -178,7 +178,7 @@ ParticleSystem.prototype.getLife = function(){
  * @returns {float} this.xVelocity
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getxVelocity = function(){
+ParticleSystem.prototype.getxVelocity = function () {
     return this.xVelocity;
 };
 
@@ -187,7 +187,7 @@ ParticleSystem.prototype.getxVelocity = function(){
  * @returns {float} this.size
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getParticleSize = function(){
+ParticleSystem.prototype.getParticleSize = function () {
     return this.size;
 };
 
@@ -196,7 +196,7 @@ ParticleSystem.prototype.getParticleSize = function(){
  * @returns {float} this.yVelocity
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getyVelocity = function(){
+ParticleSystem.prototype.getyVelocity = function () {
     return this.yVelocity;
 };
 
@@ -205,7 +205,7 @@ ParticleSystem.prototype.getyVelocity = function(){
  * @returns {float} this.flicker
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getFlicker = function(){
+ParticleSystem.prototype.getFlicker = function () {
     return this.flicker;
 };
 
@@ -214,7 +214,7 @@ ParticleSystem.prototype.getFlicker = function(){
  * @returns {float} this.intensity
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getIntensity = function(){
+ParticleSystem.prototype.getIntensity = function () {
     return this.intensity;
 };
 
@@ -223,7 +223,7 @@ ParticleSystem.prototype.getIntensity = function(){
  * @returns {float} this.xAcceleration
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getxAcceleration = function(){
+ParticleSystem.prototype.getxAcceleration = function () {
     return this.xAcceleration;
 };
 
@@ -232,7 +232,7 @@ ParticleSystem.prototype.getxAcceleration = function(){
  * @returns {Array[]} this.startColor
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getStartColor = function(){
+ParticleSystem.prototype.getStartColor = function () {
     return this.startColor;
 };
 
@@ -241,7 +241,7 @@ ParticleSystem.prototype.getStartColor = function(){
  * @returns {Array[]} this.finalColor
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getFinalColor = function(){
+ParticleSystem.prototype.getFinalColor = function () {
     return this.finalColor;
 };
 
@@ -250,7 +250,7 @@ ParticleSystem.prototype.getFinalColor = function(){
  * @returns {float} this.yMultiplier
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getyMultiplier = function(){
+ParticleSystem.prototype.getyMultiplier = function () {
     return this.yMultiplier;
 };
 
@@ -259,7 +259,7 @@ ParticleSystem.prototype.getyMultiplier = function(){
  * @returns {float} this.sizeBase
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getSizeBase = function(){
+ParticleSystem.prototype.getSizeBase = function () {
     return this.sizeBase;
 };
 
@@ -268,8 +268,8 @@ ParticleSystem.prototype.getSizeBase = function(){
  * @returns {Float[]} The x and y position of the ParticleSystem
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.getPos = function(){
-    return [this.xPos,this.yPos];
+ParticleSystem.prototype.getPos = function () {
+    return [this.xPos, this.yPos];
 };
 
 /**
@@ -277,8 +277,8 @@ ParticleSystem.prototype.getPos = function(){
  * @param {float} width The number to set the width to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setWidth = function(width){
-    this.width=width;
+ParticleSystem.prototype.setWidth = function (width) {
+    this.width = width;
 };
 
 /**
@@ -286,8 +286,8 @@ ParticleSystem.prototype.setWidth = function(width){
  * @param {float} yAcceleration The number to set the yAcceleration to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setyAcceleration = function(yAcceleration){
-    this.yAcceleration=yAcceleration;
+ParticleSystem.prototype.setyAcceleration = function (yAcceleration) {
+    this.yAcceleration = yAcceleration;
 };
 
 /**
@@ -295,8 +295,8 @@ ParticleSystem.prototype.setyAcceleration = function(yAcceleration){
  * @param {float} life The number to set the life to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setLife = function(life){
-    this.life=life;
+ParticleSystem.prototype.setLife = function (life) {
+    this.life = life;
 };
 
 /**
@@ -304,8 +304,8 @@ ParticleSystem.prototype.setLife = function(life){
  * @param {float} xVelocity The number to set the xVelocity to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setxVelocity = function(xVelocity){
-    this.xVelocity=xVelocity;
+ParticleSystem.prototype.setxVelocity = function (xVelocity) {
+    this.xVelocity = xVelocity;
 };
 
 /**
@@ -313,8 +313,8 @@ ParticleSystem.prototype.setxVelocity = function(xVelocity){
  * @param {float} yVelocity The number to set the yVelocity to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setyVelocity = function(yVelocity){
-    this.yVelocity=yVelocity;
+ParticleSystem.prototype.setyVelocity = function (yVelocity) {
+    this.yVelocity = yVelocity;
 };
 
 /**
@@ -322,8 +322,8 @@ ParticleSystem.prototype.setyVelocity = function(yVelocity){
  * @param {float} flicker The number to set the shrinking rate to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setFlicker = function(flicker){
-    this.flicker=flicker;
+ParticleSystem.prototype.setFlicker = function (flicker) {
+    this.flicker = flicker;
 };
 
 /**
@@ -331,8 +331,8 @@ ParticleSystem.prototype.setFlicker = function(flicker){
  * @param {float} intensity The number to set the intensity to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setIntensity = function(intensity){
-    this.intensity=intensity;
+ParticleSystem.prototype.setIntensity = function (intensity) {
+    this.intensity = intensity;
 };
 
 /**
@@ -340,8 +340,8 @@ ParticleSystem.prototype.setIntensity = function(intensity){
  * @param {float} xAcceleration The number to set the xAcceleration to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setxAcceleration = function(xAcceleration){
-    this.xAcceleration=xAcceleration;
+ParticleSystem.prototype.setxAcceleration = function (xAcceleration) {
+    this.xAcceleration = xAcceleration;
 };
 
 /**
@@ -349,8 +349,8 @@ ParticleSystem.prototype.setxAcceleration = function(xAcceleration){
  * @param {float} size The number to set the size to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setSize = function(size){
-    this.size=size;
+ParticleSystem.prototype.setSize = function (size) {
+    this.size = size;
 };
 
 /**
@@ -358,8 +358,8 @@ ParticleSystem.prototype.setSize = function(size){
  * @param {float} yOffset The number to set the yOffset to
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setyOffset = function(yOffset){
-    this.yOffset=yOffset;
+ParticleSystem.prototype.setyOffset = function (yOffset) {
+    this.yOffset = yOffset;
 };
 
 /**
@@ -368,9 +368,9 @@ ParticleSystem.prototype.setyOffset = function(yOffset){
  * @param {float} yPos They y position
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setPos = function(xPos,yPos){
-    this.xPos=xPos;
-    this.yPos=yPos;
+ParticleSystem.prototype.setPos = function (xPos, yPos) {
+    this.xPos = xPos;
+    this.yPos = yPos;
 };
 
 /**
@@ -378,8 +378,8 @@ ParticleSystem.prototype.setPos = function(xPos,yPos){
  * @param {Array[]} color The new start color
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setStartColor = function(color){
-    this.startColor=color;
+ParticleSystem.prototype.setStartColor = function (color) {
+    this.startColor = color;
 };
 
 /**
@@ -387,8 +387,8 @@ ParticleSystem.prototype.setStartColor = function(color){
  * @param {Array[]} color The new final color
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setFinalColor = function(color){
-    this.finalColor=color;
+ParticleSystem.prototype.setFinalColor = function (color) {
+    this.finalColor = color;
 };
 
 /**
@@ -396,8 +396,8 @@ ParticleSystem.prototype.setFinalColor = function(color){
  * @param {float} num The new yMultiplier
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setyMultiplier = function(num){
-    this.yMultiplier=num;
+ParticleSystem.prototype.setyMultiplier = function (num) {
+    this.yMultiplier = num;
 };
 
 /**
@@ -405,18 +405,18 @@ ParticleSystem.prototype.setyMultiplier = function(num){
  * @param {float} num The new size base
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.setSizeBase = function(num){
-    this.sizeBase=num;
+ParticleSystem.prototype.setSizeBase = function (num) {
+    this.sizeBase = num;
 };
 
 /**
  * Creates new particles and updates them
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.update = function(){
-    for(var i=0; i<this.intensity; i++){
-    var p = this.createParticle(this.xPos, this.yPos);
-    this.mAllParticles.addToSet(p);
+ParticleSystem.prototype.update = function () {
+    for (var i = 0; i < this.intensity; i++) {
+        var p = this.createParticle(this.xPos, this.yPos);
+        this.mAllParticles.addToSet(p);
     }
     gEngine.ParticleSystem.update(this.mAllParticles);
 };
@@ -426,7 +426,7 @@ ParticleSystem.prototype.update = function(){
  * @param {Camera} aCamera the camera to be viewed on
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.draw = function(aCamera){
+ParticleSystem.prototype.draw = function (aCamera) {
     this.mAllParticles.draw(aCamera);
 };
 
@@ -435,7 +435,7 @@ ParticleSystem.prototype.draw = function(aCamera){
  * @param {ObjSet} objSet the GameObjectSet to check for collision 
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.processCollision = function(objSet){
+ParticleSystem.prototype.processCollision = function (objSet) {
     gEngine.ParticleSystem.collideWithRigidSet(objSet, this.mAllParticles);
 };
 
@@ -446,46 +446,46 @@ ParticleSystem.prototype.processCollision = function(objSet){
  * @returns {Paritcle} p the particle created
  * @memberOf ParticleSystem
  */
-ParticleSystem.prototype.createParticle = function(atX,atY) {
-    var life = this.life + Math.random() * (this.life*10);
-    var width = -this.width + 
-                  this.width*2 *
-                  Math.random();
+ParticleSystem.prototype.createParticle = function (atX, atY) {
+    var life = this.life + Math.random() * (this.life * 10);
+    var width = -this.width +
+        this.width * 2 *
+        Math.random();
     var yOffset = this.yMultiplier *
-                  this.yOffset *
-                  Math.random();
-    
-    var p = new ParticleGameObject(this.texture, atX+width, atY+yOffset, life);
+        this.yOffset *
+        Math.random();
+
+    var p = new ParticleGameObject(this.texture, atX + width, atY + yOffset, life);
     var sTemp = Array.from(this.startColor);
     p.getRenderable().setColor(sTemp);
-    
+
     // size of the particle
     var r = this.sizeBase + Math.random() * this.size;
     p.getXform().setSize(r, r);
-    
+
     // final color
     var fTemp = Array.from(this.finalColor);
     p.setFinalColor(fTemp);
-    
+
     // velocity on the particle
     var fx;
     if (width > 0) {
         fx = 5 +
-             ((-this.xVelocity+10) * -1) *
-             Math.random();
+            ((-this.xVelocity + 10) * -1) *
+            Math.random();
     }
     else {
         fx = (5 * -1) +
-             (-this.xVelocity+10) *
-             Math.random();
+            (-this.xVelocity + 10) *
+            Math.random();
     }
     var fy = 0 +
-             this.yMultiplier*
-             this.yVelocity *
-             Math.random();
+        this.yMultiplier *
+        this.yVelocity *
+        Math.random();
     p.getParticle().setVelocity([fx, fy]);
     // size delta
-    p.setSizeDelta(1-(this.flicker*.005));
-    p.getParticle().setAcceleration([this.xAcceleration*5, this.yMultiplier*this.yAcceleration*5]);
+    p.setSizeDelta(1 - (this.flicker * .005));
+    p.getParticle().setAcceleration([this.xAcceleration * 5, this.yMultiplier * this.yAcceleration * 5]);
     return p;
 };

@@ -39,7 +39,7 @@ ParticleLevel.prototype.unloadScene = function () {
         gEngine.Core.startScene(new SmokeDemo());
     }
     else if(this.LevelSelect==="Snow"){
-        gEngine.Core.startScene(new SnowDemo());
+        gEngine.Core.startScene(new MagicBullet());
     }
     else if(this.LevelSelect==="Back"){
         gEngine.Core.startScene(new MyGame());
