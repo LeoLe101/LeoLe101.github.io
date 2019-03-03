@@ -32,6 +32,7 @@ function StartGame() {
     
     //Hero and characters
     this.mHero = null;
+    this.mMonster = null;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -86,7 +87,8 @@ StartGame.prototype.initialize = function () {
         this.bgs[i].getXform().setPosition(deltaX + 75,40);
     }
     var maxX = this.bgs[this.bgNum-1].getXform().getXPos() + this.bgs[this.bgNum-1].getXform().getWidth() / 2;
-    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 22, maxX);
+    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX);
+    this.mMonster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, 75, 21, 2);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -101,18 +103,21 @@ StartGame.prototype.draw = function () {
     }
     this.UIText.draw(this.mCamera);
     this.backButton.draw(this.mCamera);
+    
+    this.mMonster.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
 };
 
 StartGame.prototype.update = function () {
 
     this.mHero.update();
+    this.mMonster.update();
   
     this.backButton.update();
     
     var maxX = this.bgs[this.bgNum-1].getXform().getXPos() - 15;
-    if ( this.mHero.getXform().getXPos() > 10 && this.mHero.getXform().getXPos() < maxX){
-        this.mCamera.panTo(this.mHero.getXform().getXPos() + 40, this.mCamera.getWCCenter()[1]);
+    if ( this.mHero.getXform().getXPos() > 50 && this.mHero.getXform().getXPos() < maxX){
+        this.mCamera.panTo(this.mHero.getXform().getXPos(), this.mCamera.getWCCenter()[1]);
     }
     this.mCamera.update();
 };
