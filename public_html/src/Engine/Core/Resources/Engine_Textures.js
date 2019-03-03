@@ -87,7 +87,6 @@ gEngine.Textures = (function () {
         if (!(gEngine.ResourceMap.isAssetLoaded(textureName))) {
             // Create new Texture object.
             var img = new Image();
-
             // Update resources in loading counter.
             gEngine.ResourceMap.asyncLoadRequested(textureName);
 

@@ -99,3 +99,40 @@ GameObject.prototype.draw = function (aCamera) {
             this.mRigidBody.draw(aCamera);
     }
 };
+
+GameObject.prototype.panTo = function (p) {
+    this.getXform().setCenter(p);
+};
+
+GameObject.prototype.shake = function (xDelta, yDelta, shakeFrequency, duration) {
+    var center = this.getXform().getCenter();
+    this.mShake = new Shake( center, xDelta, yDelta, shakeFrequency, duration);
+};
+
+
+GameObject.prototype.generalUpdate = function() {
+    
+    this.getXform().updateInterpolation();
+    
+    if (this.mShake !== null) {
+        if (this.mShake.shakeDone()) {
+            this.mShake = null;
+        } else {
+            var center = this.getXform().getCenter();
+            this.mShake.setRefCenter(center);
+            this.mShake.updateShakeState();
+            this.getXform().updateShake(this.mShake.getCenter());
+        }
+    }
+
+};
+
+GameObject.prototype.isObjectInViewport = function (camera) {
+    var dcX = this.getXform().getXPos();
+    var dcY = this.getXform().getYPos();
+    var orX = camera.getWCCenter()[0];
+    var orY = camera.getWCCenter()[1];
+    //if (dcX <= 125 || dcX >= -25 || dcY <= 105 || dcY >= -35) return true;
+    return ((dcX >= orX - camera.getWCWidth()/2) && (dcX < orX + camera.getWCWidth()/2) &&
+            (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
+};

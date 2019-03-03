@@ -19,6 +19,10 @@ function Transform() {
     this.mScale = vec2.fromValues(1, 1);    // this is the width (x) and height (y)
     this.mZ = 0.0;                          // must be a positive number, larger is closer to eye
     this.mRotationInRad = 0.0;              // in radians!
+    
+    this.kCycles = 120;  // number of cycles to complete the transition
+    this.kRate = 0.05;  // rate of change for each cycle
+    this.mCenter = new InterpolateVec2(this.mPosition, this.kCycles, this.kRate);
 }
 
 /**
@@ -292,3 +296,11 @@ Transform.prototype.getXform = function () {
     return matrix;
 };
 //</editor-fold>
+
+Transform.prototype.getCenter = function() { return this.mCenter.getValue(); };
+Transform.prototype.setCenter = function (c) { this.mCenter.setFinalValue(c); };
+Transform.prototype.updateInterpolation = function () { 
+    this.mCenter.updateInterpolation();
+    this.mPosition = this.mCenter.getValue();
+};
+Transform.prototype.updateShake = function(p) { this.mPosition = p; };
