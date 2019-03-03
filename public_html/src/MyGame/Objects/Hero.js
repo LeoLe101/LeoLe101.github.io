@@ -54,7 +54,6 @@ Hero.prototype.update = function (atHeadX, atHeadY) {
     
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
         //this.walkLeft();
-        this.mHero = new SpriteAnimateRenderable(this.spriteTexture_i);
         if (Xform.getXPos() >= this.minX) {
             Xform.incXPosBy(-delta);
         }
