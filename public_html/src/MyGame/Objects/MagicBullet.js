@@ -11,15 +11,8 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function MagicBullet() {
-    this.kPlatformTexture = "assets/Snow/platform.png";
-    this.kUIButton = "assets/UI/button.png";
-
+function MagicBullet(atX, atY) {
     // The camera to view the scene
-    this.mCamera = null;
-    this.LevelSelect = null;
-
-    this.mPlatforms = null;
     this.mSnow = null;
     this.mSnowForWard = -9;
     this.mSnowBackWard = 9;
@@ -29,92 +22,46 @@ function MagicBullet() {
 
     this.mFlagForward = false;
     this.mFlagBackward = false;
+
+    this.mBulletBoundPos = [atX, atY];
+    this.mBulletBoundW = 3;
+    this.mBulletBoundH = 3;
+
+    this.mDestroy = false;
+    this.mBox = null;
+    this._initialize();
 }
-gEngine.Core.inheritPrototype(MagicBullet, Scene);
 
-
-MagicBullet.prototype.loadScene = function () {
-    gEngine.Textures.loadTexture(this.kPlatformTexture);
-    gEngine.Textures.loadTexture(this.kUIButton);
-    document.getElementById("particle").style.display = "block";
+/** Private */
+MagicBullet.prototype._initialize = function () {
+    // // sets the background to gray
+    // gEngine.DefaultResources.setGlobalAmbientIntensity(3);
+    this.mBox = new BoundingBox(this.mBulletBoundPos, this.mBulletBoundW, this.mBulletBoundH);
+    this.mSnow = new Snow(this.mBulletBoundPos[0], this.mBulletBoundPos[1], 1, 0, 16, 0, -1, 3, 1, 0, 4.5, 1);
 };
 
-MagicBullet.prototype.unloadScene = function () {
-    gEngine.Textures.unloadTexture(this.kPlatformTexture);
-    gEngine.Textures.unloadTexture(this.kUIButton);
-    document.getElementById("particle").style.display = "none";
-    if (this.LevelSelect === "Back")
-        gEngine.Core.startScene(new ParticleLevel());
-    else if (this.LevelSelect === "Main")
-        gEngine.Core.startScene(new MyGame());
+
+MagicBullet.prototype._configBound = function () {
+    this.mBox.setBounds(this.mBulletBoundPos, this.mBulletBoundW, this.mBulletBoundH);
 };
 
-MagicBullet.prototype.initialize = function () {
-    // Step A: set up the cameras
-    this.mCamera = new Camera(
-        vec2.fromValues(50, 40), // position of the camera
-        100,                     // width of camera
-        [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
-    );
-    this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
-    // sets the background to gray
-    gEngine.DefaultResources.setGlobalAmbientIntensity(3);
-
-    this.mPlatforms = new GameObjectSet();
-
-    this.createBounds();
-    this.mSnow = new Snow(80, 10, 1, 0, 16, 0, -1, 3, 1, 9, 4.5, 1);
-    // this.mSnowBackWard = new Snow(80, 10, 1, 0, 16, 0, -1, 3, 1, 9, 4.5, 1);
-    // this.mSnowForWard = new Snow(0, 10, 1, 0, 16, 0, -1, 3, 1, -9, 4.5, 1);
-
-    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 580], [160, 40], "Go Back", 4, [1, 1, 1, 1], [1, 1, 1, 1]);
-    this.MainMenuButton = new UIButton(this.kUIButton, this.mainSelect, this, [700, 580], [200, 40], "Main Menu", 4, [1, 1, 1, 1], [1, 1, 1, 1]);
+/** Public */
+MagicBullet.prototype.draw = function (camera) {
+    this.mSnow.draw(camera);
+    this.mPlatforms.draw(camera);
+    this.MainMenuButton.draw(camera);
+    this.backButton.draw(camera);
 };
 
-// This is the draw function, make sure to setup proper drawing environment, and more
-// importantly, make sure to _NOT_ change any state.
-MagicBullet.prototype.draw = function () {
-    // Step A: clear the canvas
-    gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
-
-    this.mCamera.setupViewProjection();
-
-    // for now draw these ...
-    /*for (var i = 0; i<this.mCollisionInfos.length; i++) 
-        this.mCollisionInfos[i].draw(this.mCamera); */
-    this.mCollisionInfos = [];
-
-    this.mSnow.draw(this.mCamera);
-    this.mPlatforms.draw(this.mCamera);
-    this.MainMenuButton.draw(this.mCamera);
-    this.backButton.draw(this.mCamera);
-};
-
-// The Update function, updates the application state. Make sure to _NOT_ draw
-// anything from this function!
-//MagicBullet.kBoundDelta = 0.1;
-MagicBullet.prototype.update = function () {
+MagicBullet.prototype.update = function (forwardDir, boundStat) {
     gEngine.ParticleSystem.update(this.mSnow);
-  
 
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Q)) {
-        if (this.mFlagForward == false) {
-            this.mFlagBackward = false;
-            this.mFlagForward = true;
-        } 
-        // else {
-        //     this.mFlagForward = false;
-        // }
-    }
-
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W)) {
-        if (this.mFlagBackward == false) {
-            this.mFlagForward = false;
-            this.mFlagBackward = true;
-        } 
-        // else {
-        //     this.mFlagBackward = false;
-        // }
+    if (forwardDir) {
+        this.mFlagBackward = false;
+        this.mFlagForward = true;
+    } else {
+        this.mFlagForward = false;
+        this.mFlagBackward = true;
     }
 
     if (this.mFlagForward) {
@@ -131,105 +78,24 @@ MagicBullet.prototype.update = function () {
         }
     }
 
-
-    // if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Q)) {
-    //     this.mSnow.incWidth(1);
-    // }
-    // if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W)) {
-    //     this.mSnow.incWidth(-1);
-    // }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A)) {
-        this.mSnow.incyAcceleration(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S)) {
-        this.mSnow.incyAcceleration(-1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Z)) {
-        this.mSnow.incLife(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.X)) {
-        this.mSnow.incLife(-1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.E)) {
-        this.mSnow.incxVelocity(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.R)) {
-        this.mSnow.incxVelocity(-1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D)) {
-        this.mSnow.incyVelocity(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.F)) {
-        this.mSnow.incyVelocity(-1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.C)) {
-        this.mSnow.incFlicker(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.V)) {
-        this.mSnow.incFlicker(-1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.T)) {
-        this.mSnow.incIntensity(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Y)) {
-        this.mSnow.incIntensity(-1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.G)) {
-        this.mSnow.incxAcceleration(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.H)) {
-        this.mSnow.incxAcceleration(-1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.B)) {
-        this.mSnow.incParticleSize(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.N)) {
-        this.mSnow.incParticleSize(-1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.U)) {
-        this.mSnow.incyOffset(1);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.I)) {
-        this.mSnow.incyOffset(-1);
-    }
-
-
-    this.updateValue();
-    this.MainMenuButton.update();
-    this.backButton.update();
+    // Update bounding box when bullet move
+    this._configBound();
 };
 
-MagicBullet.prototype.updateValue = function () {
-    document.getElementById("value1").innerHTML = this.mSnow.getWidth();
-    document.getElementById("value2").innerHTML = this.mSnow.getyAcceleration();
-    document.getElementById("value3").innerHTML = this.mSnow.getLife();
-    document.getElementById("value4").innerHTML = this.mSnow.getxVelocity();
-    document.getElementById("value5").innerHTML = this.mSnow.getyVelocity();
-    document.getElementById("value6").innerHTML = this.mSnow.getFlicker();
-    document.getElementById("value7").innerHTML = this.mSnow.getIntensity();
-    document.getElementById("value8").innerHTML = this.mSnow.getxAcceleration();
-    document.getElementById("value9").innerHTML = this.mSnow.getParticleSize();
-    document.getElementById("value10").innerHTML = this.mSnow.getyOffset();
+MagicBullet.prototype.collideOther = function (boundingBox) {
+    return this.mBox.boundCollideStatus(boundingBox);
 };
 
-MagicBullet.prototype.createBounds = function () {
-    var x = 15, w = 30, y = 4;
-    for (x = 15; x < 120; x += 30)
-        this.platformAt(x, y, w, 0);
+MagicBullet.prototype.shouldDelete = function() {
+    return this.mDestroy;
 };
 
-MagicBullet.prototype.platformAt = function (x, y, w, rot) {
-    var h = w / 8;
-    var p = new TextureRenderable(this.kPlatformTexture);
-    var xf = p.getXform();
-
-    var g = new GameObject(p);
-    var r = new RigidRectangle(xf, w, h);
-    g.setRigidBody(r);
-
-    r.setMass(0);
-    xf.setSize(w, h);
-    xf.setPosition(x, y);
-    xf.setRotationInDegree(rot);
-    this.mPlatforms.addToSet(g);
+MagicBullet.prototype.isBulletInViewport = function (camera) {
+    var dcX = this.mSnow.getPos()[0];
+    var dcY = this.mSnow.getPos()[1];
+    var orX = camera.getWCCenter()[0];
+    var orY = camera.getWCCenter()[1];
+    //if (dcX <= 125 || dcX >= -25 || dcY <= 105 || dcY >= -35) return true;
+    return ((dcX >= orX - camera.getWCWidth()/2) && (dcX < orX + camera.getWCWidth()/2) &&
+            (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
 };
