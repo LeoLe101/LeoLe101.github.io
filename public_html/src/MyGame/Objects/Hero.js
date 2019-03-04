@@ -34,6 +34,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
     this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
     this.mHero.setAnimationSpeed(1000000);
     
+    this.mHeroState = Hero.eHeroState.eFaceRight;
     this.mPreviousHeroState = Hero.eHeroState.eFaceRight;
     
     // show each element for mAnimSpeed updates
@@ -89,9 +90,7 @@ Hero.eHeroState = Object.freeze({
     eFaceRight: 0,
     eFaceLeft: 1,
     eRunRight: 2,
-    eRunLeft: 3,
-    eJumpRight: 4,
-    eJumpLeft: 5
+    eRunLeft: 3
 });
 
 Hero.prototype.changeAnimation = function () {
