@@ -9,19 +9,33 @@
 function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
     this.kDelta = 0.2;
     
-    this.spriteTexture = spriteTexture;
-    this.spriteTexture_i = spriteTexture_i;
+    this.kWidth = 8.78;
+    this.kHeight = 10;
     
-    this.mHero = null;
-    this.walkRight();
+    this.mHero = new SpriteAnimateRenderable(spriteTexture);
     this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(atX, atY);
-    this.mHero.getXform().setSize(8.78, 10);
+    this.mHero.getXform().setSize(this.kWidth, this.kHeight);
+    
+    this.spriteTexture = spriteTexture;
+    this.spriteTexture_i = spriteTexture_i;
+
     this.groundY = atY;
     
     this.minX = 5;
     this.maxX = maxX - 5;
-   
+    
+    // Set Animation of the top or bottom wing minion{
+    this.mHero.setSpriteSequence(905, 210,
+        87.8, 100,
+        16,
+        0);
+
+    this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
+    this.mHero.setAnimationSpeed(1000000);
+    
+    this.mPreviousHeroState = Hero.eHeroState.eFaceRight;
+    
     // show each element for mAnimSpeed updates
     GameObject.call(this, this.mHero);
     
@@ -39,32 +53,27 @@ Hero.prototype.update = function () {
 
     this.getXform().updateInterpolation();
     
+    if (this.mHeroState === Hero.eHeroState.eRunRight) {
+        this.mHeroState = Hero.eHeroState.eFaceRight;
+    } else if (this.mHeroState === Hero.eHeroState.eRunLeft) {
+        this.mHeroState = Hero.eHeroState.eFaceLeft;
+    }
+    
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
-        //this.walkRight();
+        this.mHeroState = Hero.eHeroState.eRunRight;
         if (Xform.getXPos() <= this.maxX) {
             Xform.incXPosBy(delta);
         }
     }
     
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
-        //this.walkLeft();
+        this.mHeroState = Hero.eHeroState.eRunLeft;
         if (Xform.getXPos() >= this.minX) {
             Xform.incXPosBy(-delta);
         }
     }
     
-    /*if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
-        if (Xform.getYPos() > this.groundY + 10) {
-            var newPosition = vec2.fromValues(Xform.getXPos() + 5, this.groundY);
-            this.panTo(newPosition);
-        } else {
-            Xform.incYPosBy(delta);
-        }
-    } else {
-        var newPosition = vec2.fromValues(Xform.getXPos(), this.groundY);
-        this.panTo(newPosition);
-    }*/
-    
+    this.changeAnimation();
 };
 
 Hero.prototype.hitByMonster = function (delta) {
@@ -76,32 +85,39 @@ Hero.prototype.deleteYet = function () {
     return (this.mCurrAlphaChannel >= 1);
 };
 
-Hero.prototype.walkRight = function () {
-    this.mHero = new SpriteAnimateRenderable(this.spriteTexture);
-    this.mHero.setSpriteSequence(905, 210,
-        87.8, 100,
-        16,
-        0);
-    this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
-    this.mHero.setAnimationSpeed(3);
-    
-    this.mHero.setColor([1, 1, 1, 0]);
-    this.mHero.getXform().setPosition(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
-    this.mHero.getXform().setSize(8.78, 10);
-    this.changeRenderable(this.mHero);
-};
+Hero.eHeroState = Object.freeze({
+    eFaceRight: 0,
+    eFaceLeft: 1,
+    eRunRight: 2,
+    eRunLeft: 3,
+    eJumpRight: 4,
+    eJumpLeft: 5
+});
 
-Hero.prototype.walkLeft = function () {
-    this.mHero = new SpriteAnimateRenderable(this.spriteTexture_i);
-    this.mHero.setSpriteSequence(905, 210,
-        87.8, 100,
-        16,
-        0);
-    this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateLeft);
-    this.mHero.setAnimationSpeed(3);
-    
-    this.mHero.setColor([1, 1, 1, 0]);
-    this.mHero.getXform().setPosition(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
-    this.mHero.getXform().setSize(8.78, 10);
-    this.changeRenderable(this.mHero);
+Hero.prototype.changeAnimation = function () {
+    if (this.mHeroState !== this.mPreviousHeroState) {
+        this.mPreviousHeroState = this.mHeroState;
+        switch (this.mHeroState) {
+            case Hero.eHeroState.eFaceLeft:
+                this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
+                this.mHero.getXform().setSize(-this.kWidth, this.kHeight);
+                this.mHero.setAnimationSpeed(1000000);
+                break;
+            case Hero.eHeroState.eFaceRight:
+                this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
+                this.mHero.getXform().setSize(this.kWidth, this.kHeight);
+                this.mHero.setAnimationSpeed(1000000);
+                break;
+            case Hero.eHeroState.eRunLeft:
+                this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
+                this.mHero.getXform().setSize(-this.kWidth, this.kHeight);
+                this.mHero.setAnimationSpeed(3);
+                break;
+            case Hero.eHeroState.eRunRight:
+                this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
+                this.mHero.getXform().setSize(this.kWidth, this.kHeight);
+                this.mHero.setAnimationSpeed(3);
+                break;
+        }
+    }
 };
