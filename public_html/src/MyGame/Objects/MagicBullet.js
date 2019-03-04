@@ -14,8 +14,8 @@
 function MagicBullet(dir, atX, atY) {
     // The camera to view the scene
     this.mSnow = null;
-    this.mSnowForWard = 9;
-    this.mSnowBackWard = -9;
+    this.mSnowForWard = -9;
+    this.mSnowBackWard = 9;
 
     this.backButton = null;
     this.MainMenuButton = null;
@@ -52,11 +52,11 @@ MagicBullet.prototype.draw = function (camera) {
 MagicBullet.prototype.update = function (forwardDir, boundStat) {
     gEngine.ParticleSystem.update(this.mSnow);
 
-    if (forwardDir) {
-        this.mFlagForward = true;
-    } else {
-        this.mFlagForward = false;
-    }
+    // if (forwardDir) {
+    //     this.mFlagForward = true;
+    // } else {
+    //     this.mFlagForward = false;
+    // }
 
     if (this.mFlagForward) {
         this.mSnow.setxAcceleration(this.mSnowForWard);
