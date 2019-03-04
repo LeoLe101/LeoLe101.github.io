@@ -27,6 +27,10 @@ function StartGame() {
     this.UITextBox = null;
     this.backButton = null;
     this.cameraFlip = false;
+    
+    this.prevTime = new Date();
+    this.currTime = new Date();
+    this.time = 0;
 
     this.bgNum = 10;
 
@@ -37,7 +41,7 @@ function StartGame() {
     this.mBulletSetSet = null;
 
     // Monster
-    this.mMonster = null;
+    this.mMonsters = null;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -100,9 +104,12 @@ StartGame.prototype.initialize = function () {
 
     // init bullet set
     this.mBulletSet = new MagicBulletSet();
-
-    // init monster
-    this.mMonster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, 75, 21, 2);
+    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX);
+    this.mMonsters = new MonsterSet();
+    /*var monsterType = Math.floor(Math.random() * Math.floor(4));
+    var monsterOrigin = this.mCamera.getWCCenter()[0] + this.mCamera.getWCWidth() / 2 + 5;
+    this.mMonster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 21, monsterType);
+    this.mMonsters = [this.mMonster];*/
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -118,7 +125,7 @@ StartGame.prototype.draw = function () {
     this.UIText.draw(this.mCamera);
     this.backButton.draw(this.mCamera);
 
-    this.mMonster.draw(this.mCamera);
+    this.mMonsters.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
     this.mBulletSet.draw(this.mCamera);
 };
@@ -126,7 +133,7 @@ StartGame.prototype.draw = function () {
 StartGame.prototype.update = function () {
 
     this.mHero.update();
-    this.mMonster.update();
+    this.mMonsters.update();
 
     this.backButton.update();
 
@@ -144,6 +151,17 @@ StartGame.prototype.update = function () {
         this.mBulletSet.addToSet(bullet);
     }
     this.mBulletSet.update(true, null);
+    
+    this.currTime = new Date();
+    if (this.currTime - this.prevTime >= this.time) {
+        var monsterType = Math.floor(Math.random() * Math.floor(4));
+        var monsterOrigin = this.mCamera.getWCCenter()[0] + this.mCamera.getWCWidth() / 2 + 5;
+        var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 21, monsterType);
+        this.mMonsters.addToSet(monster);
+        this.prevTime = this.currTime;
+        this.time = 1000 + Math.random() * 4000;
+    }
+
 };
 
 StartGame.prototype.UITextBoxTest = function () {

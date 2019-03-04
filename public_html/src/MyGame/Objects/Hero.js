@@ -11,7 +11,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
     this.mHero = new SpriteAnimateRenderable(spriteTexture);
     this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(atX, atY);
-    this.mHero.getXform().setSize(8.8, 10);
+    this.mHero.getXform().setSize(8.78, 10);
     
     this.spriteTexture = spriteTexture;
     this.spriteTexture_i = spriteTexture_i;
@@ -23,12 +23,12 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
     
     // Set Animation of the top or bottom wing minion{
     this.mHero.setSpriteSequence(905, 210,
-        88, 100,
+        87.8, 100,
         16,
         0);
 
     this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
-    this.mHero.setAnimationSpeed(4);
+    this.mHero.setAnimationSpeed(3);
     // show each element for mAnimSpeed updates
     GameObject.call(this, this.mHero);
     
