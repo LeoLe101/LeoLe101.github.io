@@ -27,7 +27,7 @@ function StartGame() {
     this.UITextBox = null;
     this.backButton = null;
     this.cameraFlip = false;
-    
+
     this.prevTime = new Date();
     this.currTime = new Date();
     this.time = 0;
@@ -42,6 +42,9 @@ function StartGame() {
 
     // Monster
     this.mMonsters = null;
+
+    // Light Set
+    this.mGlobalLightSet = null;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -66,6 +69,7 @@ StartGame.prototype.unloadScene = function () {
 };
 
 StartGame.prototype.initialize = function () {
+    
     // Step A: set up the cameras
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
@@ -75,6 +79,9 @@ StartGame.prototype.initialize = function () {
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
     // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
+
+    // init Light Set
+    this._initializeLights(); // called from Level Light file
 
     // init Game UI
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
@@ -100,11 +107,12 @@ StartGame.prototype.initialize = function () {
 
     // init hero
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 2;
-    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX);
+    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet);
 
     // init bullet set
     this.mBulletSet = new MagicBulletSet();
-    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX);
+
+    // init monster
     this.mMonsters = new MonsterSet();
     /*var monsterType = Math.floor(Math.random() * Math.floor(4));
     var monsterOrigin = this.mCamera.getWCCenter()[0] + this.mCamera.getWCWidth() / 2 + 5;
@@ -141,6 +149,8 @@ StartGame.prototype.update = function () {
     if (this.mHero.getXform().getXPos() > 50 && this.mHero.getXform().getXPos() < maxX) {
         this.mCamera.panTo(this.mHero.getXform().getXPos(), this.mCamera.getWCCenter()[1]);
     }
+    var p = vec2.clone(this.mHero.getXform().getPosition());
+    this.mGlobalLightSet.getLightAt(0).set2DPosition(p);
     this.mCamera.update();
 
     // Hero shoot bullet
@@ -151,7 +161,7 @@ StartGame.prototype.update = function () {
         this.mBulletSet.addToSet(bullet);
     }
     this.mBulletSet.update(true, null);
-    
+
     this.currTime = new Date();
     if (this.currTime - this.prevTime >= this.time) {
         var monsterType = Math.floor(Math.random() * Math.floor(4));

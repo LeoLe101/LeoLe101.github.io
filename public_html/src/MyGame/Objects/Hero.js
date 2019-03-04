@@ -6,9 +6,9 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
+function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
     this.kDelta = 0.2;
-    this.mHero = new SpriteAnimateRenderable(spriteTexture);
+    this.mHero = new LightRenderable(spriteTexture);
     this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(atX, atY);
     this.mHero.getXform().setSize(8.78, 10);
@@ -29,6 +29,10 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
 
     this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
     this.mHero.setAnimationSpeed(3);
+
+    // Get some lights on this girl!
+    this.mHero.addLight(lightSet.getLightAt(0));
+
     // show each element for mAnimSpeed updates
     GameObject.call(this, this.mHero);
     

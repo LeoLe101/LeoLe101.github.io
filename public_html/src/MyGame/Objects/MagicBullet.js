@@ -36,7 +36,7 @@ MagicBullet.prototype._initialize = function () {
     // // sets the background to gray
     // gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     this.mBox = new BoundingBox(this.mBulletBoundPos, this.mBulletBoundW, this.mBulletBoundH);
-    this.mSnow = new Snow(this.mBulletBoundPos[0], this.mBulletBoundPos[1], 1, 0, 16, 0, -1, 3, 1, 0, 4.5, 1);
+    this.mSnow = new Snow(this.mBulletBoundPos[0], this.mBulletBoundPos[1], 1, 0, 3, 0, -1, 3, 4, 0, 4.5, 1);
 };
 
 
@@ -60,14 +60,10 @@ MagicBullet.prototype.update = function (forwardDir, boundStat) {
 
     if (this.mFlagForward) {
         this.mSnow.setxAcceleration(this.mSnowForWard);
-        if (this.mSnow.getPos()[0] < 380) {
-            this.mSnow.setPos(this.mSnow.getPos()[0] += 0.5, this.mSnow.getPos()[1]);
-        }
+        this.mSnow.setPos(this.mSnow.getPos()[0] += 0.5, this.mSnow.getPos()[1]);
     } else {
         this.mSnow.setxAcceleration(this.mSnowBackWard);
-        if (this.mSnow.getPos()[0] < 380) {
-            this.mSnow.setPos(this.mSnow.getPos()[0] -= 0.5, this.mSnow.getPos()[1]);
-        }
+        this.mSnow.setPos(this.mSnow.getPos()[0] -= 0.5, this.mSnow.getPos()[1]);
     }
 
     // Update bounding box when bullet move
@@ -78,7 +74,7 @@ MagicBullet.prototype.collideOther = function (boundingBox) {
     return this.mBox.boundCollideStatus(boundingBox);
 };
 
-MagicBullet.prototype.shouldDelete = function() {
+MagicBullet.prototype.shouldDelete = function () {
     return this.mDestroy;
 };
 
@@ -88,6 +84,6 @@ MagicBullet.prototype.isBulletInViewport = function (camera) {
     var orX = camera.getWCCenter()[0];
     var orY = camera.getWCCenter()[1];
     //if (dcX <= 125 || dcX >= -25 || dcY <= 105 || dcY >= -35) return true;
-    return ((dcX >= orX - camera.getWCWidth()/2) && (dcX < orX + camera.getWCWidth()/2) &&
-            (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
+    return ((dcX >= orX - camera.getWCWidth() / 2) && (dcX < orX + camera.getWCWidth() / 2) &&
+        (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
 };
