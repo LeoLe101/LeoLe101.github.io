@@ -32,6 +32,9 @@ function StartGame() {
     
     //Hero and characters
     this.mHero = null;
+
+    // Magic Bullet
+    this.mBulletSet= null;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -49,9 +52,9 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kHealthBar);
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kBG);
-    gEngine.Textures.loadTexture(this.kBG_i);
+    gEngine.Textures.unloadTexture(this.kBG_i);
     gEngine.Textures.unloadTexture(this.kCharacters);
-    gEngine.Textures.loadTexture(this.kCharacters_i);
+    gEngine.Textures.unloadTexture(this.kCharacters_i);
     gEngine.Core.startScene(new MyGame());
 };
 
@@ -66,10 +69,12 @@ StartGame.prototype.initialize = function () {
             // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     
+    // init Game UI
     this.UIText = new UIText("Magic Run",[400,580],4,1,0,[1,1,1,1]);
     this.UITextBox = new UITextBox([500,200],6,35,[1,1,1,1],[0,0,0,1],this.UITextBoxTest,this);
     this.backButton = new UIButton(this.kUIButton,this.backSelect,this,[80,20],[160,40],"Go Back",4,[1,1,1,1],[1,1,1,1]);
     
+    // init Background
     this.bg = new TextureRenderable(this.kBG);
     this.bg.getXform().setSize(150,75);
     this.bg.getXform().setPosition(75,40);
@@ -85,8 +90,13 @@ StartGame.prototype.initialize = function () {
         this.bgs[i].getXform().setSize(150,75);
         this.bgs[i].getXform().setPosition(deltaX + 75,40);
     }
+
+    // init hero
     var maxX = this.bgs[this.bgNum-1].getXform().getXPos() + this.bgs[this.bgNum-1].getXform().getWidth() / 2;
     this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 22, maxX);
+
+    // init bullet set
+    this.mBullet = new MagicBulletSet();
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -102,6 +112,7 @@ StartGame.prototype.draw = function () {
     this.UIText.draw(this.mCamera);
     this.backButton.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
+    this.mBullet.draw(this.mCamera);
 };
 
 StartGame.prototype.update = function () {
@@ -115,6 +126,13 @@ StartGame.prototype.update = function () {
         this.mCamera.panTo(this.mHero.getXform().getXPos() + 40, this.mCamera.getWCCenter()[1]);
     }
     this.mCamera.update();
+
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+        var heroXPos = this.mHero.getXform().getXPos();
+        var heroYPos = this.mHero.getXform().getYPos();
+        var bullet = new MagicBullet();
+    }
+
 };
 
 StartGame.prototype.UITextBoxTest = function(){
