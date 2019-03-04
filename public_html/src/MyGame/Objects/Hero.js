@@ -11,8 +11,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
     this.mHero = new SpriteAnimateRenderable(spriteTexture);
     this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(atX, atY);
-    this.mHero.getXform().setSize(8.8, 20);
-    this.mCurrAlphaChannel = 0;
+    this.mHero.getXform().setSize(8.8, 10);
     
     this.spriteTexture = spriteTexture;
     this.spriteTexture_i = spriteTexture_i;
@@ -23,19 +22,21 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX) {
     this.maxX = maxX - 5;
     
     // Set Animation of the top or bottom wing minion{
-    this.mHero.setSpriteSequence(960, 210,
-        88, 200,
+    this.mHero.setSpriteSequence(905, 210,
+        88, 100,
         16,
         0);
 
     this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
-    this.mHero.setAnimationSpeed(3);
+    this.mHero.setAnimationSpeed(4);
     // show each element for mAnimSpeed updates
     GameObject.call(this, this.mHero);
+    
+    this.getXform().changeRate(0.1);
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
-Hero.prototype.update = function (atHeadX, atHeadY) {
+Hero.prototype.update = function () {
 
     GameObject.prototype.update.call(this); // Move the Hero forward
     this.mHero.updateAnimation();
@@ -59,7 +60,7 @@ Hero.prototype.update = function (atHeadX, atHeadY) {
         }
     }
     
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
+    /*if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
         if (Xform.getYPos() > this.groundY + 10) {
             var newPosition = vec2.fromValues(Xform.getXPos() + 5, this.groundY);
             this.panTo(newPosition);
@@ -69,7 +70,7 @@ Hero.prototype.update = function (atHeadX, atHeadY) {
     } else {
         var newPosition = vec2.fromValues(Xform.getXPos(), this.groundY);
         this.panTo(newPosition);
-    }
+    }*/
     
 };
 

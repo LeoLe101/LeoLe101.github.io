@@ -304,3 +304,7 @@ Transform.prototype.updateInterpolation = function () {
     this.mPosition = this.mCenter.getValue();
 };
 Transform.prototype.updateShake = function(p) { this.mPosition = p; };
+Transform.prototype.changeRate = function(r) {
+    this.kRate = r;  // rate of change for each cycle
+    this.mCenter = new InterpolateVec2(this.mPosition, this.kCycles, this.kRate);
+};

@@ -24,6 +24,8 @@ function GameObject(renderableObj) {
     this.mRigidBody = null;
     this.mDrawRenderable = true;
     this.mDrawRigidShape = false; 
+    
+    this.mShake = null;
 }
 
 /**
