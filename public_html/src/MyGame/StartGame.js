@@ -145,7 +145,7 @@ StartGame.prototype.draw = function () {
     this.mMonsters.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
 
-    //this.mMoon.draw(this.mCamera);
+    this.mMoon.draw(this.mCamera);
     this.mBulletSet.draw(this.mCamera);
 
 };
