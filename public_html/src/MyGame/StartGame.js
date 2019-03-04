@@ -39,7 +39,7 @@ function StartGame() {
     this.mHero = null;
 
     // Magic Bullet
-    this.mBulletSet = null;
+    this.mBulletSetSet = null;
 
     // Monsters
     this.mMonsters = null;
@@ -109,10 +109,10 @@ StartGame.prototype.initialize = function () {
 
     // init hero
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 2;
-    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 22, maxX);
+    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX);
 
     // init bullet set
-    this.mBullet = new MagicBulletSet();
+    this.mBulletSet = new MagicBulletSet();
     this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX);
     this.mMonsters = new MonsterSet();
     this.mMoon = new Moon(this.kMoon);
@@ -136,8 +136,10 @@ StartGame.prototype.draw = function () {
 
     this.mMonsters.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
-    this.mBullet.draw(this.mCamera);
+
     //this.mMoon.draw(this.mCamera);
+    this.mBulletSet.draw(this.mCamera);
+
 };
 
 StartGame.prototype.update = function () {
@@ -157,11 +159,14 @@ StartGame.prototype.update = function () {
     }
     this.mCamera.update();
 
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Space)) {
+    // Hero shoot bullet
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
         var heroXPos = this.mHero.getXform().getXPos();
         var heroYPos = this.mHero.getXform().getYPos();
-        var bullet = new MagicBullet();
+        var bullet = new MagicBullet(true, heroXPos + 2, heroYPos);
+        this.mBulletSet.addToSet(bullet);
     }
+    this.mBulletSet.update(true, null);
     
     this.currTime = new Date();
     if (this.currTime - this.prevTime >= this.time) {

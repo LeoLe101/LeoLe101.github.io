@@ -11,7 +11,7 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function MagicBullet(atX, atY) {
+function MagicBullet(dir, atX, atY) {
     // The camera to view the scene
     this.mSnow = null;
     this.mSnowForWard = -9;
@@ -20,8 +20,7 @@ function MagicBullet(atX, atY) {
     this.backButton = null;
     this.MainMenuButton = null;
 
-    this.mFlagForward = false;
-    this.mFlagBackward = false;
+    this.mFlagForward = dir;
 
     this.mBulletBoundPos = [atX, atY];
     this.mBulletBoundW = 3;
@@ -48,30 +47,23 @@ MagicBullet.prototype._configBound = function () {
 /** Public */
 MagicBullet.prototype.draw = function (camera) {
     this.mSnow.draw(camera);
-    this.mPlatforms.draw(camera);
-    this.MainMenuButton.draw(camera);
-    this.backButton.draw(camera);
 };
 
 MagicBullet.prototype.update = function (forwardDir, boundStat) {
     gEngine.ParticleSystem.update(this.mSnow);
 
-    if (forwardDir) {
-        this.mFlagBackward = false;
-        this.mFlagForward = true;
-    } else {
-        this.mFlagForward = false;
-        this.mFlagBackward = true;
-    }
+    // if (forwardDir) {
+    //     this.mFlagForward = true;
+    // } else {
+    //     this.mFlagForward = false;
+    // }
 
     if (this.mFlagForward) {
         this.mSnow.setxAcceleration(this.mSnowForWard);
         if (this.mSnow.getPos()[0] < 380) {
             this.mSnow.setPos(this.mSnow.getPos()[0] += 0.5, this.mSnow.getPos()[1]);
         }
-    }
-
-    if (this.mFlagBackward) {
+    } else {
         this.mSnow.setxAcceleration(this.mSnowBackWard);
         if (this.mSnow.getPos()[0] < 380) {
             this.mSnow.setPos(this.mSnow.getPos()[0] -= 0.5, this.mSnow.getPos()[1]);
