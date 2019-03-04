@@ -33,6 +33,7 @@ function StartGame() {
     //Hero and characters
     this.mHero = null;
     this.mMonster = null;
+    this.mMonsters = null;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -88,7 +89,10 @@ StartGame.prototype.initialize = function () {
     }
     var maxX = this.bgs[this.bgNum-1].getXform().getXPos() + this.bgs[this.bgNum-1].getXform().getWidth() / 2;
     this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX);
-    this.mMonster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, 75, 21, 2);
+    
+    var monsterType = Math.floor(Math.random() * Math.floor(4));
+    this.mMonster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, 75, 21, monsterType);
+    this.mMonsters = [this.mMonster];
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more

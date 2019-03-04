@@ -21,38 +21,38 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
     this.mMonster = new SpriteAnimateRenderable(spriteTexture);
     this.mMonster.setColor([1, 1, 1, 0]);
     this.mMonster.getXform().setPosition(atX, atY);
-    if (type === 1) {
+    if (type === 0) {
         this.mMonster.getXform().setSize(10.35, 10);
         this.mMonster.setSpriteSequence(725, 138,
             103.5, 100,
             18,
             0);
-    } else if (type === 2) {
+    } else if (type === 1) {
         this.mMonster.getXform().setSize(9.68, 10);
         this.mMonster.setSpriteSequence(550, 30,
             96.8, 100,
             14,
             0);
-    } else if (type === 3) {
-        this.mMonster.getXform().setSize(10.35, 10);
-        this.mMonster.setSpriteSequence(360, 138,
-            103.5, 100,
+    } else if (type === 2) {
+        this.mMonster.getXform().setSize(8.58, 10);
+        this.mMonster.setSpriteSequence(388, 35,
+            85.8, 100,
             18,
             0);
-    } else if (type === 4) {
-        this.mMonster.getXform().setSize(10.35, 10);
-        this.mMonster.setSpriteSequence(180, 138,
-            103.5, 100,
+    } else if (type === 3) {
+        this.mMonster.getXform().setSize(6.93, 10);
+        this.mMonster.setSpriteSequence(215, 43,
+            69.3, 100,
             18,
             0);
     }
 
     this.mMonster.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateLeft);
-    this.mMonster.setAnimationSpeed(30);
+    this.mMonster.setAnimationSpeed(3);
     GameObject.call(this, this.mMonster);
 
     this.shouldDestroy = false;
-    this.getXform().changeRate(0.001);
+    this.getXform().changeRate(0.002);
     //this.localShake = null;
 }
 gEngine.Core.inheritPrototype(Monster, GameObject);
@@ -77,7 +77,7 @@ Monster.prototype.update = function () {
     this.generalUpdate();
     
     var newPosition = vec2.fromValues(heroXform.getXPos(), this.groundY);
-    //this.panTo(newPosition);
+    this.panTo(newPosition);
 
     /*
     if (this.mShake !== null)
