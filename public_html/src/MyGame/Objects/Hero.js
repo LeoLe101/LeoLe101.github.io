@@ -120,3 +120,8 @@ Hero.prototype.changeAnimation = function () {
         }
     }
 };
+
+Hero.prototype.getDirection = function() {
+    if (this.mHeroState === Hero.eHeroState.eFaceLeft || this.mHeroState === Hero.eHeroState.eRunLeft) return 0;
+    return 1;
+};

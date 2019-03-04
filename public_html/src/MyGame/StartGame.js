@@ -163,7 +163,7 @@ StartGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
         var heroXPos = this.mHero.getXform().getXPos();
         var heroYPos = this.mHero.getXform().getYPos();
-        var bullet = new MagicBullet(true, heroXPos + 2, heroYPos - 2);
+        var bullet = new MagicBullet(this.mHero.getDirection(), heroXPos + 2, heroYPos - 2);
         this.mBulletSet.addToSet(bullet);
     }
     this.mBulletSet.update(true, null);

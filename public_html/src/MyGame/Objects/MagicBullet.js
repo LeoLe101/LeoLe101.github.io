@@ -57,7 +57,6 @@ MagicBullet.prototype.update = function (forwardDir, boundStat) {
     // } else {
     //     this.mFlagForward = false;
     // }
-
     if (this.mFlagForward) {
         this.mSnow.setxAcceleration(this.mSnowForWard);
         if (this.mSnow.getPos()[0] < 380) {
