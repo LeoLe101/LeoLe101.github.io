@@ -13,6 +13,8 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
     
     this.mHero = hero; //follow hero
     
+    this.mType = type;
+    
     this.groundY = atY;
     
     this.spriteTexture = spriteTexture;
@@ -21,25 +23,25 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
     this.mMonster = new SpriteAnimateRenderable(spriteTexture);
     this.mMonster.setColor([1, 1, 1, 0]);
     this.mMonster.getXform().setPosition(atX, atY);
-    if (type === 0) {
+    if (this.mType === 0) {
         this.mMonster.getXform().setSize(10.35, 10);
         this.mMonster.setSpriteSequence(725, 138,
             103.5, 100,
             18,
             0);
-    } else if (type === 1) {
+    } else if (this.mType === 1) {
         this.mMonster.getXform().setSize(9.68, 10);
         this.mMonster.setSpriteSequence(550, 30,
             96.8, 100,
             14,
             0);
-    } else if (type === 2) {
+    } else if (this.mType === 2) {
         this.mMonster.getXform().setSize(8.58, 10);
         this.mMonster.setSpriteSequence(388, 35,
             85.8, 100,
             18,
             0);
-    } else if (type === 3) {
+    } else if (this.mType === 3) {
         this.mMonster.getXform().setSize(6.93, 10);
         this.mMonster.setSpriteSequence(215, 43,
             69.3, 100,

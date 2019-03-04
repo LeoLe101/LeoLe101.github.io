@@ -28,6 +28,10 @@ function GameObject(renderableObj) {
     this.mShake = null;
 }
 
+GameObject.prototype.changeRenderable = function(renderableObj) {
+    this.mRenderComponent = renderableObj;
+};
+
 /**
  * Return the GameObject's Transform
  * @returns {Transform} Gameobject Transform

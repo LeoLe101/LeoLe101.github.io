@@ -18,6 +18,7 @@ function StartGame() {
     this.kBG_i = "assets/Game/forest_i.png";
     this.kCharacters = "assets/Game/characters.png";
     this.kCharacters_i = "assets/Game/characters_i.png";
+    this.kMoon = "assets/Game/moon.png";
 
     // The camera to view the scene
     this.mCamera = null;
@@ -34,14 +35,20 @@ function StartGame() {
 
     this.bgNum = 10;
 
-    // Hero and characters
+    // Hero
     this.mHero = null;
 
     // Magic Bullet
     this.mBulletSet = null;
 
-    // Monster
+    // Monsters
     this.mMonsters = null;
+    
+    // Moon
+    this.mMoon = null;
+    
+    this.moonDelta = 0;
+    this.moonChangeRate = 0;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -53,6 +60,7 @@ StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kBG_i);
     gEngine.Textures.loadTexture(this.kCharacters);
     gEngine.Textures.loadTexture(this.kCharacters_i);
+    gEngine.Textures.loadTexture(this.kMoon);
 };
 
 StartGame.prototype.unloadScene = function () {
@@ -62,6 +70,7 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kBG_i);
     gEngine.Textures.unloadTexture(this.kCharacters);
     gEngine.Textures.unloadTexture(this.kCharacters_i);
+    gEngine.Textures.unloadTexture(this.kMoon);
     gEngine.Core.startScene(new MyGame());
 };
 
@@ -106,10 +115,10 @@ StartGame.prototype.initialize = function () {
     this.mBullet = new MagicBulletSet();
     this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX);
     this.mMonsters = new MonsterSet();
-    /*var monsterType = Math.floor(Math.random() * Math.floor(4));
-    var monsterOrigin = this.mCamera.getWCCenter()[0] + this.mCamera.getWCWidth() / 2 + 5;
-    this.mMonster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 21, monsterType);
-    this.mMonsters = [this.mMonster];*/
+    this.mMoon = new Moon(this.kMoon);
+    
+    this.moonDelta = this.mMoon.getXform().getXPos() - this.mCamera.getWCCenter()[0];
+    this.moonChangeRate = 0.05;
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -128,18 +137,23 @@ StartGame.prototype.draw = function () {
     this.mMonsters.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
     this.mBullet.draw(this.mCamera);
+    //this.mMoon.draw(this.mCamera);
 };
 
 StartGame.prototype.update = function () {
 
     this.mHero.update();
     this.mMonsters.update();
+    this.mMoon.update();
 
     this.backButton.update();
 
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() - 15;
     if (this.mHero.getXform().getXPos() > 50 && this.mHero.getXform().getXPos() < maxX) {
         this.mCamera.panTo(this.mHero.getXform().getXPos(), this.mCamera.getWCCenter()[1]);
+        //this.moonDelta -= this.moonChangeRate;
+        this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta, 
+                                          this.mMoon.getXform().getYPos());
     }
     this.mCamera.update();
 
