@@ -52,7 +52,7 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
     GameObject.call(this, this.mMonster);
 
     this.shouldDestroy = false;
-    this.getXform().changeRate(0.002);
+    this.getXform().changeRate(0.0015);
     //this.localShake = null;
 }
 gEngine.Core.inheritPrototype(Monster, GameObject);
