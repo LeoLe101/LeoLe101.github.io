@@ -35,7 +35,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
     this.mHero.setAnimationSpeed(1000000);
     
     // Get some lights on this girl!
-    this.mHero.addLight(lightSet.getLightAt(0));
+    //this.mHero.addLight(lightSet.getLightAt(0));
     
     this.mHeroState = Hero.eHeroState.eFaceRight;
     this.mPreviousHeroState = Hero.eHeroState.eFaceRight;
