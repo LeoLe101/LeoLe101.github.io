@@ -15,6 +15,7 @@ function MyGame() {
     //this.kUIButton = "assets/UI/button.png";
     this.kUIButton = "assets/Game/play.png";
     this.kBG = "assets/Game/forest.png";
+    this.kSky = "assets/Game/sky.png";
     
     // The camera to view the scene
     this.mCamera = null;
@@ -25,6 +26,7 @@ function MyGame() {
     this.LevelSelect = null;
     
     this.bg = null;
+    this.sky = null;
 }
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
@@ -32,11 +34,13 @@ gEngine.Core.inheritPrototype(MyGame, Scene);
 MyGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kUIButton);
     gEngine.Textures.loadTexture(this.kBG);
+    gEngine.Textures.loadTexture(this.kSky);
 };
 
 MyGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kBG);
+    gEngine.Textures.unloadTexture(this.kSky);
     if(this.LevelSelect==="Particle"){
         gEngine.Core.startScene(new ParticleLevel());
     }
@@ -67,6 +71,10 @@ MyGame.prototype.initialize = function () {
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
     this.bg.getXform().setPosition(75, 40);
+    
+    this.sky = new LightRenderable(this.kSky);
+    this.sky.getXform().setSize(150, 75);
+    this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0], 40);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -77,6 +85,7 @@ MyGame.prototype.draw = function () {
     
     
     this.mCamera.setupViewProjection();
+    this.sky.draw(this.mCamera);
     this.bg.draw(this.mCamera);
     //this.ParticleButton.draw(this.mCamera);
     //this.PhysicsButton.draw(this.mCamera);
@@ -89,6 +98,7 @@ MyGame.prototype.update = function () {
     //this.PhysicsButton.update();
     this.StartButton.update();
     this.bg.update();
+    this.sky.update();
 };
 
 MyGame.prototype.particleSelect = function(){

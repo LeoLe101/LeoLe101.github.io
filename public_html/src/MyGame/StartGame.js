@@ -16,6 +16,7 @@ function StartGame() {
     this.kUIButton = "assets/Game/button.png";
     this.kBG = "assets/Game/forest.png";
     this.kBG_i = "assets/Game/forest_i.png";
+    this.kSky = "assets/Game/sky.png";
     this.kCharacters = "assets/Game/characters.png";
     this.kCharacters_i = "assets/Game/characters_i.png";
     this.kMoon = "assets/Game/moon.png";
@@ -25,6 +26,7 @@ function StartGame() {
     this.mCamera = null;
     this.bg = null;
     this.bgs = null;
+    this.sky = null;
     this.UIText = null;
     this.UITextBox = null;
 
@@ -76,6 +78,7 @@ StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kCharacters_i);
     gEngine.Textures.loadTexture(this.kMoon);
     gEngine.Textures.loadTexture(this.kObstacle);
+    gEngine.Textures.loadTexture(this.kSky);
 };
 
 StartGame.prototype.unloadScene = function () {
@@ -87,6 +90,7 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kCharacters_i);
     gEngine.Textures.unloadTexture(this.kMoon);
     gEngine.Textures.unloadTexture(this.kObstacle);
+    gEngine.Textures.unloadTexture(this.kSky);
 
     if (this.mRestart === true) {
         var nextLevel = new StartGame();  // restart the lvl
@@ -161,6 +165,8 @@ StartGame.prototype.draw = function () {
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 
     this.mCamera.setupViewProjection();
+    this.sky.draw(this.mCamera);
+    
     for (var i = 0; i < this.bgNum; i++) {
         this.bgs[i].draw(this.mCamera);
     }
@@ -182,6 +188,7 @@ StartGame.prototype.draw = function () {
 
 StartGame.prototype.update = function () {
 
+    this.sky.update();
     this.mObstacles.update();
     this.backButton.update();
 
@@ -195,6 +202,8 @@ StartGame.prototype.update = function () {
 
         this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta,
             this.mMoon.getXform().getYPos());
+        this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0],
+            this.sky.getXform().getYPos());  
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
 
     }
@@ -287,6 +296,17 @@ StartGame.prototype._initUI = function () {
 }
 
 StartGame.prototype._initBackGround = function () {
+    
+    //setting sky
+    this.sky = new LightRenderable(this.kSky);
+    this.sky.getXform().setSize(150, 75);
+    this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0], 40);
+    this.sky.getXform().setZPos(-5);
+    for (var i = 0; i < 2; i++) {
+        this.sky.addLight(this.mGlobalLightSet.getLightAt(i));
+    }
+    
+    //setting floor
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
     this.bg.getXform().setPosition(75, 40);
