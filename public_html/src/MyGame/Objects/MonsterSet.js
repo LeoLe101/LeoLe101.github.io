@@ -47,6 +47,7 @@ MonsterSet.prototype.pixelTouches = function (hero, bSet, h) {
     //         }
     //     }
     // }
+
 };
 
 

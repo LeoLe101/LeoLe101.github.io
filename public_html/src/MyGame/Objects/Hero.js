@@ -122,12 +122,12 @@ Hero.prototype.changeAnimation = function () {
             case Hero.eHeroState.eRunLeft:
                 this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
                 this.mHero.getXform().setSize(-this.kWidth, this.kHeight);
-                this.mHero.setAnimationSpeed(3);
+                this.mHero.setAnimationSpeed(4);
                 break;
             case Hero.eHeroState.eRunRight:
                 this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
                 this.mHero.getXform().setSize(this.kWidth, this.kHeight);
-                this.mHero.setAnimationSpeed(3);
+                this.mHero.setAnimationSpeed(4);
                 break;
         }
     }
@@ -142,8 +142,8 @@ Hero.prototype.getDirection = function () {
 Hero.prototype.keyControl = function () {
 
     var xform = this.getXform();
-    var delta = 0.4;
-
+    var delta = 0.2;
+    
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
         xform.incYPosBy(kWASDDelta);
     }

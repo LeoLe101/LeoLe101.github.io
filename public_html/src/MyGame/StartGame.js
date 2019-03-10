@@ -13,7 +13,7 @@
 
 function StartGame() {
     this.kHealthBar = "assets/UI/healthbar.png";
-    this.kUIButton = "assets/UI/button.png";
+    this.kUIButton = "assets/Game/button.png";
     this.kBG = "assets/Game/forest.png";
     this.kBG_i = "assets/Game/forest_i.png";
     this.kCharacters = "assets/Game/characters.png";
@@ -27,7 +27,9 @@ function StartGame() {
     this.bgs = null;
     this.UIText = null;
     this.UITextBox = null;
-    this.UIhealthBar = null;
+
+    this.UIhealthBar = null; 
+
     this.backButton = null;
     this.cameraFlip = false;
     this.endGame = false;
@@ -181,8 +183,16 @@ StartGame.prototype.draw = function () {
 };
 
 StartGame.prototype.update = function () {
+
+    this.mHero.update();
+    this.mMonsters.update();
+    this.mMoon.update();
+
+    this.mCamera.update();
+
     this.mObstacles.update();
     this.backButton.update();
+
     this.UIhealthBar.update();
     // #region ----------------- Moon Interpolation -----------------
     this.mMoon.update();
@@ -201,7 +211,6 @@ StartGame.prototype.update = function () {
     this.mGlobalLightSet.getLightAt(1).set2DPosition(moonLight);
     this.mCamera.update();
     // #endregion
-
 
     // #region ----------------- Hero Support -------------------
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
@@ -239,8 +248,10 @@ StartGame.prototype.update = function () {
     this.mMonsters.update();
     this.mMonsters.delete(this.mCamera);
     // Check if collision with anything
+
     var h = [];
     this.mMonsters.pixelTouches(this.mHero, this.mBulletSet, h);
+
     // #endregion
 
 
@@ -272,8 +283,10 @@ StartGame.prototype.backSelect = function () {
 StartGame.prototype._initUI = function () {
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
     this.UITextBox = new UITextBox([500, 200], 6, 35, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
-    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 20], [160, 40], "Go Back", 4, [1, 1, 1, 1], [1, 1, 1, 1]);
+    
+    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Go Back", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
+
     // For testing
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([1, 1, 1, 1]);
