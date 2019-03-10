@@ -13,7 +13,7 @@
 
 function StartGame() {
     this.kHealthBar = "assets/UI/healthbar.png";
-    this.kUIButton = "assets/UI/button.png";
+    this.kUIButton = "assets/Game/button.png";
     this.kBG = "assets/Game/forest.png";
     this.kBG_i = "assets/Game/forest_i.png";
     this.kCharacters = "assets/Game/characters.png";
@@ -237,7 +237,7 @@ StartGame.prototype.backSelect = function () {
 StartGame.prototype._initUI = function () {
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
     this.UITextBox = new UITextBox([500, 200], 6, 35, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
-    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 20], [160, 40], "Go Back", 4, [1, 1, 1, 1], [1, 1, 1, 1]);
+    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Go Back", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
     // For testing
     this.mMsg = new FontRenderable("Status Message");

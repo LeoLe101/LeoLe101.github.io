@@ -21,7 +21,7 @@
  */
 function UIButton(buttonSprite, callback, context, position, size, text, textSize, textColor, clickTextColor) {
     this.mBack = new SpriteRenderable(buttonSprite);
-    this.mBack.setElementUVCoordinate(0.0, 1.0, 0.5, 1.0);
+    //this.mBack.setElementUVCoordinate(0.0, 1.0, 0.5, 1.0);
     UIElement.call(this, this.mBack, position, size);
     
     this.mText = new UIText(text, 
@@ -71,7 +71,7 @@ UIButton.prototype.update = function () {
     var uiXform = this.getUIXform();
    
     //make sure the button text stays on the button
-    this.mText.getUIXform().setPosition(uiXform.getXPos(), uiXform.getYPos());
+    this.mText.getUIXform().setPosition(uiXform.getXPos(), uiXform.getYPos() + 5);
     
     //get the mouse position, and if its over the button
     var mousePos = vec2.fromValues(gEngine.Input.getMousePosX(),
@@ -83,14 +83,14 @@ UIButton.prototype.update = function () {
     if(gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)){
         if(mouseOver){
             this.mClick = true;
-            this.mBack.setElementUVCoordinate(0.0, 1.0, 0.0, 0.5);
+            //this.mBack.setElementUVCoordinate(0.0, 1.0, 0.0, 0.5);
             this.setTextColor(this.clickTextColor);
         }
     }
     
     if(gEngine.Input.isButtonReleased(gEngine.Input.mouseButton.Left)){
         if(this.mClick) {
-            this.mBack.setElementUVCoordinate(0.0, 1.0, 0.5, 1.0);
+//            this.mBack.setElementUVCoordinate(0.0, 1.0, 0.5, 1.0);
             this.mClick = false;
             this.setTextColor(this.textColor);
             
