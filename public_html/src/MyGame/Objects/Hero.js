@@ -18,7 +18,10 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
     this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(atX, atY);
     this.mHero.getXform().setSize(this.kWidth, this.kHeight);
-    
+
+    this.healthBar = null;
+    this.gotHit = false;
+
     this.spriteTexture = spriteTexture;
     this.spriteTexture_i = spriteTexture_i;
 
@@ -61,7 +64,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
-Hero.prototype.update = function () {
+Hero.prototype.update = function (healthBar) {
 
     GameObject.prototype.update.call(this); // Move the Hero forward
     this.mHero.updateAnimation();
@@ -78,15 +81,20 @@ Hero.prototype.update = function () {
 
     this.keyControl();
     this.changeAnimation();
+
+    if (this.gotHit) {
+        healthBar.incCurrentHP(-10);
+        this.gotHit = false;
+    }
 };
 
 Hero.prototype.hitByMonster = function (delta) {
-    this.mCurrAlphaChannel += delta;
-    this.mHero.setColor([1, 1, 1, this.mCurrAlphaChannel]);
+    this.healthBar -= delta;
+    this.gotHit = true;
 };
 
 Hero.prototype.deleteYet = function () {
-    return (this.mCurrAlphaChannel >= 1);
+    return (this.healthBar <= 0);
 };
 
 Hero.eHeroState = Object.freeze({
@@ -113,12 +121,12 @@ Hero.prototype.changeAnimation = function () {
             case Hero.eHeroState.eRunLeft:
                 this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
                 this.mHero.getXform().setSize(-this.kWidth, this.kHeight);
-                this.mHero.setAnimationSpeed(3);
+                this.mHero.setAnimationSpeed(4);
                 break;
             case Hero.eHeroState.eRunRight:
                 this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
                 this.mHero.getXform().setSize(this.kWidth, this.kHeight);
-                this.mHero.setAnimationSpeed(3);
+                this.mHero.setAnimationSpeed(4);
                 break;
         }
     }
@@ -133,7 +141,7 @@ Hero.prototype.getDirection = function() {
 Hero.prototype.keyControl = function () {
     
     var xform = this.getXform();
-    var delta = 0.4;
+    var delta = 0.2;
     
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
         xform.incYPosBy(kWASDDelta);

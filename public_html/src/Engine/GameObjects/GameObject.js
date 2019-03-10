@@ -139,6 +139,6 @@ GameObject.prototype.isObjectInViewport = function (camera) {
     var orX = camera.getWCCenter()[0];
     var orY = camera.getWCCenter()[1];
     //if (dcX <= 125 || dcX >= -25 || dcY <= 105 || dcY >= -35) return true;
-    return ((dcX >= orX - camera.getWCWidth()/2) && (dcX < orX + camera.getWCWidth()/2) &&
+    return ((dcX >= orX - camera.getWCWidth()/2 - 20) &&
             (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
 };

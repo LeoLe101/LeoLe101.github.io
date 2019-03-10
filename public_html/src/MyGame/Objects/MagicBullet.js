@@ -81,3 +81,7 @@ MagicBullet.prototype.isBulletInViewport = function (camera) {
     return ((dcX >= orX - (camera.getWCWidth() / 2 + 30)) && (dcX < orX + (camera.getWCWidth() / 2 + 30)) &&
         (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
 };
+
+MagicBullet.prototype.getSnow = function () {
+    return this.mSnow;
+};
