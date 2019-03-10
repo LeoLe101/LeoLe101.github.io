@@ -27,7 +27,7 @@ function StartGame() {
     this.bgs = null;
     this.UIText = null;
     this.UITextBox = null;
-    this.UIhealthBar = null; 
+    this.UIhealthBar = null;
     this.backButton = null;
     this.cameraFlip = false;
     this.endGame = false;
@@ -120,29 +120,29 @@ StartGame.prototype.initialize = function () {
 
     this.moonDelta = this.mMoon.getXform().getXPos() - this.mCamera.getWCCenter()[0];
     this.moonChangeRate = 0.05;
-    
+
     this.mObstacles = new ObstacleSet();
-    
+
     //setting floor
-    var obstacle = new Obstacle(50,9,100,13.75,0,.9,this.kObstacle, this.mHero, true);
+    var obstacle = new Obstacle(50, 9, 100, 13.75, 0, .9, this.kObstacle, this.mHero, true);
     this.mObstacles.addToSet(obstacle);
-    
+
     //100*10 = 1000
-    
-    for(var i = 0; i < 5; i++){
+
+    for (var i = 0; i < 5; i++) {
         var randX = 50 + Math.random() * 500;
         var Y = 25;
-        var obstacle = new Obstacle(randX,Y,10,3,0,.9,this.kObstacle, this.mHero, false);
+        var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle);
     }
-    
-    for(var i = 0; i < 5; i++){
+
+    for (var i = 0; i < 5; i++) {
         var randX = 50 + Math.random() * 500;
         var Y = 30;
-        var obstacle = new Obstacle(randX,Y,10,3,0,.9,this.kObstacle, this.mHero, false);
+        var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle);
     }
-    
+
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -164,7 +164,7 @@ StartGame.prototype.draw = function () {
 
     this.mMoon.draw(this.mCamera);
     this.mBulletSet.draw(this.mCamera);
-    
+
     this.mObstacles.draw(this.mCamera);
 
     // For Testing:
@@ -172,7 +172,7 @@ StartGame.prototype.draw = function () {
 };
 
 StartGame.prototype.update = function () {
-
+    this.mObstacles.update();
     this.backButton.update();
     this.UIhealthBar.update();
     // #region ----------------- Moon Interpolation -----------------
@@ -182,8 +182,8 @@ StartGame.prototype.update = function () {
         this.mCamera.panTo(this.mHero.getXform().getXPos(), this.mCamera.getWCCenter()[1]);
         //this.moonDelta -= this.moonChangeRate;
 
-        this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta, 
-                                          this.mMoon.getXform().getYPos());
+        this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta,
+            this.mMoon.getXform().getYPos());
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
 
     }
@@ -230,14 +230,14 @@ StartGame.prototype.update = function () {
     this.mMonsters.update();
     this.mMonsters.delete(this.mCamera);
     // Check if collision with anything
-    // var h = [];
-    // this.mMonsters.pixelTouches(this.mHero, this.mBulletSet, h);
+    var h = [];
+    this.mMonsters.pixelTouches(this.mHero, this.mBulletSet, h);
     // #endregion
 
 
     // #region ----------------- End Game -----------------
     if (this.endGame) {
-        
+
     }
     // #endregion
 
