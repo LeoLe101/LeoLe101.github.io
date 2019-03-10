@@ -35,7 +35,9 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
     this.mHero.setAnimationSpeed(1000000);
     
     // Get some lights on this girl!
-    this.mHero.addLight(lightSet.getLightAt(0));
+    this.light = this._createPointLight(atX, atY);
+    lightSet.addToSet(this.light);
+    this.mHero.addLight(this.light);
     
     this.mHeroState = Hero.eHeroState.eFaceRight;
     this.mPreviousHeroState = Hero.eHeroState.eFaceRight;
@@ -76,7 +78,7 @@ Hero.prototype.update = function () {
             Xform.incXPosBy(-delta);
         }
     }
-    
+    this.light.set2DPosition(this.getXform().getPosition());
     this.changeAnimation();
 };
 
@@ -127,4 +129,19 @@ Hero.prototype.changeAnimation = function () {
 Hero.prototype.getDirection = function() {
     if (this.mHeroState === Hero.eHeroState.eFaceLeft || this.mHeroState === Hero.eHeroState.eRunLeft) return 0;
     return 1;
+};
+
+Hero.prototype._createPointLight = function (atX, atY) {
+    var lgt = new Light();
+    lgt.setLightType(0);
+    lgt.setColor([1, 1, 1, 0.5]);
+    lgt.setXPos(atX);
+    lgt.setYPos(atY);
+    lgt.setZPos(1);
+    lgt.setNear(5);
+    lgt.setFar(8);
+    lgt.setIntensity(0.5);
+    lgt.setDropOff(20);
+    lgt.setLightCastShadowTo(true);
+    return lgt;
 };

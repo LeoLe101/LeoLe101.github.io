@@ -46,12 +46,14 @@ function StartGame() {
 
     // Light Set
     this.mGlobalLightSet = null;
-    
+
     // Moon
     this.mMoon = null;
-    
     this.moonDelta = 0;
     this.moonChangeRate = 0;
+
+    // For Testing
+    this.mMsg = null;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -78,7 +80,7 @@ StartGame.prototype.unloadScene = function () {
 };
 
 StartGame.prototype.initialize = function () {
-    
+
     // Step A: set up the cameras
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
@@ -93,26 +95,10 @@ StartGame.prototype.initialize = function () {
     this._initializeLights(); // called from Level Light file
 
     // init Game UI
-    this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
-    this.UITextBox = new UITextBox([500, 200], 6, 35, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
-    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 20], [160, 40], "Go Back", 4, [1, 1, 1, 1], [1, 1, 1, 1]);
+    this._initUI();
 
-    // init Background
-    this.bg = new TextureRenderable(this.kBG);
-    this.bg.getXform().setSize(150, 75);
-    this.bg.getXform().setPosition(75, 40);
-    this.bgs = [this.bg];
-    for (var i = 1; i < this.bgNum; i++) {
-        var deltaX = this.bgs[i - 1].getXform().getXPos() + this.bgs[i - 1].getXform().getWidth() / 2;
-        if (i % 2 === 0) {
-            var bg = new TextureRenderable(this.kBG);
-        } else {
-            var bg = new TextureRenderable(this.kBG_i);
-        }
-        this.bgs.push(bg);
-        this.bgs[i].getXform().setSize(150, 75);
-        this.bgs[i].getXform().setPosition(deltaX + 75, 40);
-    }
+    // init BackGround with Light
+    this._initBackGround();
 
     // init hero
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 2;
@@ -123,8 +109,8 @@ StartGame.prototype.initialize = function () {
 
     // init monster
     this.mMonsters = new MonsterSet();
-    this.mMoon = new Moon(this.kMoon);
-    
+    this.mMoon = new Moon(this.kMoon, this.mGlobalLightSet);
+
     this.moonDelta = this.mMoon.getXform().getXPos() - this.mCamera.getWCCenter()[0];
     this.moonChangeRate = 0.05;
 };
@@ -148,6 +134,8 @@ StartGame.prototype.draw = function () {
     this.mMoon.draw(this.mCamera);
     this.mBulletSet.draw(this.mCamera);
 
+    // For Testing:
+    this.mMsg.draw(this.mCamera);   // only draw status in the main camera
 };
 
 StartGame.prototype.update = function () {
@@ -155,18 +143,23 @@ StartGame.prototype.update = function () {
     this.mHero.update();
     this.mMonsters.update();
     this.mMoon.update();
-
     this.backButton.update();
 
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() - 15;
     if (this.mHero.getXform().getXPos() > 50 && this.mHero.getXform().getXPos() < maxX) {
         this.mCamera.panTo(this.mHero.getXform().getXPos(), this.mCamera.getWCCenter()[1]);
         //this.moonDelta -= this.moonChangeRate;
-        this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta, 
-                                          this.mMoon.getXform().getYPos());
+        this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta,
+            this.mMoon.getXform().getYPos());
     }
-    var p = vec2.clone(this.mHero.getXform().getPosition());
-    this.mGlobalLightSet.getLightAt(0).set2DPosition(p);
+
+    // Update Hero Light
+    var heroLight = vec2.clone(this.mHero.getXform().getPosition());
+    this.mGlobalLightSet.getLightAt(0).set2DPosition(heroLight);
+
+    // Update Moon Light
+    var moonLight = vec2.clone(this.mMoon.getXform().getPosition());
+    this.mGlobalLightSet.getLightAt(1).set2DPosition(moonLight);
     this.mCamera.update();
 
     // Hero shoot bullet
@@ -177,7 +170,9 @@ StartGame.prototype.update = function () {
         this.mBulletSet.addToSet(bullet);
     }
     this.mBulletSet.update(true, null);
+    this.mBulletSet.delete(this.mCamera); // check if the bullet should be deleted or nah.
 
+    // Randomly spawn Monster
     this.currTime = new Date();
     if (this.currTime - this.prevTime >= this.time) {
         var monsterType = Math.floor(Math.random() * Math.floor(4));
@@ -188,6 +183,10 @@ StartGame.prototype.update = function () {
         this.time = 1000 + Math.random() * 4000;
     }
 
+    // For Testing
+    this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0] + 30, this.mHero.getXform().getPosition()[1] + 20);
+    var msg = "Bullet=" + this.mBulletSet.size() + " ";
+    this.mMsg.setText(msg)
 };
 
 StartGame.prototype.UITextBoxTest = function () {
@@ -197,3 +196,43 @@ StartGame.prototype.UITextBoxTest = function () {
 StartGame.prototype.backSelect = function () {
     gEngine.GameLoop.stop();
 };
+
+StartGame.prototype._initUI = function () {
+    this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
+    this.UITextBox = new UITextBox([500, 200], 6, 35, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
+    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 20], [160, 40], "Go Back", 4, [1, 1, 1, 1], [1, 1, 1, 1]);
+
+    // For testing
+    this.mMsg = new FontRenderable("Status Message");
+    this.mMsg.setColor([1, 1, 1, 1]);
+    this.mMsg.getXform().setPosition(50, 30);
+    this.mMsg.setTextHeight(3);
+    this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
+}
+
+StartGame.prototype._initBackGround = function () {
+    this.bg = new LightRenderable(this.kBG);
+    this.bg.getXform().setSize(150, 75);
+    this.bg.getXform().setPosition(75, 40);
+    this.bg.getXform().setZPos(-5);
+    for (var i = 0; i < 2; i++) {
+        this.bg.addLight(this.mGlobalLightSet.getLightAt(i));
+    }
+
+    this.bgs = [this.bg];
+    for (var i = 1; i < this.bgNum; i++) {
+        var deltaX = this.bgs[i - 1].getXform().getXPos() + this.bgs[i - 1].getXform().getWidth() / 2;
+        if (i % 2 === 0) {
+            var bg = new LightRenderable(this.kBG);
+        } else {
+            var bg = new LightRenderable(this.kBG_i);
+        }
+        this.bgs.push(bg);
+        this.bgs[i].getXform().setSize(150, 75);
+        this.bgs[i].getXform().setPosition(deltaX + 75, 40);
+        this.bgs[i].getXform().setZPos(-5);
+        for (var j = 0; j < 2; j++) {
+            this.bgs[i].addLight(this.mGlobalLightSet.getLightAt(j));
+        }
+    }
+}

@@ -52,17 +52,12 @@ MagicBullet.prototype.draw = function (camera) {
 MagicBullet.prototype.update = function (forwardDir, boundStat) {
     gEngine.ParticleSystem.update(this.mSnow);
 
-    // if (forwardDir) {
-    //     this.mFlagForward = true;
-    // } else {
-    //     this.mFlagForward = false;
-    // }
     if (this.mFlagForward) {
         this.mSnow.setxAcceleration(this.mSnowForWard);
-        this.mSnow.setPos(this.mSnow.getPos()[0] += 0.5, this.mSnow.getPos()[1]);
+        this.mSnow.setPos(this.mSnow.getPos()[0] += 1, this.mSnow.getPos()[1]);
     } else {
         this.mSnow.setxAcceleration(this.mSnowBackWard);
-        this.mSnow.setPos(this.mSnow.getPos()[0] -= 0.5, this.mSnow.getPos()[1]);
+        this.mSnow.setPos(this.mSnow.getPos()[0] -= 1, this.mSnow.getPos()[1]);
     }
 
     // Update bounding box when bullet move
@@ -83,6 +78,6 @@ MagicBullet.prototype.isBulletInViewport = function (camera) {
     var orX = camera.getWCCenter()[0];
     var orY = camera.getWCCenter()[1];
     //if (dcX <= 125 || dcX >= -25 || dcY <= 105 || dcY >= -35) return true;
-    return ((dcX >= orX - camera.getWCWidth() / 2) && (dcX < orX + camera.getWCWidth() / 2) &&
+    return ((dcX >= orX - (camera.getWCWidth() / 2 + 30)) && (dcX < orX + (camera.getWCWidth() / 2 + 30)) &&
         (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
 };

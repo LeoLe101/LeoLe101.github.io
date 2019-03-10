@@ -28,25 +28,27 @@ StartGame.prototype._createALight = function (type, pos, dir, color, n, f, inner
 StartGame.prototype._initializeLights = function () {
     this.mGlobalLightSet = new LightSet();
 
-    var l = this._createALight(Light.eLightType.eDirectionalLight,
-            [0, 0, 3],         // position
-            [0, 0, 0],          // Direction 
-            [1, 1, 1, 1],        // some color
-            5, 10,               // near and far distances
-            5, 10,            // inner and outer cones
-            2,                   // intensity
-            1                  // drop off
-            );
+    var l = this._createALight(Light.eLightType.ePointLight,
+        [0, 0, 5],         // position
+        [0, 0, 0],          // Direction 
+        [1, 1, 1, 0.5],        // some color
+        5, 8,               // near and far distances
+        0, 150,            // inner and outer cones
+        1,                   // intensity
+        1                  // drop off
+    );
     this.mGlobalLightSet.addToSet(l);
 
-    l = this._createALight(Light.eLightType.eDirectionalLight,
-            [15, 50, 10],           // position (not used by directional)
-            [0, 0, -1],         // Pointing direction 
-            [0.7, 0.7, 0.0, 1],     // color
-            500, 500,               // near anf far distances: essentially switch this off
-            0.1, 0.2,               // inner and outer cones
-            2,                      // intensity
-            1.0                     // drop off
-            );
+    l = this._createALight(Light.eLightType.ePointLight,
+        [0, 0, 5],         // position
+        [0, 0, 0],          // Direction 
+        [1, 1, 1, 0.5],        // some color
+        10, 15,               // near and far distances
+        100, 150,            // inner and outer cones
+        1,                   // intensity
+        100                  // drop off
+    );
     this.mGlobalLightSet.addToSet(l);
 };
+
+
