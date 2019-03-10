@@ -19,6 +19,7 @@ function StartGame() {
     this.kCharacters = "assets/Game/characters.png";
     this.kCharacters_i = "assets/Game/characters_i.png";
     this.kMoon = "assets/Game/moon.png";
+    this.kObstacle = "assets/Game/obstacle.png";
 
     // The camera to view the scene
     this.mCamera = null;
@@ -52,6 +53,8 @@ function StartGame() {
     
     this.moonDelta = 0;
     this.moonChangeRate = 0;
+    
+    this.mObstacles = null;
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
 
@@ -64,6 +67,7 @@ StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kCharacters);
     gEngine.Textures.loadTexture(this.kCharacters_i);
     gEngine.Textures.loadTexture(this.kMoon);
+    gEngine.Textures.loadTexture(this.kObstacle);
 };
 
 StartGame.prototype.unloadScene = function () {
@@ -74,6 +78,7 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kCharacters);
     gEngine.Textures.unloadTexture(this.kCharacters_i);
     gEngine.Textures.unloadTexture(this.kMoon);
+    gEngine.Textures.unloadTexture(this.kObstacle);
     gEngine.Core.startScene(new MyGame());
 };
 
@@ -127,6 +132,29 @@ StartGame.prototype.initialize = function () {
     
     this.moonDelta = this.mMoon.getXform().getXPos() - this.mCamera.getWCCenter()[0];
     this.moonChangeRate = 0.05;
+    
+    this.mObstacles = new ObstacleSet();
+    
+    //setting floor
+    var obstacle = new Obstacle(50,9,100,13.75,0,.9,this.kObstacle, this.mHero, true);
+    this.mObstacles.addToSet(obstacle);
+    
+    //100*10 = 1000
+    
+    for(var i = 0; i < 5; i++){
+        var randX = 50 + Math.random() * 500;
+        var Y = 25;
+        var obstacle = new Obstacle(randX,Y,10,3,0,.9,this.kObstacle, this.mHero, false);
+        this.mObstacles.addToSet(obstacle);
+    }
+    
+    for(var i = 0; i < 5; i++){
+        var randX = 50 + Math.random() * 500;
+        var Y = 30;
+        var obstacle = new Obstacle(randX,Y,10,3,0,.9,this.kObstacle, this.mHero, false);
+        this.mObstacles.addToSet(obstacle);
+    }
+    
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -147,6 +175,8 @@ StartGame.prototype.draw = function () {
 
     this.mMoon.draw(this.mCamera);
     this.mBulletSet.draw(this.mCamera);
+    
+    this.mObstacles.draw(this.mCamera);
 
 };
 
@@ -155,6 +185,8 @@ StartGame.prototype.update = function () {
     this.mHero.update();
     this.mMonsters.update();
     this.mMoon.update();
+    this.mCamera.update();
+    this.mObstacles.update();
 
     this.backButton.update();
 
@@ -164,6 +196,7 @@ StartGame.prototype.update = function () {
         //this.moonDelta -= this.moonChangeRate;
         this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta, 
                                           this.mMoon.getXform().getYPos());
+        this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
     }
     var p = vec2.clone(this.mHero.getXform().getPosition());
     this.mGlobalLightSet.getLightAt(0).set2DPosition(p);
@@ -185,7 +218,7 @@ StartGame.prototype.update = function () {
         var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 21, monsterType);
         this.mMonsters.addToSet(monster);
         this.prevTime = this.currTime;
-        this.time = 1000 + Math.random() * 4000;
+        this.time = 3000 + Math.random() * 4000;
     }
 
 };

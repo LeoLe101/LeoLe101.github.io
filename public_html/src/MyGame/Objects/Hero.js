@@ -6,6 +6,8 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
+var kWASDDelta = 0.5;
+
 function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
     this.kDelta = 0.2;
     
@@ -39,11 +41,19 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
     
     this.mHeroState = Hero.eHeroState.eFaceRight;
     this.mPreviousHeroState = Hero.eHeroState.eFaceRight;
-    
+
     // show each element for mAnimSpeed updates
     GameObject.call(this, this.mHero);
     
     this.getXform().changeRate(0.1);
+    
+    var r = new RigidRectangle(this.getXform(), this.kWidth, this.kHeight);
+    r.setMass(2);
+    r.setRestitution(0.5);
+
+    this.setRigidBody(r);
+    //this.toggleDrawRenderable();
+    //this.toggleDrawRigidShape();
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
@@ -52,9 +62,6 @@ Hero.prototype.update = function () {
     GameObject.prototype.update.call(this); // Move the Hero forward
     this.mHero.updateAnimation();
 
-    var Xform = this.getXform();
-    var delta = 0.5;
-
     this.getXform().updateInterpolation();
     
     if (this.mHeroState === Hero.eHeroState.eRunRight) {
@@ -62,21 +69,9 @@ Hero.prototype.update = function () {
     } else if (this.mHeroState === Hero.eHeroState.eRunLeft) {
         this.mHeroState = Hero.eHeroState.eFaceLeft;
     }
-    
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
-        this.mHeroState = Hero.eHeroState.eRunRight;
-        if (Xform.getXPos() <= this.maxX) {
-            Xform.incXPosBy(delta);
-        }
-    }
-    
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
-        this.mHeroState = Hero.eHeroState.eRunLeft;
-        if (Xform.getXPos() >= this.minX) {
-            Xform.incXPosBy(-delta);
-        }
-    }
-    
+
+    this.keyControl();
+  
     this.changeAnimation();
 };
 
@@ -127,4 +122,33 @@ Hero.prototype.changeAnimation = function () {
 Hero.prototype.getDirection = function() {
     if (this.mHeroState === Hero.eHeroState.eFaceLeft || this.mHeroState === Hero.eHeroState.eRunLeft) return 0;
     return 1;
+};
+
+Hero.prototype.keyControl = function () {
+    
+    var xform = this.getXform();
+    var delta = 0.4;
+    
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
+        xform.incYPosBy(kWASDDelta);
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
+        xform.incYPosBy(-kWASDDelta);;
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
+        this.mHeroState = Hero.eHeroState.eRunLeft;
+        if (xform.getXPos() >= this.minX) {
+            xform.incXPosBy(-delta);
+        }
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
+        this.mHeroState = Hero.eHeroState.eRunRight;
+        if (xform.getXPos() <= this.maxX) {
+            xform.incXPosBy(delta);
+        }
+    }
+    
+    //this.getRigidBody().userSetsState();
+    
+    
 };

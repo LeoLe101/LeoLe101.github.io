@@ -185,7 +185,7 @@ RigidShape.prototype.travel = function() {
      // linear motion
     var p = this.mXform.getPosition();
     vec2.scaleAndAdd(p, p, this.mVelocity, dt);
-    
+    this.mAngularVelocity = 0.00001;
     this.mXform.incRotationByRad(this.mAngularVelocity * dt);
 };
 
