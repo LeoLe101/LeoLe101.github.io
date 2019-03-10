@@ -14,7 +14,7 @@ function Obstacle(x,y,w,h,res,frct,spriteTexture, hero, isFloor) {
     this.kIsFloor = isFloor;
     
     this.mObstacle = null;
-    this.mHero = hero
+    this.mHero = hero;
     
     this.mShapes = new GameObjectSet();
     

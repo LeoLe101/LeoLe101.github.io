@@ -131,19 +131,17 @@ StartGame.prototype.initialize = function () {
 
     //100*10 = 1000
 
-    for (var i = 0; i < 5; i++) {
-        var randX = 50 + Math.random() * 500;
+    var minPos = 30;
+    for (var i = 0; i < 50; i++) {
+        var randX = minPos + Math.random() * 50;
         var Y = 25;
+        if ( 0.3 < Math.random() <= 0.6) Y = 28.5;
+        if (Math.random() > 0.6) Y = 32;
         var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle);
+        minPos = randX + 10;
     }
 
-    for (var i = 0; i < 5; i++) {
-        var randX = 50 + Math.random() * 500;
-        var Y = 30;
-        var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
-        this.mObstacles.addToSet(obstacle);
-    }
 
 };
 
