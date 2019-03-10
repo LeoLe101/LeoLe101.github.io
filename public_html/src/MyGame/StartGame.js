@@ -184,12 +184,6 @@ StartGame.prototype.draw = function () {
 
 StartGame.prototype.update = function () {
 
-    this.mHero.update();
-    this.mMonsters.update();
-    this.mMoon.update();
-
-    this.mCamera.update();
-
     this.mObstacles.update();
     this.backButton.update();
 
@@ -248,7 +242,6 @@ StartGame.prototype.update = function () {
     this.mMonsters.update();
     this.mMonsters.delete(this.mCamera);
     // Check if collision with anything
-
     var h = [];
     this.mMonsters.pixelTouches(this.mHero, this.mBulletSet, h);
 
