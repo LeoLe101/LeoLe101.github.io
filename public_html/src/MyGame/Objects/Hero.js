@@ -6,7 +6,7 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-var kWASDDelta = 0.5;
+var kWASDDelta = 0.45;
 
 function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBar) {
     this.kDelta = 0.2;
