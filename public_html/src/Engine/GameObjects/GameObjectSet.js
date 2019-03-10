@@ -81,12 +81,6 @@ GameObjectSet.prototype.update = function () {
     }
 };
 
-GameObjectSet.prototype.updateBullet = function (forward, boundStat) {
-    var i;
-    for (i = 0; i < this.mSet.length; i++) {
-        this.mSet[i].update(forward, boundStat);
-    }
-};
 
 /**
  * Draw function called by GameLoop calls all GameObject's in GameObjectSet

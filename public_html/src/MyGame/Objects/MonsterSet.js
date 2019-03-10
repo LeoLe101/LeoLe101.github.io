@@ -31,21 +31,26 @@ MonsterSet.prototype.pixelTouches = function (hero, bSet, h) {
     var bulletSet = bSet.getSet();
     var i, j;
     for (i = 0; i < this.mSet.length; i++) {
-        if (this.hasShaken[i]) continue;
         if (this.mSet[i].pixelTouches(hero, h)) {
             hero.hitByMonster(10);
-            // hero.shake(0.2, 0.2, 10, 100);
+            hero.shake(0.2, 0.1, 10, 30);
         }
     }
+
     // for (i = 0; i < this.mSet.length; i++) {
-    //     for (j = 0; j < bulletSet.length; j++) {
-    //         if (this.hasShaken[i]) continue;
-    //         if (this.mSet[i].pixelTouches(bulletSet[j].getSnow(), h)) {
-    //             bulletSet[j].shouldDelete();
-    //             this.mSet[i].shake(0.2, 0.2, 10, 100);
-    //             this.hasShaken[i] = true;
-    //         }
-    //     }
+        // for (j = 0; j < bulletSet.length; j++) {
+        //     if (this.hasShaken[i]) continue;
+
+        //     bulletSet[j].getSnow().processCollision(this.mSet);
+
+
+
+            // if (this.mSet[i].pixelTouches(bulletSet[j].getSnow(), h)) {
+            //     bulletSet[j].shouldDelete();
+            //     this.mSet[i].shake(0.2, 0.2, 10, 30);
+            //     this.hasShaken[i] = true;
+            // }
+        // }
     // }
 
 };

@@ -213,7 +213,7 @@ StartGame.prototype.update = function () {
         var bullet = new MagicBullet(this.mHero.getDirection(), heroXPos + 2, heroYPos - 2);
         this.mBulletSet.addToSet(bullet);
     }
-    this.mBulletSet.update(true, null);
+    this.mBulletSet.update();
     this.mBulletSet.delete(this.mCamera); // check if the bullet should be deleted or nah.
 
     // ----------------- Update Hero Light -----------------

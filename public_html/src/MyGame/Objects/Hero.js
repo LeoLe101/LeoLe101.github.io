@@ -58,6 +58,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBa
     r.setMass(2);
     r.setRestitution(0.5);
 
+    this.localShake = null;
     this.setRigidBody(r);
     //this.toggleDrawRenderable();
     //this.toggleDrawRigidShape();
@@ -81,6 +82,7 @@ Hero.prototype.update = function (healthBar) {
 
     this.keyControl();
     this.changeAnimation();
+    this.generalUpdate();
 
     if (this.gotHit) {
         this.healthBar = healthBar.getCurrentHP();
@@ -143,7 +145,7 @@ Hero.prototype.keyControl = function () {
 
     var xform = this.getXform();
     var delta = 0.2;
-    
+
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
         xform.incYPosBy(kWASDDelta);
     }

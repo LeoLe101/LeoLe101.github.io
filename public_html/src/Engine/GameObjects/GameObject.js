@@ -23,12 +23,12 @@ function GameObject(renderableObj) {
     this.mCurrentFrontDir = vec2.fromValues(0, 1);  // this is the current front direction of the object
     this.mRigidBody = null;
     this.mDrawRenderable = true;
-    this.mDrawRigidShape = false; 
-    
+    this.mDrawRigidShape = false;
+
     this.mShake = null;
 }
 
-GameObject.prototype.changeRenderable = function(renderableObj) {
+GameObject.prototype.changeRenderable = function (renderableObj) {
     this.mRenderComponent = renderableObj;
 };
 
@@ -86,15 +86,17 @@ GameObject.prototype.setRigidBody = function (r) {
     this.mRigidBody = r;
 };
 GameObject.prototype.getRigidBody = function () { return this.mRigidBody; };
-GameObject.prototype.toggleDrawRenderable = function() { 
-    this.mDrawRenderable = !this.mDrawRenderable; };
-GameObject.prototype.toggleDrawRigidShape = function() { 
-    this.mDrawRigidShape = !this.mDrawRigidShape; };
+GameObject.prototype.toggleDrawRenderable = function () {
+    this.mDrawRenderable = !this.mDrawRenderable;
+};
+GameObject.prototype.toggleDrawRigidShape = function () {
+    this.mDrawRigidShape = !this.mDrawRigidShape;
+};
 
 GameObject.prototype.update = function () {
     // simple default behavior
     if (this.mRigidBody !== null)
-            this.mRigidBody.update();
+        this.mRigidBody.update();
 };
 
 GameObject.prototype.draw = function (aCamera) {
@@ -112,14 +114,14 @@ GameObject.prototype.panTo = function (p) {
 
 GameObject.prototype.shake = function (xDelta, yDelta, shakeFrequency, duration) {
     var center = this.getXform().getCenter();
-    this.mShake = new Shake( center, xDelta, yDelta, shakeFrequency, duration);
+    this.mShake = new Shake(center, xDelta, yDelta, shakeFrequency, duration);
 };
 
 
-GameObject.prototype.generalUpdate = function() {
-    
+GameObject.prototype.generalUpdate = function () {
+
     this.getXform().updateInterpolation();
-    
+
     if (this.mShake !== null) {
         if (this.mShake.shakeDone()) {
             this.mShake = null;
@@ -139,6 +141,6 @@ GameObject.prototype.isObjectInViewport = function (camera) {
     var orX = camera.getWCCenter()[0];
     var orY = camera.getWCCenter()[1];
     //if (dcX <= 125 || dcX >= -25 || dcY <= 105 || dcY >= -35) return true;
-    return ((dcX >= orX - camera.getWCWidth()/2 - 20) &&
-            (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
+    return ((dcX >= orX - camera.getWCWidth() / 2 - 20) &&
+        (dcY >= orY - camera.getWCHeight()) && (dcY < orY + camera.getWCHeight()));
 };
