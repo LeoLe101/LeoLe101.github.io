@@ -93,7 +93,7 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kSky);
 
     if (this.mRestart === true) {
-        var nextLevel = new StartGame();  // restart the lvl
+        var nextLevel = new EndGame();  // restart the lvl
         gEngine.Core.startScene(nextLevel);
     } else {
         var nextLevel = new MyGame();  // go back to main menu
@@ -284,7 +284,7 @@ StartGame.prototype._initUI = function () {
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
     this.UITextBox = new UITextBox([500, 200], 6, 35, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
     
-    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Go Back", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
+    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
 
     // For testing
