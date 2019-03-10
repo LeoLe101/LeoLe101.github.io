@@ -21,6 +21,8 @@ function StartGame() {
     this.kCharacters_i = "assets/Game/characters_i.png";
     this.kMoon = "assets/Game/moon.png";
     this.kObstacle = "assets/Game/obstacle.png";
+    
+    this.LevelSelect = null;
 
     // The camera to view the scene
     this.mCamera = null;
@@ -35,6 +37,7 @@ function StartGame() {
     this.backButton = null;
     this.cameraFlip = false;
     this.endGame = false;
+    this.wonGame = false;
 
     this.prevTime = new Date();
     this.currTime = new Date();
@@ -93,8 +96,15 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kSky);
 
     if (this.mRestart === true) {
-        var nextLevel = new EndGame();  // restart the lvl
-        gEngine.Core.startScene(nextLevel);
+        if(this.LevelSelect==="GameOver"){
+            var nextLevel = new EndGame();  // restart the lvl
+            gEngine.Core.startScene(nextLevel);
+        }
+        else if(this.LevelSelect==="Win"){
+            var nextLevel = new WonGame();  // restart the lvl
+            gEngine.Core.startScene(nextLevel);
+        }
+        
     } else {
         var nextLevel = new MyGame();  // go back to main menu
         gEngine.Core.startScene(nextLevel);
@@ -205,7 +215,10 @@ StartGame.prototype.update = function () {
         this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0],
             this.sky.getXform().getYPos());  
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
-
+    } 
+    
+    if (this.mHero.getXform().getXPos() >= maxX) {
+        this.wonGame = true;
     }
     // ----------------- Update Moon Light -----------------
     var moonLight = vec2.clone(this.mMoon.getXform().getPosition());
@@ -262,9 +275,21 @@ StartGame.prototype.update = function () {
         this.currTime = new Date();
         if (this.currTime - this.prevTime >= 3000) {
             this.mRestart = true;
+            this.LevelSelect = "GameOver";
             gEngine.GameLoop.stop();
         }
-    } else {
+    } 
+    if (this.wonGame) {
+        var msg = "YOU WON!";
+        this.mMsg.setText(msg)
+        this.currTime = new Date();
+        if (this.currTime - this.prevTime >= 3000) {
+            this.mRestart = true;
+            this.LevelSelect = "Win";
+            gEngine.GameLoop.stop();
+        }
+    } 
+    else {
         this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
         var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
         this.mMsg.setText(msg)
