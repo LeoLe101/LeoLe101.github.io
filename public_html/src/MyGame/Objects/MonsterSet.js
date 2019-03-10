@@ -33,9 +33,8 @@ MonsterSet.prototype.pixelTouches = function (hero, bSet, h) {
     for (i = 0; i < this.mSet.length; i++) {
         if (this.hasShaken[i]) continue;
         if (this.mSet[i].pixelTouches(hero, h)) {
-            this.mSet[i].shake(0.2, 0.2, 10, 100);
-            this.hasShaken[i] = true;
             hero.hitByMonster(10);
+            // hero.shake(0.2, 0.2, 10, 100);
         }
     }
     // for (i = 0; i < this.mSet.length; i++) {

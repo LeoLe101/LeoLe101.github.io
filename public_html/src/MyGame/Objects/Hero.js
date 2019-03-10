@@ -8,28 +8,28 @@
 
 var kWASDDelta = 0.5;
 
-function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
+function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBar) {
     this.kDelta = 0.2;
-    
+
     this.kWidth = 8.78;
     this.kHeight = 10;
-    
+
     this.mHero = new LightRenderable(spriteTexture);
     this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(atX, atY);
     this.mHero.getXform().setSize(this.kWidth, this.kHeight);
 
-    this.healthBar = null;
+    this.healthBar = healthBar.getCurrentHP();
     this.gotHit = false;
 
     this.spriteTexture = spriteTexture;
     this.spriteTexture_i = spriteTexture_i;
 
     this.groundY = atY;
-    
+
     this.minX = 5;
     this.maxX = maxX - 5;
-    
+
     // Set Animation of the top or bottom wing minion{
     this.mHero.setSpriteSequence(905, 210,
         87.8, 100,
@@ -38,22 +38,22 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
 
     this.mHero.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateRight);
     this.mHero.setAnimationSpeed(1000000);
-    
+
     // Get some lights on this girl!
 
     this.light = this._createPointLight(atX, atY);
     lightSet.addToSet(this.light);
     this.mHero.addLight(this.light);
 
-    
+
     this.mHeroState = Hero.eHeroState.eFaceRight;
     this.mPreviousHeroState = Hero.eHeroState.eFaceRight;
 
     // show each element for mAnimSpeed updates
     GameObject.call(this, this.mHero);
-    
+
     this.getXform().changeRate(0.1);
-    
+
     var r = new RigidRectangle(this.getXform(), this.kWidth, this.kHeight);
     r.setMass(2);
     r.setRestitution(0.5);
@@ -70,7 +70,7 @@ Hero.prototype.update = function (healthBar) {
     this.mHero.updateAnimation();
 
     this.getXform().updateInterpolation();
-    
+
     if (this.mHeroState === Hero.eHeroState.eRunRight) {
         this.mHeroState = Hero.eHeroState.eFaceRight;
     } else if (this.mHeroState === Hero.eHeroState.eRunLeft) {
@@ -83,6 +83,7 @@ Hero.prototype.update = function (healthBar) {
     this.changeAnimation();
 
     if (this.gotHit) {
+        this.healthBar = healthBar.getCurrentHP();
         healthBar.incCurrentHP(-10);
         this.gotHit = false;
     }
@@ -132,17 +133,17 @@ Hero.prototype.changeAnimation = function () {
     }
 };
 
-Hero.prototype.getDirection = function() {
+Hero.prototype.getDirection = function () {
     if (this.mHeroState === Hero.eHeroState.eFaceLeft || this.mHeroState === Hero.eHeroState.eRunLeft) return 0;
     return 1;
 };
 
 
 Hero.prototype.keyControl = function () {
-    
+
     var xform = this.getXform();
     var delta = 0.4;
-    
+
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
         xform.incYPosBy(kWASDDelta);
     }
@@ -161,10 +162,10 @@ Hero.prototype.keyControl = function () {
             xform.incXPosBy(delta);
         }
     }
-    
+
     //this.getRigidBody().userSetsState();
-    
- };   
+
+};
 
 Hero.prototype._createPointLight = function (atX, atY) {
     var lgt = new Light();

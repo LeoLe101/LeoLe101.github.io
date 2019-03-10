@@ -58,6 +58,8 @@ function StartGame() {
     this.mObstacles = null;
 
     this.mMsg = null;
+    this.mRestart = false;
+    this.mWin = false;
 
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
@@ -83,7 +85,14 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kCharacters_i);
     gEngine.Textures.unloadTexture(this.kMoon);
     gEngine.Textures.unloadTexture(this.kObstacle);
-    gEngine.Core.startScene(new MyGame());
+
+    if (this.mRestart === true) {
+        var nextLevel = new StartGame();  // restart the lvl
+        gEngine.Core.startScene(nextLevel);
+    } else {
+        var nextLevel = new MyGame();  // go back to main menu
+        gEngine.Core.startScene(nextLevel);
+    }
 };
 
 StartGame.prototype.initialize = function () {
@@ -109,7 +118,7 @@ StartGame.prototype.initialize = function () {
 
     // init hero
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 2;
-    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet);
+    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet, this.UIhealthBar);
 
     // init bullet set
     this.mBulletSet = new MagicBulletSet();
@@ -187,7 +196,6 @@ StartGame.prototype.update = function () {
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
 
     }
-
     // ----------------- Update Moon Light -----------------
     var moonLight = vec2.clone(this.mMoon.getXform().getPosition());
     this.mGlobalLightSet.getLightAt(1).set2DPosition(moonLight);
@@ -196,7 +204,6 @@ StartGame.prototype.update = function () {
 
 
     // #region ----------------- Hero Support -------------------
-    this.mHero.update(this.UIhealthBar);
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
         var heroXPos = this.mHero.getXform().getXPos();
         var heroYPos = this.mHero.getXform().getYPos();
@@ -213,6 +220,8 @@ StartGame.prototype.update = function () {
     // ----------------- Check if hero is killed or not -----------------
     if (this.mHero.deleteYet()) {
         this.endGame = true;
+    } else {
+        this.mHero.update(this.UIhealthBar); // only update when hero is still alive
     }
     // #endregion
 
@@ -237,15 +246,18 @@ StartGame.prototype.update = function () {
 
     // #region ----------------- End Game -----------------
     if (this.endGame) {
-
+        var msg = "GAME OVER!";
+        this.mMsg.setText(msg)
+        this.currTime = new Date();
+        if (this.currTime - this.prevTime >= 3000) {
+            this.mRestart = true;
+            gEngine.GameLoop.stop();
+        }
+    } else {
+        this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
+        var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
+        this.mMsg.setText(msg)
     }
-    // #endregion
-
-
-    // #region ----------------- For Testing -----------------
-    this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
-    var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
-    this.mMsg.setText(msg)
     // #endregion
 };
 

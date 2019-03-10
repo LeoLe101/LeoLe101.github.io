@@ -83,32 +83,15 @@ Monster.prototype.update = function () {
     
     var heroXform = this.mHero.getXform();
     var Xform = this.getXform();
-    /*var distance = Xform.getXPos() - heroXform.getXPos();
-    if (distance > 10) {
-        var kDelta = 0.5;
-        if (distance > 0 ) kDelta = -0.5;
-        Xform.incXPosBy(kDelta);
-    }
 
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S)) {
-        this.shake(4, 0.2, 20, 300);
-    }*/
     this.generalUpdate();
     
     var newPosition = vec2.fromValues(heroXform.getXPos(), this.groundY);
     this.panTo(newPosition);
 
-    /*
+    
     if (this.mShake !== null)
         this.localShake = this.mShake;
-
-    if (this.localShake !== null && this.mShake === null)
-        this.shouldDestroy = true;
-
-    if (this.kDelta <= 0) {
-        this.kDelta = 0;
-        this.shouldDestroy = true;
-    }*/
     
     this.currX = this.getXform().getXPos();
     if (this.currX < this.prevX) {
