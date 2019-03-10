@@ -22,7 +22,7 @@ function MyGame() {
     this.ParticleButton = null;
     this.PhysicsButton = null;
     this.UIButton = null;
-    //this.UIText = null;
+    this.UIText = null;
     this.LevelSelect = null;
     
     this.bg = null;
@@ -66,7 +66,7 @@ MyGame.prototype.initialize = function () {
     this.ParticleButton = new UIButton(this.kUIButton,this.particleSelect,this,[400,400],[600,100],"Particle Demos",8,[1,1,1,1],[0,0,0,1]);
     this.PhysicsButton = new UIButton(this.kUIButton,this.physicsSelect,this,[400,200],[500,100],"Physics Demo",8,[1,1,1,1],[0,0,0,1]);
     this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[400,300],[320,160],"",8,[1,1,1,1],[0,0,0,1]);
-    //this.UIText = new UIText("Game Engine Tech Demo",[400,600],8,1,0,[0,0,0,1]);
+    this.UIText = new UIText("Magic Run",[400,500],8,1,0,[1,1,1,1]);
     
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
@@ -90,7 +90,7 @@ MyGame.prototype.draw = function () {
     //this.ParticleButton.draw(this.mCamera);
     //this.PhysicsButton.draw(this.mCamera);
     this.StartButton.draw(this.mCamera);
-    //this.UIText.draw(this.mCamera);
+    this.UIText.draw(this.mCamera);
 };
 
 MyGame.prototype.update = function () {
