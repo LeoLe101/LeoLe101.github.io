@@ -27,29 +27,27 @@ MonsterSet.prototype.addOther = function () {
     this.hasShaken.push(false);
 };
 
-/*MonsterSet.prototype.pixelTouches = function (otherObj, h) {
-    var patrolSet = otherObj.getSet();
+MonsterSet.prototype.pixelTouches = function (hero, bSet, h) {
+    var bulletSet = bSet.getSet();
     var i, j;
     for (i = 0; i < this.mSet.length; i++) {
-        for (j = 0; j < patrolSet.length; j++) {
+        if (this.hasShaken[i]) continue;
+        if (this.mSet[i].pixelTouches(hero, h)) {
+            this.mSet[i].shake(0.2, 0.2, 10, 100);
+            this.hasShaken[i] = true;
+            hero.hitByMonster(10);
+        }
+    }
+    for (i = 0; i < this.mSet.length; i++) {
+        for (j = 0; j < bulletSet.length; j++) {
             if (this.hasShaken[i]) continue;
-            if (this.mSet[i].pixelTouches(patrolSet[j].getHead(), h)) {
-                this.mSet[i].shake(4, 0.2, 20, 300);
+            if (this.mSet[i].pixelTouches(bulletSet[j], h)) {
+                this.mSet[i].shake(0.2, 0.2, 10, 100);
                 this.hasShaken[i] = true;
-                patrolSet[j].headHit();
-            }
-            if (this.mSet[i].pixelTouches(patrolSet[j].getWingTop(), h) ) {
-                this.mSet[i].shake(4, 0.2, 20, 300);
-                this.hasShaken[i] = true;
-                patrolSet[j].wingTopHit(0.2);
-            }
-            if (this.mSet[i].pixelTouches(patrolSet[j].getWingBot(), h) ) {
-                this.mSet[i].shake(4, 0.2, 20, 300);
-                this.hasShaken[i] = true;
-                patrolSet[j].wingBotHit(0.2);
+                // bulletSet[j].headHit();
             }
         }
     }
-};*/
+};
 
 

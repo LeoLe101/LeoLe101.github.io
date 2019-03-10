@@ -26,8 +26,10 @@ function StartGame() {
     this.bgs = null;
     this.UIText = null;
     this.UITextBox = null;
+    this.UIhealthBar = null; 
     this.backButton = null;
     this.cameraFlip = false;
+    this.endGame = false;
 
     this.prevTime = new Date();
     this.currTime = new Date();
@@ -127,6 +129,7 @@ StartGame.prototype.draw = function () {
     }
     this.UIText.draw(this.mCamera);
     this.backButton.draw(this.mCamera);
+    this.UIhealthBar.draw(this.mCamera);
 
     this.mMonsters.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
@@ -140,11 +143,10 @@ StartGame.prototype.draw = function () {
 
 StartGame.prototype.update = function () {
 
-    this.mHero.update();
-    this.mMonsters.update();
-    this.mMoon.update();
     this.backButton.update();
-
+    this.UIhealthBar.update();
+    // #region ----------------- Moon Interpolation -----------------
+    this.mMoon.update();
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() - 15;
     if (this.mHero.getXform().getXPos() > 50 && this.mHero.getXform().getXPos() < maxX) {
         this.mCamera.panTo(this.mHero.getXform().getXPos(), this.mCamera.getWCCenter()[1]);
@@ -153,16 +155,15 @@ StartGame.prototype.update = function () {
             this.mMoon.getXform().getYPos());
     }
 
-    // Update Hero Light
-    var heroLight = vec2.clone(this.mHero.getXform().getPosition());
-    this.mGlobalLightSet.getLightAt(0).set2DPosition(heroLight);
-
-    // Update Moon Light
+    // ----------------- Update Moon Light -----------------
     var moonLight = vec2.clone(this.mMoon.getXform().getPosition());
     this.mGlobalLightSet.getLightAt(1).set2DPosition(moonLight);
     this.mCamera.update();
+    // #endregion
 
-    // Hero shoot bullet
+
+    // #region ----------------- Hero Support -------------------
+    this.mHero.update(this.UIhealthBar);
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
         var heroXPos = this.mHero.getXform().getXPos();
         var heroYPos = this.mHero.getXform().getYPos();
@@ -172,7 +173,18 @@ StartGame.prototype.update = function () {
     this.mBulletSet.update(true, null);
     this.mBulletSet.delete(this.mCamera); // check if the bullet should be deleted or nah.
 
-    // Randomly spawn Monster
+    // ----------------- Update Hero Light -----------------
+    var heroLight = vec2.clone(this.mHero.getXform().getPosition());
+    this.mGlobalLightSet.getLightAt(0).set2DPosition(heroLight);
+
+    // ----------------- Check if hero is killed or not -----------------
+    if (this.mHero.deleteYet()) {
+        this.endGame = true;
+    }
+    // #endregion
+
+
+    // #region ----------------- Randomly spawn Monster -----------------
     this.currTime = new Date();
     if (this.currTime - this.prevTime >= this.time) {
         var monsterType = Math.floor(Math.random() * Math.floor(4));
@@ -182,11 +194,26 @@ StartGame.prototype.update = function () {
         this.prevTime = this.currTime;
         this.time = 1000 + Math.random() * 4000;
     }
+    this.mMonsters.update();
+    this.mMonsters.delete(this.mCamera);
+    // Check if collision with anything
+    // var h = [];
+    // this.mMonsters.pixelTouches(this.mHero, this.mBulletSet, h);
+    // #endregion
 
-    // For Testing
-    this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0] + 30, this.mHero.getXform().getPosition()[1] + 20);
-    var msg = "Bullet=" + this.mBulletSet.size() + " ";
+
+    // #region ----------------- End Game -----------------
+    if (this.endGame) {
+        
+    }
+    // #endregion
+
+
+    // #region ----------------- For Testing -----------------
+    this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
+    var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
     this.mMsg.setText(msg)
+    // #endregion
 };
 
 StartGame.prototype.UITextBoxTest = function () {
@@ -201,7 +228,7 @@ StartGame.prototype._initUI = function () {
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
     this.UITextBox = new UITextBox([500, 200], 6, 35, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
     this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 20], [160, 40], "Go Back", 4, [1, 1, 1, 1], [1, 1, 1, 1]);
-
+    this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
     // For testing
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([1, 1, 1, 1]);

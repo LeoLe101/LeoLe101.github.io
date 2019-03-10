@@ -16,7 +16,10 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
     this.mHero.setColor([1, 1, 1, 0]);
     this.mHero.getXform().setPosition(atX, atY);
     this.mHero.getXform().setSize(this.kWidth, this.kHeight);
-    
+
+    this.healthBar = null;
+    this.gotHit = false;
+
     this.spriteTexture = spriteTexture;
     this.spriteTexture_i = spriteTexture_i;
 
@@ -49,7 +52,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet) {
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
-Hero.prototype.update = function () {
+Hero.prototype.update = function (healthBar) {
 
     GameObject.prototype.update.call(this); // Move the Hero forward
     this.mHero.updateAnimation();
@@ -80,15 +83,20 @@ Hero.prototype.update = function () {
     }
     this.light.set2DPosition(this.getXform().getPosition());
     this.changeAnimation();
+
+    if (this.gotHit) {
+        healthBar.incCurrentHP(-10);
+        this.gotHit = false;
+    }
 };
 
 Hero.prototype.hitByMonster = function (delta) {
-    this.mCurrAlphaChannel += delta;
-    this.mHero.setColor([1, 1, 1, this.mCurrAlphaChannel]);
+    this.healthBar -= delta;
+    this.gotHit = true;
 };
 
 Hero.prototype.deleteYet = function () {
-    return (this.mCurrAlphaChannel >= 1);
+    return (this.healthBar <= 0);
 };
 
 Hero.eHeroState = Object.freeze({
