@@ -37,6 +37,7 @@ function StartGame() {
     this.UITextGoal2 = null;
     this.UITextGoal3 = null;
     this.UITextBox = null;
+    this.UITextBox1 = null;
     this.UIhealthBar = null;
     this.backButton = null;
 
@@ -53,6 +54,7 @@ function StartGame() {
     // Hero
     this.mHero = null;
     this.mHeroStartPos = null;
+    this.mHeroAbleToShoot = false;
 
     // Magic Bullet
     this.mBulletSet = null;
@@ -70,6 +72,7 @@ function StartGame() {
     
     //Bush
     this.mBush = null;
+    this.mBigBush = null;
 
     this.mObstacles = null;
 
@@ -160,9 +163,13 @@ StartGame.prototype.initialize = function () {
     this.mObstacles = new ObstacleSet();
     
     this.mBush = new LightRenderable(this.kBush);
-    this.mBush.getXform().setSize(48, 27);
-    this.mBush.getXform().setPosition(80, 28);
+    this.mBush.getXform().setSize(48, 25);
+    this.mBush.getXform().setPosition(80, 29);
     this.bushDelta = this.mBush.getXform().getXPos() - this.mCamera.getWCCenter()[0];
+    
+    this.mBigBush = new LightRenderable(this.kBush);
+    this.mBigBush.getXform().setSize(48, 30);
+    this.mBigBush.getXform().setPosition(80, 31);
 
     //setting floor
     var obstacle = new Obstacle(50, 11, 100, 13.75, 0, .9, this.kObstacle, this.mHero, true);
@@ -173,8 +180,8 @@ StartGame.prototype.initialize = function () {
     var minPos = 30;
     for (var i = 0; i < 50; i++) {
         var randX = minPos + Math.random() * 50;
-        var Y = 28;
-        if (0.3 < Math.random() <= 0.6) Y = 31;
+        var Y = 29;
+        if (0.3 < Math.random() <= 0.6) Y = 32;
         if (Math.random() > 0.6) Y = 35;
         var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle);
@@ -197,11 +204,13 @@ StartGame.prototype.draw = function () {
         this.bgs[i].draw(this.mCamera);
     }
     this.UIText.draw(this.mCamera);
+
     //this.UITextBox.draw(this.mCamera);
+
     this.backButton.draw(this.mCamera);
     this.UIhealthBar.draw(this.mCamera);
-  
-    
+
+
     if (this.mHero.getXform().getXPos() < (this.mHeroStartPos + 50)) {
         this.UITextGoal1.draw(this.mCamera);
     } else if (this.mHero.getXform().getXPos() < (this.mHeroStartPos + 100)) {
@@ -218,10 +227,16 @@ StartGame.prototype.draw = function () {
 
     this.mObstacles.draw(this.mCamera);
     
-    this.mBush.draw(this.mCamera);
+    if (!this.mHeroAbleToShoot) {
+        //this.UITextBox.draw(this.mCamera);
+        this.mBush.draw(this.mCamera);
+    } else {
+        //this.UITextBox1.draw(this.mCamera);
+        this.mBigBush.draw(this.mCamera);
+    }
 
     // For Testing:
-    this.mMsg.draw(this.mCamera);   // only draw status in the main camera
+    // this.mMsg.draw(this.mCamera);   // only draw status in the main camera
 };
 
 StartGame.prototype.update = function () {
@@ -230,7 +245,11 @@ StartGame.prototype.update = function () {
     this.mObstacles.update();
     this.backButton.update();
     this.UIhealthBar.update();
-    this.UITextBox.update(this.mCamera);
+    if (!this.mHeroAbleToShoot) {
+        this.UITextBox.update(this.mCamera);
+    } else {
+        this.UITextBox1.update(this.mCamera);
+    }
 
     // #region ----------------- Moon Interpolation -----------------
     this.mMoon.update();
@@ -245,6 +264,8 @@ StartGame.prototype.update = function () {
             this.sky.getXform().getYPos());
         this.mBush.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.bushDelta,
             this.mBush.getXform().getYPos());
+        this.mBigBush.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.bushDelta,
+            this.mBigBush.getXform().getYPos());
             
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
     }
@@ -259,7 +280,10 @@ StartGame.prototype.update = function () {
     // #endregion
 
     // #region ----------------- Hero Support -------------------
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.K)) {
+        this.mHeroAbleToShoot = !this.mHeroAbleToShoot;
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space) && this.mHeroAbleToShoot) {
         var heroXPos = this.mHero.getXform().getXPos();
         var heroYPos = this.mHero.getXform().getYPos();
         var bullet = new MagicBullet(this.mHero.getDirection(), heroXPos + 2, heroYPos - 2);
@@ -322,13 +346,13 @@ StartGame.prototype.update = function () {
         }
     }
     else {
-        this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
-        var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
-        this.mMsg.setText(msg)
+        // this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
+        // var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
+        // this.mMsg.setText(msg)
     }
     // #endregion
 
-    
+
 };
 
 StartGame.prototype.UITextBoxTest = function () {
@@ -342,10 +366,12 @@ StartGame.prototype.backSelect = function () {
 StartGame.prototype._initUI = function () {
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
     this.UITextGoal1 = new UIText("Try to survive and reach the end of this forest!", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
-    this.UITextGoal2 = new UIText("Oh dear, what is this face blocking the screen??!!", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
+    this.UITextGoal2 = new UIText("Oh dear, what is this bush blocking the screen??!!", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
     this.UITextGoal3 = new UIText("Oh well, gotta deal with it...", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
     this.UITextBox = new UITextBox([520, 250], 20, 40, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
     this.UITextBox.setText(":))");
+    this.UITextBox1 = new UITextBox([500, 350], 30, 50, [1, 1, 1, 1], [1, 0, 0, 1], this.UITextBoxTest, this);
+    this.UITextBox1.setText(":(");
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
     this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
