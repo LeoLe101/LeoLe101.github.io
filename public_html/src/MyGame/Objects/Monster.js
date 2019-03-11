@@ -13,9 +13,10 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
 
     this.mHero = hero; //follow hero
     this.mMonster = null;
-
     this.mType = type;
+    this.healthBar = 100;
 
+    this.gotHit = false;
     this.groundY = atY;
 
     this.spriteTexture = spriteTexture;
@@ -109,8 +110,22 @@ Monster.prototype.update = function () {
     }
     this.prevX = this.currX;
 
+    if (this.gotHit) {
+        if (this.healthBar <= 0) {
+            this.destroy();
+        } else {
+            this.healthBar -= Math.floor((Math.random() * 100) + 20);;
+            this.gotHit = false;
+        }
+    }
+
     this.changeAnimation();
 
+};
+
+Monster.prototype.hitByBullet = function (delta) {
+    this.healthBar -= delta;
+    this.gotHit = true;
 };
 
 Monster.prototype.shouldDelete = function () {

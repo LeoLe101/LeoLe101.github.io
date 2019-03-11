@@ -273,7 +273,7 @@ StartGame.prototype.update = function () {
         var msg = "GAME OVER!";
         this.mMsg.setText(msg)
         this.currTime = new Date();
-        if (this.currTime - this.prevTime >= 3000) {
+        if (this.currTime - this.prevTime >= 2000) {
             this.mRestart = true;
             this.LevelSelect = "GameOver";
             gEngine.GameLoop.stop();
@@ -283,7 +283,7 @@ StartGame.prototype.update = function () {
         var msg = "YOU WON!";
         this.mMsg.setText(msg)
         this.currTime = new Date();
-        if (this.currTime - this.prevTime >= 3000) {
+        if (this.currTime - this.prevTime >= 2000) {
             this.mRestart = true;
             this.LevelSelect = "Win";
             gEngine.GameLoop.stop();
