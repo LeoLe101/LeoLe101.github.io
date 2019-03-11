@@ -29,12 +29,16 @@ function StartGame() {
     this.bg = null;
     this.bgs = null;
     this.sky = null;
+
+    // UI Stuffs
     this.UIText = null;
+    this.UITextGoal1 = null;
+    this.UITextGoal2 = null;
+    this.UITextGoal3 = null;
     this.UITextBox = null;
-
     this.UIhealthBar = null;
-
     this.backButton = null;
+
     this.cameraFlip = false;
     this.endGame = false;
     this.wonGame = false;
@@ -47,6 +51,7 @@ function StartGame() {
 
     // Hero
     this.mHero = null;
+    this.mHeroStartPos = null;
 
     // Magic Bullet
     this.mBulletSet = null;
@@ -135,7 +140,7 @@ StartGame.prototype.initialize = function () {
     // init hero
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 2;
     this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet, this.UIhealthBar);
-
+    this.mHeroStartPos = this.mHero.getXform().getXPos();
     // init bullet set
     this.mBulletSet = new MagicBulletSet();
 
@@ -181,8 +186,18 @@ StartGame.prototype.draw = function () {
         this.bgs[i].draw(this.mCamera);
     }
     this.UIText.draw(this.mCamera);
+    this.UITextBox.draw(this.mCamera);
     this.backButton.draw(this.mCamera);
     this.UIhealthBar.draw(this.mCamera);
+  
+    
+    if (this.mHero.getXform().getXPos() < (this.mHeroStartPos + 50)) {
+        this.UITextGoal1.draw(this.mCamera);
+    } else if (this.mHero.getXform().getXPos() < (this.mHeroStartPos + 100)) {
+        this.UITextGoal2.draw(this.mCamera);
+    } else if (this.mHero.getXform().getXPos() < (this.mHeroStartPos + 150)) {
+        this.UITextGoal3.draw(this.mCamera);
+    }
 
     this.mMonsters.draw(this.mCamera);
     this.mHero.draw(this.mCamera);
@@ -201,8 +216,9 @@ StartGame.prototype.update = function () {
     this.sky.update();
     this.mObstacles.update();
     this.backButton.update();
-
     this.UIhealthBar.update();
+    this.UITextBox.update(this.mCamera);
+
     // #region ----------------- Moon Interpolation -----------------
     this.mMoon.update();
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() - 15;
@@ -296,6 +312,7 @@ StartGame.prototype.update = function () {
     }
     // #endregion
 
+    
 };
 
 StartGame.prototype.UITextBoxTest = function () {
@@ -308,10 +325,13 @@ StartGame.prototype.backSelect = function () {
 
 StartGame.prototype._initUI = function () {
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
-    this.UITextBox = new UITextBox([500, 200], 6, 35, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
-
-    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
+    this.UITextGoal1 = new UIText("Try to survive and reach the end of this forest!", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
+    this.UITextGoal2 = new UIText("Oh dear, what is this face blocking the screen??!!", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
+    this.UITextGoal3 = new UIText("Oh well, gotta deal with it...", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
+    this.UITextBox = new UITextBox([520, 250], 20, 40, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
+    this.UITextBox.setText(":))");
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
+    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
     // For testing
     this.mMsg = new FontRenderable("Status Message");

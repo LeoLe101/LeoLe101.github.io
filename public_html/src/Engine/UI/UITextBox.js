@@ -36,7 +36,7 @@ function UITextBox(position, textSize, width, color, textColor, callback, contex
     this.line.setDrawVertices(false);
     this.line.getXform().setZPos(3);
     this.line.setColor(textColor);
-    this.mEnteredValue="";
+    this.mEnteredValue=":))";
     this.timer=0;
 }
 
@@ -57,20 +57,20 @@ UITextBox.prototype.update = function(aCamera){
     var mouseOver = b.containsPoint(mousePos[0], mousePos[1]);
     
 
-    //start simple, just do callback when clicked
-    if(gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)){
-        if(mouseOver){
-            this.mActive = true;
-            this.line.setShowLine(true);
-            this.line.setDrawVertices(true);
-        }
-        else{
-            this.mActive = false;
-            this.timer=0;
-            this.line.setShowLine(false);
-            this.line.setDrawVertices(false);
-        }
-    }
+    // start simple, just do callback when clicked
+    // if(gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)){
+        // if(mouseOver){
+            // this.mActive = true;
+            // this.line.setShowLine(true);
+            // this.line.setDrawVertices(true);
+    //     }
+    //     else{
+    //         this.mActive = false;
+    //         this.timer=0;
+    //         this.line.setShowLine(false);
+    //         this.line.setDrawVertices(false);
+    //     }
+    // }
     if(this.mActive===true){
         this.keyCheck();
         this.timer++;

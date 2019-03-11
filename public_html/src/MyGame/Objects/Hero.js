@@ -93,6 +93,7 @@ Hero.prototype.update = function (healthBar) {
 };
 
 Hero.prototype.hitByMonster = function (delta) {
+    this.getXform().incXPosBy(-5);
     this.healthBar -= delta;
     this.gotHit = true;
 };

@@ -23,8 +23,6 @@ function MagicBullet(dir, atX, atY) {
     this.mFlagForward = dir;
 
     this.mBulletBoundPos = [atX, atY];
-    this.mBulletBoundW = 3;
-    this.mBulletBoundH = 3;
 
     this.mHit = false;
     this.mDestroy = false;
@@ -37,15 +35,7 @@ function MagicBullet(dir, atX, atY) {
 
 /** Private */
 MagicBullet.prototype._initialize = function () {
-    // // sets the background to gray
-    // gEngine.DefaultResources.setGlobalAmbientIntensity(3);
-    this.mBox = new BoundingBox(this.mBulletBoundPos, this.mBulletBoundW, this.mBulletBoundH);
     this.mSnow = new Snow(this.mBulletBoundPos[0], this.mBulletBoundPos[1], 1, 0, 3, 0, -1, 5, 4, 0, 4.5, 1);
-};
-
-
-MagicBullet.prototype._configBound = function () {
-    this.mBox.setBounds(this.mBulletBoundPos, this.mBulletBoundW, this.mBulletBoundH);
 };
 
 /** Public */
@@ -63,10 +53,7 @@ MagicBullet.prototype.update = function () {
         }
         if (this.mSnow.getPos()[0] === (this.mBulletBoundPos[0] + 20)) {
             this.shouldSplash();
-            this.currTime = new Date();
-            if (this.currTime - this.prevTime >= 1000) {
-                this.mDestroy = true;
-            }
+            this.destroy();
         }
     } else {
         if (!this.mHit) {
@@ -75,26 +62,20 @@ MagicBullet.prototype.update = function () {
         }
         if (this.mSnow.getPos()[0] === (this.mBulletBoundPos[0] - 20)) {
             this.shouldSplash();
-            this.currTime = new Date();
-            if (this.currTime - this.prevTime >= 1000) {
-                this.mDestroy = true;
-            }
+            this.destroy();
         }
     }
 
     if (this.mHit) {
-        this.currTime = new Date();
-        if (this.currTime - this.prevTime >= 1000) {
-            this.mDestroy = true;
-        }
+        this.destroy();
     }
-
-    // Update bounding box when bullet move
-    this._configBound();
 };
 
-MagicBullet.prototype.collideOther = function (boundingBox) {
-    return this.mBox.boundCollideStatus(boundingBox);
+MagicBullet.prototype.destroy = function () {
+    this.currTime = new Date();
+    if (this.currTime - this.prevTime >= 1000) {
+        this.mDestroy = true;
+    }
 };
 
 MagicBullet.prototype.shouldDelete = function () {
