@@ -56,8 +56,8 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBa
 
     //add rigidbody
     var r = new RigidRectangle(this.getXform(), this.kWidth, this.kHeight);
-    r.setMass(2);
-    r.setRestitution(0.5);
+    r.setMass(20);
+    r.setRestitution(50);
 
     this.localShake = null;
     this.setRigidBody(r);
