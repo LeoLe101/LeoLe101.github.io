@@ -36,6 +36,7 @@ function StartGame() {
     this.UITextGoal2 = null;
     this.UITextGoal3 = null;
     this.UITextBox = null;
+    this.UITextBox1 = null;
     this.UIhealthBar = null;
     this.backButton = null;
 
@@ -52,6 +53,7 @@ function StartGame() {
     // Hero
     this.mHero = null;
     this.mHeroStartPos = null;
+    this.mHeroAbleToShoot = false;
 
     // Magic Bullet
     this.mBulletSet = null;
@@ -186,17 +188,22 @@ StartGame.prototype.draw = function () {
         this.bgs[i].draw(this.mCamera);
     }
     this.UIText.draw(this.mCamera);
-    this.UITextBox.draw(this.mCamera);
     this.backButton.draw(this.mCamera);
     this.UIhealthBar.draw(this.mCamera);
-  
-    
+
+
     if (this.mHero.getXform().getXPos() < (this.mHeroStartPos + 50)) {
         this.UITextGoal1.draw(this.mCamera);
     } else if (this.mHero.getXform().getXPos() < (this.mHeroStartPos + 100)) {
         this.UITextGoal2.draw(this.mCamera);
     } else if (this.mHero.getXform().getXPos() < (this.mHeroStartPos + 150)) {
         this.UITextGoal3.draw(this.mCamera);
+    }
+
+    if (!this.mHeroAbleToShoot) {
+        this.UITextBox.draw(this.mCamera);
+    } else {
+        this.UITextBox1.draw(this.mCamera);
     }
 
     this.mMonsters.draw(this.mCamera);
@@ -217,7 +224,11 @@ StartGame.prototype.update = function () {
     this.mObstacles.update();
     this.backButton.update();
     this.UIhealthBar.update();
-    this.UITextBox.update(this.mCamera);
+    if (!this.mHeroAbleToShoot) {
+        this.UITextBox.update(this.mCamera);
+    } else {
+        this.UITextBox1.update(this.mCamera);
+    }
 
     // #region ----------------- Moon Interpolation -----------------
     this.mMoon.update();
@@ -243,7 +254,10 @@ StartGame.prototype.update = function () {
     // #endregion
 
     // #region ----------------- Hero Support -------------------
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.K)) {
+        this.mHeroAbleToShoot = true;
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space) && this.mHeroAbleToShoot) {
         var heroXPos = this.mHero.getXform().getXPos();
         var heroYPos = this.mHero.getXform().getYPos();
         var bullet = new MagicBullet(this.mHero.getDirection(), heroXPos + 2, heroYPos - 2);
@@ -306,13 +320,13 @@ StartGame.prototype.update = function () {
         }
     }
     else {
-        this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
-        var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
-        this.mMsg.setText(msg)
+        // this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
+        // var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
+        // this.mMsg.setText(msg)
     }
     // #endregion
 
-    
+
 };
 
 StartGame.prototype.UITextBoxTest = function () {
@@ -330,6 +344,8 @@ StartGame.prototype._initUI = function () {
     this.UITextGoal3 = new UIText("Oh well, gotta deal with it...", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
     this.UITextBox = new UITextBox([520, 250], 20, 40, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
     this.UITextBox.setText(":))");
+    this.UITextBox1 = new UITextBox([500, 350], 30, 50, [1, 1, 1, 1], [1, 0, 0, 1], this.UITextBoxTest, this);
+    this.UITextBox1.setText(":(");
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
     this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
