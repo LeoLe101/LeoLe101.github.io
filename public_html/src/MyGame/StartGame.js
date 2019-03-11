@@ -21,6 +21,7 @@ function StartGame() {
     this.kCharacters_i = "assets/Game/characters_i.png";
     this.kMoon = "assets/Game/moon.png";
     this.kObstacle = "assets/Game/obstacle.png";
+    this.kBush = "assets/Game/bush.png";
 
     this.LevelSelect = null;
 
@@ -89,6 +90,7 @@ StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kMoon);
     gEngine.Textures.loadTexture(this.kObstacle);
     gEngine.Textures.loadTexture(this.kSky);
+    gEngine.Textures.loadTexture(this.kBush);
 };
 
 StartGame.prototype.unloadScene = function () {
@@ -101,6 +103,7 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kMoon);
     gEngine.Textures.unloadTexture(this.kObstacle);
     gEngine.Textures.unloadTexture(this.kSky);
+    gEngine.Textures.unloadTexture(this.kBush);
 
     if (this.mRestart === true) {
         if (this.LevelSelect === "GameOver") {
