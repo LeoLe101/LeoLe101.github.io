@@ -134,7 +134,7 @@ StartGame.prototype.initialize = function () {
 
     // init hero
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 2;
-    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet, this.UIhealthBar);
+    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 27, maxX, this.mGlobalLightSet, this.UIhealthBar);
 
     // init bullet set
     this.mBulletSet = new MagicBulletSet();
@@ -149,7 +149,7 @@ StartGame.prototype.initialize = function () {
     this.mObstacles = new ObstacleSet();
 
     //setting floor
-    var obstacle = new Obstacle(50, 9, 100, 13.75, 0, .9, this.kObstacle, this.mHero, true);
+    var obstacle = new Obstacle(50, 11, 100, 13.75, 0, .9, this.kObstacle, this.mHero, true);
     this.mObstacles.addToSet(obstacle);
 
     //100*10 = 1000
@@ -157,9 +157,9 @@ StartGame.prototype.initialize = function () {
     var minPos = 30;
     for (var i = 0; i < 50; i++) {
         var randX = minPos + Math.random() * 50;
-        var Y = 25;
-        if (0.3 < Math.random() <= 0.6) Y = 28.5;
-        if (Math.random() > 0.6) Y = 32;
+        var Y = 28;
+        if (0.3 < Math.random() <= 0.6) Y = 31;
+        if (Math.random() > 0.6) Y = 35;
         var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle);
         minPos = randX + 10;
@@ -254,7 +254,7 @@ StartGame.prototype.update = function () {
     if (this.currTime - this.prevTime >= this.time) {
         var monsterType = Math.floor(Math.random() * Math.floor(4));
         var monsterOrigin = this.mCamera.getWCCenter()[0] + this.mCamera.getWCWidth() / 2 + 5;
-        var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 21, monsterType);
+        var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 22.7, monsterType);
         this.mMonsters.addToSet(monster);
         this.prevTime = this.currTime;
         this.time = 3000 + Math.random() * 4000;

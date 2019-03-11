@@ -6,9 +6,14 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-var kWASDDelta = 0.45;
+var kWASDDelta = 0.9;
+var delta = 0.4;
 
 function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBar) {
+    
+    var max = 4;
+    this.keySettings = Math.floor(Math.random() * (max + 1));
+    
     this.kDelta = 0.2;
 
     this.kWidth = 8.78;
@@ -144,25 +149,91 @@ Hero.prototype.getDirection = function () {
 
 Hero.prototype.keyControl = function () {
 
-    var xform = this.getXform();
-    var delta = 0.4;
-    
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
-        xform.incYPosBy(kWASDDelta);
+        //xform.incYPosBy(kWASDDelta);
+        switch (this.keySettings) {
+            case 0:
+                this.goDown();
+                break;
+            case 1:
+                this.goRight();
+                break;
+            case 2:
+                this.goLeft();
+                break;
+            case 3:
+                this.goDown();
+                break;
+            default:
+                this.goLeft();
+                break; 
+        }
+            
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
-        xform.incYPosBy(-kWASDDelta);;
+        //xform.incYPosBy(-kWASDDelta);
+        switch (this.keySettings) {
+            case 0:
+                this.goRight();
+                break;
+            case 1:
+                this.goLeft();
+                break;
+            case 2:
+                this.goRight();
+                break;
+            case 3:
+                this.goLeft();
+                break;
+            default:
+                this.goUp();
+                break; 
+        }
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
-        this.mHeroState = Hero.eHeroState.eRunLeft;
+        /*this.mHeroState = Hero.eHeroState.eRunLeft;
         if (xform.getXPos() >= this.minX) {
             xform.incXPosBy(-delta);
+        }*/
+        switch (this.keySettings) {
+            case 0:
+                this.goUp();
+                break;
+            case 1:
+                this.goDown();
+                break;
+            case 2:
+                this.goUp();
+                break;
+            case 3:
+                this.goRight();
+                break;
+            default:
+                this.goDown();
+                break; 
         }
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
-        this.mHeroState = Hero.eHeroState.eRunRight;
+        /*this.mHeroState = Hero.eHeroState.eRunRight;
         if (xform.getXPos() <= this.maxX) {
             xform.incXPosBy(delta);
+        }*/
+        switch (this.keySettings) {
+            case 0:
+                this.goLeft();
+                break;
+            case 1:
+                this.goUp();
+                break;
+            case 2:
+                this.goDown();
+                break;
+            case 3:
+                this.goUp();
+                break;
+            default:
+                this.goRight();
+                break; 
         }
     }
 
@@ -170,6 +241,35 @@ Hero.prototype.keyControl = function () {
 
 };
 
+Hero.prototype.goUp = function () {
+    var xform = this.getXform();
+    xform.incYPosBy(kWASDDelta);
+};
+
+Hero.prototype.goDown = function () {
+    var xform = this.getXform();
+    if (xform.getYPos() >= this.groundY) {
+        xform.incYPosBy(-kWASDDelta);
+    }
+};
+
+Hero.prototype.goLeft = function () {
+    var xform = this.getXform();
+    this.mHeroState = Hero.eHeroState.eRunLeft;
+    if (xform.getXPos() >= this.minX) {
+        xform.incXPosBy(-delta);
+    }
+};
+
+Hero.prototype.goRight = function () {
+    var xform = this.getXform();
+    this.mHeroState = Hero.eHeroState.eRunRight;
+    if (xform.getXPos() <= this.maxX) {
+        xform.incXPosBy(delta);
+    }
+};
+
+    
 Hero.prototype._createPointLight = function (atX, atY) {
     var lgt = new Light();
     lgt.setLightType(0);
