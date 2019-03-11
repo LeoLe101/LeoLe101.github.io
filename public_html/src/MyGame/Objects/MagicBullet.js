@@ -57,20 +57,20 @@ MagicBullet.prototype.update = function () {
     gEngine.ParticleSystem.update(this.mSnow);
 
     if (this.mFlagForward) {
-        this.mSnow.setxAcceleration(this.mSnowForWard);
-        this.mSnow.setPos(this.mSnow.getPos()[0] += this.mDelta, this.mSnow.getPos()[1]);
+        if (!this.mHit) {
+            this.mSnow.setxAcceleration(this.mSnowForWard);
+            this.mSnow.setPos(this.mSnow.getPos()[0] += this.mDelta, this.mSnow.getPos()[1]);
+        }
     } else {
-        this.mSnow.setxAcceleration(this.mSnowBackWard);
-        this.mSnow.setPos(this.mSnow.getPos()[0] -= this.mDelta, this.mSnow.getPos()[1]);
+        if (!this.mHit) {
+            this.mSnow.setxAcceleration(this.mSnowBackWard);
+            this.mSnow.setPos(this.mSnow.getPos()[0] -= this.mDelta, this.mSnow.getPos()[1]);
+        }
     }
 
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.A)) {
         this.shouldSplash();
     }
-
-    // if (this.mHit) {
-    //     this.shouldSplash();
-    // }
 
     // Update bounding box when bullet move
     this._configBound();
@@ -88,6 +88,8 @@ MagicBullet.prototype.shouldSplash = function () {
     this.mDelta = 0;
     this.mSnowForWard = 0;
     this.mSnowBackWard = 0;
+    this.mHit = true;
+    this.mDestroy = true;
 };
 
 MagicBullet.prototype.isBulletInViewport = function (camera) {

@@ -16,23 +16,28 @@ function StartGame() {
     this.kUIButton = "assets/Game/button.png";
     this.kBG = "assets/Game/forest.png";
     this.kBG_i = "assets/Game/forest_i.png";
+    this.kSky = "assets/Game/sky.png";
     this.kCharacters = "assets/Game/characters.png";
     this.kCharacters_i = "assets/Game/characters_i.png";
     this.kMoon = "assets/Game/moon.png";
     this.kObstacle = "assets/Game/obstacle.png";
 
+    this.LevelSelect = null;
+
     // The camera to view the scene
     this.mCamera = null;
     this.bg = null;
     this.bgs = null;
+    this.sky = null;
     this.UIText = null;
     this.UITextBox = null;
 
-    this.UIhealthBar = null; 
+    this.UIhealthBar = null;
 
     this.backButton = null;
     this.cameraFlip = false;
     this.endGame = false;
+    this.wonGame = false;
 
     this.prevTime = new Date();
     this.currTime = new Date();
@@ -44,7 +49,7 @@ function StartGame() {
     this.mHero = null;
 
     // Magic Bullet
-    this.mBulletSetSet = null;
+    this.mBulletSet = null;
 
     // Monsters
     this.mMonsters = null;
@@ -76,6 +81,7 @@ StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kCharacters_i);
     gEngine.Textures.loadTexture(this.kMoon);
     gEngine.Textures.loadTexture(this.kObstacle);
+    gEngine.Textures.loadTexture(this.kSky);
 };
 
 StartGame.prototype.unloadScene = function () {
@@ -87,10 +93,18 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kCharacters_i);
     gEngine.Textures.unloadTexture(this.kMoon);
     gEngine.Textures.unloadTexture(this.kObstacle);
+    gEngine.Textures.unloadTexture(this.kSky);
 
     if (this.mRestart === true) {
-        var nextLevel = new StartGame();  // restart the lvl
-        gEngine.Core.startScene(nextLevel);
+        if (this.LevelSelect === "GameOver") {
+            var nextLevel = new EndGame();  // restart the lvl
+            gEngine.Core.startScene(nextLevel);
+        }
+        else if (this.LevelSelect === "Win") {
+            var nextLevel = new WonGame();  // restart the lvl
+            gEngine.Core.startScene(nextLevel);
+        }
+
     } else {
         var nextLevel = new MyGame();  // go back to main menu
         gEngine.Core.startScene(nextLevel);
@@ -140,19 +154,17 @@ StartGame.prototype.initialize = function () {
 
     //100*10 = 1000
 
-    for (var i = 0; i < 5; i++) {
-        var randX = 50 + Math.random() * 500;
+    var minPos = 30;
+    for (var i = 0; i < 50; i++) {
+        var randX = minPos + Math.random() * 50;
         var Y = 25;
+        if (0.3 < Math.random() <= 0.6) Y = 28.5;
+        if (Math.random() > 0.6) Y = 32;
         var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle);
+        minPos = randX + 10;
     }
 
-    for (var i = 0; i < 5; i++) {
-        var randX = 50 + Math.random() * 500;
-        var Y = 30;
-        var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
-        this.mObstacles.addToSet(obstacle);
-    }
 
 };
 
@@ -163,6 +175,8 @@ StartGame.prototype.draw = function () {
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 
     this.mCamera.setupViewProjection();
+    this.sky.draw(this.mCamera);
+
     for (var i = 0; i < this.bgNum; i++) {
         this.bgs[i].draw(this.mCamera);
     }
@@ -184,6 +198,7 @@ StartGame.prototype.draw = function () {
 
 StartGame.prototype.update = function () {
 
+    this.sky.update();
     this.mObstacles.update();
     this.backButton.update();
 
@@ -197,8 +212,13 @@ StartGame.prototype.update = function () {
 
         this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta,
             this.mMoon.getXform().getYPos());
+        this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0],
+            this.sky.getXform().getYPos());
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
+    }
 
+    if (this.mHero.getXform().getXPos() >= maxX) {
+        this.wonGame = true;
     }
     // ----------------- Update Moon Light -----------------
     var moonLight = vec2.clone(this.mMoon.getXform().getPosition());
@@ -255,14 +275,27 @@ StartGame.prototype.update = function () {
         this.currTime = new Date();
         if (this.currTime - this.prevTime >= 3000) {
             this.mRestart = true;
+            this.LevelSelect = "GameOver";
             gEngine.GameLoop.stop();
         }
-    } else {
+    }
+    if (this.wonGame) {
+        var msg = "YOU WON!";
+        this.mMsg.setText(msg)
+        this.currTime = new Date();
+        if (this.currTime - this.prevTime >= 3000) {
+            this.mRestart = true;
+            this.LevelSelect = "Win";
+            gEngine.GameLoop.stop();
+        }
+    }
+    else {
         this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
         var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
         this.mMsg.setText(msg)
     }
     // #endregion
+
 };
 
 StartGame.prototype.UITextBoxTest = function () {
@@ -276,8 +309,8 @@ StartGame.prototype.backSelect = function () {
 StartGame.prototype._initUI = function () {
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
     this.UITextBox = new UITextBox([500, 200], 6, 35, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
-    
-    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Go Back", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
+
+    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
 
     // For testing
@@ -289,6 +322,17 @@ StartGame.prototype._initUI = function () {
 }
 
 StartGame.prototype._initBackGround = function () {
+
+    //setting sky
+    this.sky = new LightRenderable(this.kSky);
+    this.sky.getXform().setSize(150, 75);
+    this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0], 40);
+    this.sky.getXform().setZPos(-5);
+    for (var i = 0; i < 2; i++) {
+        this.sky.addLight(this.mGlobalLightSet.getLightAt(i));
+    }
+
+    //setting floor
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
     this.bg.getXform().setPosition(75, 40);

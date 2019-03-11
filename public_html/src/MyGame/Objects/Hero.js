@@ -6,7 +6,7 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-var kWASDDelta = 0.5;
+var kWASDDelta = 0.45;
 
 function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBar) {
     this.kDelta = 0.2;
@@ -54,6 +54,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBa
 
     this.getXform().changeRate(0.1);
 
+    //add rigidbody
     var r = new RigidRectangle(this.getXform(), this.kWidth, this.kHeight);
     r.setMass(2);
     r.setRestitution(0.5);
@@ -124,12 +125,12 @@ Hero.prototype.changeAnimation = function () {
             case Hero.eHeroState.eRunLeft:
                 this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
                 this.mHero.getXform().setSize(-this.kWidth, this.kHeight);
-                this.mHero.setAnimationSpeed(4);
+                this.mHero.setAnimationSpeed(3);
                 break;
             case Hero.eHeroState.eRunRight:
                 this.mHero.setSpriteSequence(905, 210, 87.8, 100, 16, 0);
                 this.mHero.getXform().setSize(this.kWidth, this.kHeight);
-                this.mHero.setAnimationSpeed(4);
+                this.mHero.setAnimationSpeed(3);
                 break;
         }
     }
@@ -144,8 +145,8 @@ Hero.prototype.getDirection = function () {
 Hero.prototype.keyControl = function () {
 
     var xform = this.getXform();
-    var delta = 0.2;
-
+    var delta = 0.4;
+    
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
         xform.incYPosBy(kWASDDelta);
     }

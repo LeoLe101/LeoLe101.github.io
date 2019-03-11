@@ -436,7 +436,8 @@ ParticleSystem.prototype.draw = function (aCamera) {
  * @memberOf ParticleSystem
  */
 ParticleSystem.prototype.processCollision = function (objSet) {
-    gEngine.ParticleSystem.collideWithRigidSet(objSet, this.mAllParticles);
+    var result = gEngine.ParticleSystem.collideWithRigidSet(objSet, this.mAllParticles);
+    return result; 
 };
 
 /**

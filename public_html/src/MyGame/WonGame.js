@@ -11,48 +11,40 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function MyGame() {
+function WonGame() {
     //this.kUIButton = "assets/UI/button.png";
-    this.kUIButton = "assets/Game/play.png";
+    this.kUIButton = "assets/Game/button.png";
     this.kBG = "assets/Game/forest.png";
     this.kSky = "assets/Game/sky.png";
     
     // The camera to view the scene
     this.mCamera = null;
-    this.ParticleButton = null;
-    this.PhysicsButton = null;
     this.UIButton = null;
-    this.UIText = null;
     this.LevelSelect = null;
+    this.UIText = null;
     
     this.bg = null;
     this.sky = null;
 }
-gEngine.Core.inheritPrototype(MyGame, Scene);
+gEngine.Core.inheritPrototype(WonGame, Scene);
 
 
-MyGame.prototype.loadScene = function () {
+WonGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kUIButton);
     gEngine.Textures.loadTexture(this.kBG);
     gEngine.Textures.loadTexture(this.kSky);
 };
 
-MyGame.prototype.unloadScene = function () {
+WonGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kBG);
     gEngine.Textures.unloadTexture(this.kSky);
-    if(this.LevelSelect==="Particle"){
-        gEngine.Core.startScene(new ParticleLevel());
-    }
-    else if(this.LevelSelect==="Physics"){
-        gEngine.Core.startScene(new RigidShapeDemo());
-    }
-    else if(this.LevelSelect==="start"){
+    if(this.LevelSelect==="start"){
         gEngine.Core.startScene(new StartGame());
     }
 };
 
-MyGame.prototype.initialize = function () {
+WonGame.prototype.initialize = function () {
     // Step A: set up the cameras
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
@@ -62,11 +54,9 @@ MyGame.prototype.initialize = function () {
     this.mCamera.setBackgroundColor([48/255, 54/255, 84/255, 1]);
             // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
-    
-    this.ParticleButton = new UIButton(this.kUIButton,this.particleSelect,this,[400,400],[600,100],"Particle Demos",8,[1,1,1,1],[0,0,0,1]);
-    this.PhysicsButton = new UIButton(this.kUIButton,this.physicsSelect,this,[400,200],[500,100],"Physics Demo",8,[1,1,1,1],[0,0,0,1]);
-    this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[400,300],[320,160],"",8,[1,1,1,1],[0,0,0,1]);
-    this.UIText = new UIText("Magic Run",[400,500],8,1,0,[1,1,1,1]);
+
+    this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[400,300],[320,160],"Go Again",6,[1,1,1,1],[0,0,0,1]);
+    this.UIText = new UIText("You survived!",[400,500],8,1,0,[1,1,1,1]);
     
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
@@ -79,7 +69,7 @@ MyGame.prototype.initialize = function () {
 
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
-MyGame.prototype.draw = function () {
+WonGame.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
     
@@ -93,26 +83,15 @@ MyGame.prototype.draw = function () {
     this.UIText.draw(this.mCamera);
 };
 
-MyGame.prototype.update = function () {
+WonGame.prototype.update = function () {
     //this.ParticleButton.update();
     //this.PhysicsButton.update();
     this.StartButton.update();
     this.bg.update();
     this.sky.update();
-
 };
 
-MyGame.prototype.particleSelect = function(){
-    this.LevelSelect="Particle";
-    gEngine.GameLoop.stop();
-};
-
-MyGame.prototype.physicsSelect = function(){
-    this.LevelSelect="Physics";
-    gEngine.GameLoop.stop();
-};
-
-MyGame.prototype.startSelect= function(){
+WonGame.prototype.startSelect= function(){
     this.LevelSelect="start";
     gEngine.GameLoop.stop();
 };
