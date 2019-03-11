@@ -82,7 +82,12 @@ MagicBullet.prototype.update = function () {
         }
     }
 
-   
+    if (this.mHit) {
+        this.currTime = new Date();
+        if (this.currTime - this.prevTime >= 1000) {
+            this.mDestroy = true;
+        }
+    }
 
     // Update bounding box when bullet move
     this._configBound();
@@ -104,32 +109,6 @@ MagicBullet.prototype.shouldSplash = function () {
     this.mSnow.setyAcceleration(-30);
     this.mSnow.setPos(this.mSnow.getPos()[0], this.mSnow.getPos()[1]);
     this.mHit = true;
-};
-
-MagicBullet.prototype.createParticle = function(atX, atY) {
-    var life = 30 + Math.random() * 200;
-    var p = new ParticleGameObject("assets/particle.png", atX, atY, life);
-    p.getRenderable().setColor([1, 0, 0, 1]);
-    
-    // size of the particle
-    var r = 3.5 + Math.random() * 2.5;
-    p.getXform().setSize(r, r);
-    
-    // final color
-    var fr = 3.5 + Math.random();
-    var fg = 0.4 + 0.1 * Math.random();
-    var fb = 0.3 + 0.1 * Math.random();
-    p.setFinalColor([fr, fg, fb, 0.6]);
-    
-    // velocity on the particle
-    var fx = 10 * Math.random() - 20 * Math.random();
-    var fy = 10 * Math.random();
-    p.getPhysicsComponent().setVelocity([fx, fy]);
-    
-    // size delta
-    p.setSizeDelta(0.98);
-    
-    return p;
 };
 
 MagicBullet.prototype.isBulletInViewport = function (camera) {
