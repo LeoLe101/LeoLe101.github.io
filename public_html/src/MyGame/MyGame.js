@@ -99,6 +99,7 @@ MyGame.prototype.update = function () {
     this.StartButton.update();
     this.bg.update();
     this.sky.update();
+
 };
 
 MyGame.prototype.particleSelect = function(){

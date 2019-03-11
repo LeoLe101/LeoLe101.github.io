@@ -12,8 +12,8 @@
  * Static refrence to gEngine
  * @type gEngine
  */
-var gEngine = gEngine || { };
-    // initialize the variable while ensuring it is not redefined
+var gEngine = gEngine || {};
+// initialize the variable while ensuring it is not redefined
 
 /**
  * Default Constructor
@@ -23,11 +23,11 @@ var gEngine = gEngine || { };
  */
 gEngine.ParticleSystem = (function () {
     var mSystemtAcceleration = [0, -50.0];
-    
+
     // the follows are scratch workspace for vec2
     var mFrom1to2 = [0, 0];
-    var mCircleCollider = null; 
-    
+    var mCircleCollider = null;
+
     /**
      * Resolve collision between a particle and a RigidCircle
      * @memberOf gEngine.ParticleSystem
@@ -42,13 +42,13 @@ gEngine.ParticleSystem = (function () {
         vec2.subtract(mFrom1to2, pos, cPos);
         var dist = vec2.length(mFrom1to2);
         if (dist < circShape.getRadius()) {
-            vec2.scale(mFrom1to2, mFrom1to2, 1/dist);
+            vec2.scale(mFrom1to2, mFrom1to2, 1 / dist);
             vec2.scaleAndAdd(pos, cPos, mFrom1to2, circShape.getRadius());
             collided = true;
         }
         return collided;
     };
-    
+
     /**
      * Resolve collision between a particle and a RigidRectangle
      * @memberOf gEngine.ParticleSystem
@@ -72,59 +72,69 @@ gEngine.ParticleSystem = (function () {
             }
         }
     };
-    
+
     /**
      * Processes the collisions between a GameObject and a ParticleObjectSet
      * @memberOf gEngine.ParticleSystem
      * @param {GameObject} obj The object being checked for collision
      * @param {ParticleObjectSet} pSet The Particle Set being checked for collision
      */
-    var processObjSet = function(obj, pSet) {
+    var processObjSet = function (obj, pSet) {
         var s1 = obj.getRigidBody();  // a RigidShape
         var i, p;
-        for (i=0; i<pSet.size(); i++) {
-            var x = pSet.getObjectAt(i).getX();
+        var result = false;
+        for (i = 0; i < pSet.size(); i++) {
+            var x = pSet.getObjectAt(i).getXform();
             p = pSet.getObjectAt(i).getParticle();  // a Particle
-            s1.resolveParticleCollision(p,x);
+            result = s1.resolveParticleCollision(p, x);
+            if (result) {
+                return result;
+            }
         }
+        return false;
     };
-    
+
     /**
      * Handles the collisions between a GameObjectSet and a ParticleGameObjectSet
      * @memberOf gEngine.ParticleSystem
      * @param {GameObjectSet} objSet The GameObjectSet having its rigid shapes being checked for collisions
      * @param {ParticleGameObjectSet} pSet The ParticleGameObjectSet having its particles checked for collisions
      */
-    var collideWithRigidSet = function(objSet, pSet) {
+    var collideWithRigidSet = function (objSet, pSet) {
         var i;
-        for (i=0; i<objSet.size(); i++) {
-            processObjSet(objSet.getObjectAt(i), pSet);
+        var result = false;
+        for (i = 0; i < objSet.size(); i++) {
+            result = processObjSet(objSet.getObjectAt(i), pSet);
+            if (result) {
+                return result;
+            }
         }
+        return false;
     };
-    
-    /**
+
+    /** 
      * Return the Acceleration for the particle system
      * @memberOf gEngine.ParticleSystem
      * @returns {Float[]} Current Acceleration [X, Y]
      */
-    var getSystemtAcceleration = function() { return mSystemtAcceleration; };
-    
+    var getSystemtAcceleration = function () { return mSystemtAcceleration; };
+
     /**
      * Set the Acceleration for the particle system
      * @memberOf gEngine.ParticleSystem
      * @param {Float[]} g new Acceleration [X, Y]
      */
-    var setSystemtAcceleration = function(g) { mSystemtAcceleration = g; };
-    
+    var setSystemtAcceleration = function (g) { mSystemtAcceleration = g; };
+
     /**
      * Update the Particle Set
      * @memberOf gEngine.ParticleSystem
      * @param {ParticleGameObjectSet} pSet The particleSet to be update
      */
-    var update = function(pSet){
+    var update = function (pSet) {
         pSet.update();
     };
-    
+
     var mPublic = {
         getSystemtAcceleration: getSystemtAcceleration,
         setSystemtAcceleration: setSystemtAcceleration,

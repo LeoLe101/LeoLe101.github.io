@@ -10,22 +10,22 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
     this.kRefWidth = 80;
     this.kRefHeight = 130;
     this.kDelta = 0.6;
-    
+
     this.mHero = hero; //follow hero
     this.mMonster = null;
-    
+
     this.mType = type;
-    
+
     this.groundY = atY;
-    
+
     this.spriteTexture = spriteTexture;
     this.spriteTexture_i = spriteTexture_i;
     this.kWidth = 0;
     this.kHeight = 0;
-    
+
     this.prevX = atX;
     this.currX = atX;
-    
+
     this.mMonsterState = Monster.eMonsterState.eRunRight;
     this.mPreviousMonsterState = Monster.eMonsterState.eRunRight;
 
@@ -72,41 +72,53 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
 
     this.shouldDestroy = false;
     this.getXform().changeRate(0.0015);
+
+    //add rigidbody
+    var r = new RigidCircle(this.getXform(), 6.5);
+    r.setMass(0);
+    r.setRestitution(0.5);
+    this.setRigidBody(r);
+
+    this.localShake = null;
     //this.localShake = null;
 }
 gEngine.Core.inheritPrototype(Monster, GameObject);
 
 Monster.prototype.update = function () {
-    
+
     GameObject.prototype.update.call(this); // Move the Hero forward
     this.mMonster.updateAnimation();
-    
+
     var heroXform = this.mHero.getXform();
     var Xform = this.getXform();
 
     this.generalUpdate();
-    
+
     var newPosition = vec2.fromValues(heroXform.getXPos(), this.groundY);
     this.panTo(newPosition);
 
-    
+
     if (this.mShake !== null)
         this.localShake = this.mShake;
-    
+
     this.currX = this.getXform().getXPos();
     if (this.currX < this.prevX) {
         this.mMonsterState = Monster.eMonsterState.eRunRight;
     } else {
         this.mMonsterState = Monster.eMonsterState.eRunLeft;
     }
-   this.prevX = this.currX;
-   
-   this.changeAnimation();
+    this.prevX = this.currX;
+
+    this.changeAnimation();
 
 };
 
 Monster.prototype.shouldDelete = function () {
     return this.shouldDestroy;
+};
+
+Monster.prototype.destroy = function () {
+    this.shouldDestroy = true;
 };
 
 Monster.eMonsterState = Object.freeze({
@@ -123,26 +135,26 @@ Monster.prototype.changeAnimation = function () {
                 this.mMonster.getXform().setSize(-this.kWidth, this.kHeight);
                 this.mMonster.setAnimationSpeed(3);
                 if (this.mType === 0) {
-                    this.mMonster.setSpriteSequence(725, 138, 103.5, 100, 18,  0);
+                    this.mMonster.setSpriteSequence(725, 138, 103.5, 100, 18, 0);
                 } else if (this.mType === 1) {
                     this.mMonster.setSpriteSequence(550, 30, 96.8, 100, 14, 0);
                 } else if (this.mType === 2) {
                     this.mMonster.setSpriteSequence(388, 35, 85.8, 100, 18, 0);
                 } else if (this.mType === 3) {
-                    this.mMonster.setSpriteSequence(215, 43, 69.3, 100, 18,0);
+                    this.mMonster.setSpriteSequence(215, 43, 69.3, 100, 18, 0);
                 }
                 break;
             case Monster.eMonsterState.eRunRight:
                 this.mMonster.getXform().setSize(this.kWidth, this.kHeight);
                 this.mMonster.setAnimationSpeed(3);
                 if (this.mType === 0) {
-                    this.mMonster.setSpriteSequence(725, 138, 103.5, 100, 18,  0);
+                    this.mMonster.setSpriteSequence(725, 138, 103.5, 100, 18, 0);
                 } else if (this.mType === 1) {
                     this.mMonster.setSpriteSequence(550, 30, 96.8, 100, 14, 0);
                 } else if (this.mType === 2) {
                     this.mMonster.setSpriteSequence(388, 35, 85.8, 100, 18, 0);
                 } else if (this.mType === 3) {
-                    this.mMonster.setSpriteSequence(215, 43, 69.3, 100, 18,0);
+                    this.mMonster.setSpriteSequence(215, 43, 69.3, 100, 18, 0);
                 }
                 break;
         }

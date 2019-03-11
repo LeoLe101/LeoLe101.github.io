@@ -59,6 +59,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBa
     r.setMass(20);
     r.setRestitution(50);
 
+    this.localShake = null;
     this.setRigidBody(r);
     //this.toggleDrawRenderable();
     //this.toggleDrawRigidShape();
@@ -82,6 +83,7 @@ Hero.prototype.update = function (healthBar) {
 
     this.keyControl();
     this.changeAnimation();
+    this.generalUpdate();
 
     if (this.gotHit) {
         this.healthBar = healthBar.getCurrentHP();

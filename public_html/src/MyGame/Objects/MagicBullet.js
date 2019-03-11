@@ -26,8 +26,12 @@ function MagicBullet(dir, atX, atY) {
     this.mBulletBoundW = 3;
     this.mBulletBoundH = 3;
 
+    this.mHit = false;
     this.mDestroy = false;
     this.mBox = null;
+    this.mDelta = 1;
+    this.prevTime = new Date();
+    this.currTime = new Date();
     this._initialize();
 }
 
@@ -36,7 +40,7 @@ MagicBullet.prototype._initialize = function () {
     // // sets the background to gray
     // gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     this.mBox = new BoundingBox(this.mBulletBoundPos, this.mBulletBoundW, this.mBulletBoundH);
-    this.mSnow = new Snow(this.mBulletBoundPos[0], this.mBulletBoundPos[1], 1, 0, 3, 0, -1, 3, 4, 0, 4.5, 1);
+    this.mSnow = new Snow(this.mBulletBoundPos[0], this.mBulletBoundPos[1], 1, 0, 3, 0, -1, 5, 4, 0, 4.5, 1);
 };
 
 
@@ -49,15 +53,23 @@ MagicBullet.prototype.draw = function (camera) {
     this.mSnow.draw(camera);
 };
 
-MagicBullet.prototype.update = function (forwardDir, boundStat) {
+MagicBullet.prototype.update = function () {
     gEngine.ParticleSystem.update(this.mSnow);
 
     if (this.mFlagForward) {
-        this.mSnow.setxAcceleration(this.mSnowForWard);
-        this.mSnow.setPos(this.mSnow.getPos()[0] += 1, this.mSnow.getPos()[1]);
+        if (!this.mHit) {
+            this.mSnow.setxAcceleration(this.mSnowForWard);
+            this.mSnow.setPos(this.mSnow.getPos()[0] += this.mDelta, this.mSnow.getPos()[1]);
+        }
     } else {
-        this.mSnow.setxAcceleration(this.mSnowBackWard);
-        this.mSnow.setPos(this.mSnow.getPos()[0] -= 1, this.mSnow.getPos()[1]);
+        if (!this.mHit) {
+            this.mSnow.setxAcceleration(this.mSnowBackWard);
+            this.mSnow.setPos(this.mSnow.getPos()[0] -= this.mDelta, this.mSnow.getPos()[1]);
+        }
+    }
+
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.A)) {
+        this.shouldSplash();
     }
 
     // Update bounding box when bullet move
@@ -70,6 +82,14 @@ MagicBullet.prototype.collideOther = function (boundingBox) {
 
 MagicBullet.prototype.shouldDelete = function () {
     return this.mDestroy;
+};
+
+MagicBullet.prototype.shouldSplash = function () {
+    this.mDelta = 0;
+    this.mSnowForWard = 0;
+    this.mSnowBackWard = 0;
+    this.mHit = true;
+    this.mDestroy = true;
 };
 
 MagicBullet.prototype.isBulletInViewport = function (camera) {
