@@ -67,6 +67,9 @@ function StartGame() {
     this.mMoon = null;
     this.moonDelta = 0;
     this.moonChangeRate = 0;
+    
+    //Bush
+    this.mBush = null;
 
     this.mObstacles = null;
 
@@ -155,6 +158,11 @@ StartGame.prototype.initialize = function () {
     this.moonChangeRate = 0.05;
 
     this.mObstacles = new ObstacleSet();
+    
+    this.mBush = new LightRenderable(this.kBush);
+    this.mBush.getXform().setSize(48, 27);
+    this.mBush.getXform().setPosition(80, 28);
+    this.bushDelta = this.mBush.getXform().getXPos() - this.mCamera.getWCCenter()[0];
 
     //setting floor
     var obstacle = new Obstacle(50, 11, 100, 13.75, 0, .9, this.kObstacle, this.mHero, true);
@@ -189,7 +197,7 @@ StartGame.prototype.draw = function () {
         this.bgs[i].draw(this.mCamera);
     }
     this.UIText.draw(this.mCamera);
-    this.UITextBox.draw(this.mCamera);
+    //this.UITextBox.draw(this.mCamera);
     this.backButton.draw(this.mCamera);
     this.UIhealthBar.draw(this.mCamera);
   
@@ -209,6 +217,8 @@ StartGame.prototype.draw = function () {
     this.mBulletSet.draw(this.mCamera);
 
     this.mObstacles.draw(this.mCamera);
+    
+    this.mBush.draw(this.mCamera);
 
     // For Testing:
     this.mMsg.draw(this.mCamera);   // only draw status in the main camera
@@ -233,6 +243,9 @@ StartGame.prototype.update = function () {
             this.mMoon.getXform().getYPos());
         this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0],
             this.sky.getXform().getYPos());
+        this.mBush.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.bushDelta,
+            this.mBush.getXform().getYPos());
+            
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
     }
 
