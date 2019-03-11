@@ -26,7 +26,7 @@ var gEngine = gEngine || { };
  */
 gEngine.Physics = (function () {
 
-    var mSystemtAcceleration = [0, -20];        // system-wide default acceleration
+    var mSystemAcceleration = [0, -100];        // system-wide default acceleration
     var mPosCorrectionRate = 0.8;               // percentage of separation to project objects
     var mRelaxationCount = 15;                  // number of relaxation iteration
     
@@ -38,7 +38,7 @@ gEngine.Physics = (function () {
      * @memberOf gEngine.Physics
      * @returns {Float[]} Current Acceleration [X, Y]
      */
-    var getSystemtAcceleration = function() { return mSystemtAcceleration; };
+    var getSystemAcceleration = function() { return mSystemAcceleration; };
     /**
      * Sets mCorrectPosition from true to false or vice versa
      * @memberOf gEngine.Physics
@@ -240,7 +240,7 @@ gEngine.Physics = (function () {
     
     
     var mPublic = {
-        getSystemAcceleration: getSystemtAcceleration,
+        getSystemAcceleration: getSystemAcceleration,
         processCollision: processCollision,
         togglePositionalCorrection: togglePositionalCorrection,
         getPositionalCorrection: getPositionalCorrection,
