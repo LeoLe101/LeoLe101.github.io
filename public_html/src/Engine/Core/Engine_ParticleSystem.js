@@ -101,11 +101,10 @@ gEngine.ParticleSystem = (function () {
      * @param {ParticleGameObjectSet} pSet The ParticleGameObjectSet having its particles checked for collisions
      */
     var collideWithRigidSet = function (objSet, pSet) {
-        var i; 
+        var i;
         var result = false;
         for (i = 0; i < objSet.size(); i++) {
             result = processObjSet(objSet.getObjectAt(i), pSet);
-            console.log("Result", result);
             if (result) {
                 return result;
             }

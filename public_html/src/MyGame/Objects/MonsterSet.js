@@ -34,16 +34,16 @@ MonsterSet.prototype.pixelTouches = function (hero, bSet, h) {
     for (i = 0; i < this.mSet.length; i++) {
         if (this.mSet[i].pixelTouches(hero, h)) {
             hero.hitByMonster(10);
-            hero.shake(0.2, 0.1, 10, 30);
+            hero.shake(0.2, 0.2, 10, 30);
         }
 
         for (j = 0; j < bSet.size(); j++) {
             if (this.hasShaken[i]) continue;
 
-            if (bSet.getObjectAt(j).getSnow().processCollision(this)) {
-                console.log("HIT");
+            if (bSet.getObjectAt(j).getSnow().processCollision(this.mSet[i])) {
                 bSet.getSet()[j].shouldSplash();
                 this.mSet[i].shake(0.2, 0.2, 10, 30);
+                this.mSet[i].destroy();
                 this.hasShaken[i] = true;
             }
         }

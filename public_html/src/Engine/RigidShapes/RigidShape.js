@@ -362,7 +362,6 @@ RigidShape.prototype.resolveParticleCollision = function (aParticle, xf) {
     }
     else if (this.getType() === "RigidRectangle") {
         status = gEngine.ParticleSystem.resolveRectPos(this, xf);
-        console.log("Result", status);
         return status;
     }
     else {

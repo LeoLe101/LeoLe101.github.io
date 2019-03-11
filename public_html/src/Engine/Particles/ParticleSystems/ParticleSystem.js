@@ -436,8 +436,12 @@ ParticleSystem.prototype.draw = function (aCamera) {
  * @memberOf ParticleSystem
  */
 ParticleSystem.prototype.processCollision = function (objSet) {
-    var result = gEngine.ParticleSystem.collideWithRigidSet(objSet, this.mAllParticles);
-    return result; 
+    return gEngine.ParticleSystem.collideWithRigidSet(objSet, this.mAllParticles); 
+};
+
+// just for 1 collision, not a whole set of obj
+ParticleSystem.prototype.processCollision = function (obj) {
+    return gEngine.ParticleSystem.processObjSet(obj, this.mAllParticles); 
 };
 
 /**

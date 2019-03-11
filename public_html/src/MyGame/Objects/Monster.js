@@ -117,6 +117,10 @@ Monster.prototype.shouldDelete = function () {
     return this.shouldDestroy;
 };
 
+Monster.prototype.destroy = function () {
+    this.shouldDestroy = true;
+};
+
 Monster.eMonsterState = Object.freeze({
     eRunRight: 0,
     eRunLeft: 1
