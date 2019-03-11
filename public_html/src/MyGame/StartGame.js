@@ -218,7 +218,7 @@ StartGame.prototype.draw = function () {
     this.mObstacles.draw(this.mCamera);
 
     // For Testing:
-    this.mMsg.draw(this.mCamera);   // only draw status in the main camera
+    // this.mMsg.draw(this.mCamera);   // only draw status in the main camera
 };
 
 StartGame.prototype.update = function () {
