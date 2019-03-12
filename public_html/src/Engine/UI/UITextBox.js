@@ -60,9 +60,9 @@ UITextBox.prototype.update = function(aCamera){
     // start simple, just do callback when clicked
     // if(gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Left)){
         // if(mouseOver){
-            // this.mActive = true;
-            // this.line.setShowLine(true);
-            // this.line.setDrawVertices(true);
+            this.mActive = true;
+            this.line.setShowLine(true);
+            this.line.setDrawVertices(true);
     //     }
     //     else{
     //         this.mActive = false;

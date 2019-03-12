@@ -11,18 +11,20 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function EndGame() {
+function EndGame(distTravel) {
     //this.kUIButton = "assets/UI/button.png";
     this.kUIButton = "assets/Game/button.png";
     this.kBG = "assets/Game/forest.png";
     this.kSky = "assets/Game/sky.png";
-    
+
     // The camera to view the scene
     this.mCamera = null;
     this.UIButton = null;
     this.LevelSelect = null;
     this.UIText = null;
-    
+    this.UITextDistTravel = null;
+    this.distTravel = distTravel;
+
     this.bg = null;
     this.sky = null;
 }
@@ -39,7 +41,7 @@ EndGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kBG);
     gEngine.Textures.unloadTexture(this.kSky);
-    if(this.LevelSelect==="start"){
+    if (this.LevelSelect === "start") {
         gEngine.Core.startScene(new StartGame());
     }
 };
@@ -51,17 +53,18 @@ EndGame.prototype.initialize = function () {
         100,                     // width of camera
         [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
     );
-    this.mCamera.setBackgroundColor([48/255, 54/255, 84/255, 1]);
-            // sets the background to gray
+    this.mCamera.setBackgroundColor([48 / 255, 54 / 255, 84 / 255, 1]);
+    // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
 
-    this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[400,300],[320,160],"Restart",6,[1,1,1,1],[0,0,0,1]);
-    this.UIText = new UIText("Game Over!",[400,500],8,1,0,[1,1,1,1]);
-    
+    this.StartButton = new UIButton(this.kUIButton, this.startSelect, this, [400, 300], [320, 160], "Restart", 6, [1, 1, 1, 1], [0, 0, 0, 1]);
+    this.UIText = new UIText("Game Over!", [400, 500], 8, 1, 0, [1, 1, 1, 1]);
+    this.UITextDistTravel = new UIText("Distance Travelled: " + this.distTravel, [400, 420], 5, 1, 0, [1, 1, 1, 1]);
+
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
     this.bg.getXform().setPosition(75, 40);
-    
+
     this.sky = new LightRenderable(this.kSky);
     this.sky.getXform().setSize(150, 75);
     this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0], 40);
@@ -72,8 +75,8 @@ EndGame.prototype.initialize = function () {
 EndGame.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
-    
-    
+
+
     this.mCamera.setupViewProjection();
     this.sky.draw(this.mCamera);
     this.bg.draw(this.mCamera);
@@ -81,6 +84,7 @@ EndGame.prototype.draw = function () {
     //this.PhysicsButton.draw(this.mCamera);
     this.StartButton.draw(this.mCamera);
     this.UIText.draw(this.mCamera);
+    this.UITextDistTravel.draw(this.mCamera);
 };
 
 EndGame.prototype.update = function () {
@@ -91,7 +95,7 @@ EndGame.prototype.update = function () {
     this.sky.update();
 };
 
-EndGame.prototype.startSelect= function(){
-    this.LevelSelect="start";
+EndGame.prototype.startSelect = function () {
+    this.LevelSelect = "start";
     gEngine.GameLoop.stop();
 };

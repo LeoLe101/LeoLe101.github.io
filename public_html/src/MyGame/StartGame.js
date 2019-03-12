@@ -23,7 +23,10 @@ function StartGame() {
     this.kObstacle = "assets/Game/obstacle.png";
     this.kBush = "assets/Game/bush.png";
 
+    // Level and Cheats
     this.LevelSelect = null;
+    this.mEnterCheat = false;
+    this.mEnterCheat2 = false;
 
     // The camera to view the scene
     this.mCamera = null;
@@ -69,7 +72,7 @@ function StartGame() {
     this.mMoon = null;
     this.moonDelta = 0;
     this.moonChangeRate = 0;
-    
+
     //Bush
     this.mBush = null;
     this.mBigBush = null;
@@ -79,6 +82,7 @@ function StartGame() {
     this.mMsg = null;
     this.mRestart = false;
     this.mWin = false;
+    this.distTravel = 0;
 
 }
 gEngine.Core.inheritPrototype(StartGame, Scene);
@@ -111,7 +115,7 @@ StartGame.prototype.unloadScene = function () {
 
     if (this.mRestart === true) {
         if (this.LevelSelect === "GameOver") {
-            var nextLevel = new EndGame();  // restart the lvl
+            var nextLevel = new EndGame(this.distTravel);  // restart the lvl
             gEngine.Core.startScene(nextLevel);
         }
         else if (this.LevelSelect === "Win") {
@@ -161,12 +165,12 @@ StartGame.prototype.initialize = function () {
     this.moonChangeRate = 0.05;
 
     this.mObstacles = new ObstacleSet();
-    
+
     this.mBush = new LightRenderable(this.kBush);
     this.mBush.getXform().setSize(48, 25);
     this.mBush.getXform().setPosition(80, 29);
     this.bushDelta = this.mBush.getXform().getXPos() - this.mCamera.getWCCenter()[0];
-    
+
     this.mBigBush = new LightRenderable(this.kBush);
     this.mBigBush.getXform().setSize(48, 30);
     this.mBigBush.getXform().setPosition(80, 31);
@@ -203,9 +207,13 @@ StartGame.prototype.draw = function () {
     for (var i = 0; i < this.bgNum; i++) {
         this.bgs[i].draw(this.mCamera);
     }
-    this.UIText.draw(this.mCamera);
 
-    //this.UITextBox.draw(this.mCamera);
+    this.UIText.draw(this.mCamera);
+    this.UITextDistance.draw(this.mCamera);
+
+    if (this.mEnterCheat) {
+        this.UITextBox.draw(this.mCamera);
+    }
 
     this.backButton.draw(this.mCamera);
     this.UIhealthBar.draw(this.mCamera);
@@ -226,13 +234,15 @@ StartGame.prototype.draw = function () {
     this.mBulletSet.draw(this.mCamera);
 
     this.mObstacles.draw(this.mCamera);
-    
-    if (!this.mHeroAbleToShoot) {
-        //this.UITextBox.draw(this.mCamera);
-        this.mBush.draw(this.mCamera);
-    } else {
-        //this.UITextBox1.draw(this.mCamera);
-        this.mBigBush.draw(this.mCamera);
+
+    if (this.mHero.getXform().getXPos() > (this.mHeroStartPos + 50)) {
+        if (!this.mHeroAbleToShoot) {
+            //this.UITextBox.draw(this.mCamera);
+            this.mBush.draw(this.mCamera);
+        } else {
+            //this.UITextBox1.draw(this.mCamera);
+            this.mBigBush.draw(this.mCamera);
+        }
     }
 
     // For Testing:
@@ -241,15 +251,14 @@ StartGame.prototype.draw = function () {
 
 StartGame.prototype.update = function () {
 
+    this.distTravel = Math.round(this.mHero.getXform().getXPos() - 10);
     this.sky.update();
     this.mObstacles.update();
     this.backButton.update();
     this.UIhealthBar.update();
-    if (!this.mHeroAbleToShoot) {
-        this.UITextBox.update(this.mCamera);
-    } else {
-        this.UITextBox1.update(this.mCamera);
-    }
+    this.UITextBox.update(this.mCamera);
+    this.UITextDistance.update();
+    this.UITextDistance.setText("Distance: " + this.distTravel + " / 1400");
 
     // #region ----------------- Moon Interpolation -----------------
     this.mMoon.update();
@@ -266,7 +275,7 @@ StartGame.prototype.update = function () {
             this.mBush.getXform().getYPos());
         this.mBigBush.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.bushDelta,
             this.mBigBush.getXform().getYPos());
-            
+
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
     }
 
@@ -352,6 +361,26 @@ StartGame.prototype.update = function () {
     }
     // #endregion
 
+    // Cheat
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Enter)) {
+        if (!this.mEnterCheat) {
+            this.mEnterCheat = true;
+        } else {
+            this.mEnterCheat = false;
+        }
+    }
+
+    if (this.UITextBox.getEnteredValue() === "WHOSYOURDADDY") {
+        this.UITextBox.setText("");
+        this.wonGame = true;
+        this.mEnterCheat = false;
+    }
+
+    if (this.UITextBox.getEnteredValue() === "WHOSYOURMOMMY") {
+        this.UITextBox.setText("");
+        this.endGame = true;
+        this.mEnterCheat = false;
+    }
 
 };
 
@@ -365,13 +394,13 @@ StartGame.prototype.backSelect = function () {
 
 StartGame.prototype._initUI = function () {
     this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
+    this.UITextDistance = new UIText("Distance: ", [700, 580], 2, 1, 0, [1, 1, 1, 1]);
     this.UITextGoal1 = new UIText("Try to survive and reach the end of this forest!", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
     this.UITextGoal2 = new UIText("Oh dear, what is this bush blocking the screen??!!", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
     this.UITextGoal3 = new UIText("Oh well, gotta deal with it...", [400, 500], 3, 1, 0, [1, 0.5, 1, 1]);
-    this.UITextBox = new UITextBox([520, 250], 20, 40, [1, 1, 1, 1], [0, 0, 0, 1], this.UITextBoxTest, this);
-    this.UITextBox.setText(":))");
-    this.UITextBox1 = new UITextBox([500, 350], 30, 50, [1, 1, 1, 1], [1, 0, 0, 1], this.UITextBoxTest, this);
-    this.UITextBox1.setText(":(");
+    this.UITextBox = new UITextBox([320, 100], 5, 50, [1, 1, 1, 1], [0, 0, 0, 1], null, this);
+    // this.UITextBox1 = new UITextBox([500, 350], 30, 50, [1, 1, 1, 1], [1, 0, 0, 1], this.UITextBoxTest, this);
+    // this.UITextBox1.setText(":(");
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
     this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
