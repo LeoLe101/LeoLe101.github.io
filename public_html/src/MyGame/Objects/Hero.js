@@ -151,91 +151,16 @@ Hero.prototype.getDirection = function () {
 Hero.prototype.keyControl = function () {
 
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
-        //xform.incYPosBy(kWASDDelta);
-        switch (this.keySettings) {
-            case 0:
-                this.goDown();
-                break;
-            case 1:
-                this.goRight();
-                break;
-            case 2:
-                this.goLeft();
-                break;
-            case 3:
-                this.goDown();
-                break;
-            default:
-                this.goLeft();
-                break; 
-        }
-            
+        this.goUp();   
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
-        //xform.incYPosBy(-kWASDDelta);
-        switch (this.keySettings) {
-            case 0:
-                this.goRight();
-                break;
-            case 1:
-                this.goLeft();
-                break;
-            case 2:
-                this.goRight();
-                break;
-            case 3:
-                this.goLeft();
-                break;
-            default:
-                this.goUp();
-                break; 
-        }
+        this.goDown();
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
-        /*this.mHeroState = Hero.eHeroState.eRunLeft;
-        if (xform.getXPos() >= this.minX) {
-            xform.incXPosBy(-delta);
-        }*/
-        switch (this.keySettings) {
-            case 0:
-                this.goUp();
-                break;
-            case 1:
-                this.goDown();
-                break;
-            case 2:
-                this.goUp();
-                break;
-            case 3:
-                this.goRight();
-                break;
-            default:
-                this.goDown();
-                break; 
-        }
+        this.goLeft();
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
-        /*this.mHeroState = Hero.eHeroState.eRunRight;
-        if (xform.getXPos() <= this.maxX) {
-            xform.incXPosBy(delta);
-        }*/
-        switch (this.keySettings) {
-            case 0:
-                this.goLeft();
-                break;
-            case 1:
-                this.goUp();
-                break;
-            case 2:
-                this.goDown();
-                break;
-            case 3:
-                this.goUp();
-                break;
-            default:
-                this.goRight();
-                break; 
-        }
+        this.goRight();
     }
 
     //this.getRigidBody().userSetsState();

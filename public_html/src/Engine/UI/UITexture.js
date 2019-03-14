@@ -15,3 +15,10 @@ function UITexture(myTexture, position, size) {
 }
 gEngine.Core.inheritPrototype(UITexture, UIElement);
 
+UITexture.prototype.makeLight = function() {
+    this.mTex.setColor([1, 1, 1, 0.5]);
+};
+
+UITexture.prototype.makeNormal = function() {
+    this.mTex.setColor([1, 1, 1, 1]);
+};
