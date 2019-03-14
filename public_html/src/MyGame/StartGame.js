@@ -193,16 +193,15 @@ StartGame.prototype.initialize = function () {
     this.mBigBush.getXform().setSize(48, 30);
     this.mBigBush.getXform().setPosition(80, 31);*/
     
-    //setting small letters
+
     for (var i = 0; i < this.kLetters.length; i++){
+        //setting small letters
         var newLetter = new UITexture(this.kLetters[i], [270 + i*40, 40], [30, 30]);
         this.smallLetters.push(newLetter);
         this.smallLetters[i].makeLight();
-    }
-    
-    //setting large letters
-    for (var i = 0; i < this.kLetters.length; i++){
-        var newLetter = new UITexture(this.kLetters[i], [80 + i*70, 30], [60, 60]);
+
+        //setting large letters
+        var newLetter = new Letter(30 + i*6, 40, this.kLetters[i], this.mHero, this.smallLetters[i]);
         this.letters.push(newLetter);
     }
 
@@ -273,6 +272,7 @@ StartGame.prototype.draw = function () {
     //drawing letters
     for (var i = 0; i < this.kLetters.length; i++){
         this.smallLetters[i].draw(this.mCamera);
+        this.letters[i].draw(this.mCamera);
     }
 
 };
@@ -287,6 +287,13 @@ StartGame.prototype.update = function () {
     this.UITextBox.update(this.mCamera);
     this.UITextDistance.update();
     this.UITextDistance.setText("Distance: " + this.distTravel + " / 1400");
+    
+    var allLettersFound = true;
+    for (var i = 0; i < this.kLetters.length; i++){
+        this.letters[i].update();
+        if (!this.smallLetters[i].isNormalColor()) allLettersFound = false;
+    }
+    if (allLettersFound == true) this.wonGame = true;
 
     // #region ----------------- Moon Interpolation -----------------
     this.mMoon.update();
@@ -306,9 +313,11 @@ StartGame.prototype.update = function () {
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
     }
 
-    if (this.mHero.getXform().getXPos() >= maxX) {
+    /*if (this.mHero.getXform().getXPos() >= maxX) {
         this.wonGame = true;
-    }
+    }*/
+
+    
     // ----------------- Update Moon Light -----------------
     var moonLight = vec2.clone(this.mMoon.getXform().getPosition());
     this.mGlobalLightSet.getLightAt(1).set2DPosition(moonLight);

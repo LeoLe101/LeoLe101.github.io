@@ -50,6 +50,7 @@ TextureRenderable.prototype.draw = function (aCamera) {
     // activate the texture
     gEngine.Textures.activateTexture(this.mTexture);
     Renderable.prototype.draw.call(this, aCamera);
+
 };
 
 /**
