@@ -201,7 +201,7 @@ StartGame.prototype.initialize = function () {
         this.smallLetters[i].makeLight();
 
         //setting large letters
-        var newLetter = new Letter(30 + i*6, 40, this.kLetters[i], this.mHero, this.smallLetters[i]);
+        var newLetter = new Letter(30 + i*6, 21, this.kLetters[i], this.mHero, this.smallLetters[i]);
         this.letters.push(newLetter);
     }
 
