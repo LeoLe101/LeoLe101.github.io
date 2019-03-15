@@ -222,8 +222,8 @@ StartGame.prototype.initialize = function () {
     for (var i = 0; i < 12; i++) {
         
         X[0] = minPos + Math.random() * 50;
-        X[1] = Math.max(X[0] + 13 + Math.random() * 20, X[0] + 10);
-        X[2] = Math.max(X[1] + 13 + Math.random() * 20, X[1] + 10);
+        X[1] = Math.max(X[0] + 13 + Math.random() * 20, X[0] + 11);
+        X[2] = Math.max(X[1] + 13 + Math.random() * 20, X[1] + 11);
         
         Y[0] = 30;
         Y[1] = Y[0] + 5 + Math.random() * 5;
@@ -245,7 +245,7 @@ StartGame.prototype.initialize = function () {
         var obstacle3 = new Obstacle(X[2], Y[2], 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle3);
         
-        minPos = X[2] + 10 + Math.random() * 20;
+        minPos = X[2] + 15 + Math.random() * 25;
         
         sig = sig * -1;
         
