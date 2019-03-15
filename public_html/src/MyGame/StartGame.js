@@ -211,17 +211,38 @@ StartGame.prototype.initialize = function () {
     var obstacle = new Obstacle(50, 11, 100, 13.75, 0, .9, this.kObstacle, this.mHero, true);
     this.mObstacles.addToSet(obstacle);
 
-    //100*10 = 1000
-
+    var sig = 1;
+    //creating platform obstacles: 39 of them
     var minPos = 30;
-    for (var i = 0; i < 40; i++) {
+    for (var i = 0; i < 12; i++) {
         var randX = minPos + Math.random() * 50;
-        var Y = 29;
-        if (0.3 < Math.random() <= 0.6) Y = 32;
-        if (Math.random() > 0.6) Y = 35;
-        var obstacle = new Obstacle(randX, Y, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
-        this.mObstacles.addToSet(obstacle);
-        minPos = randX + 10;
+        //var Y = 29;
+        //if (0.3 < Math.random() <= 0.6) Y = 32;
+        //if (Math.random() > 0.6) Y = 35;
+        
+        var X1 = minPos + Math.random() * 50;
+        var X2 = X1 + 15 + Math.random() * 20;
+        var X3 = X2 + 15 + Math.random() * 20;
+        
+        var Y1 = 29;
+        var Y2 = Y1 + Math.random() * 5;
+        var Y3 = Y2 + sig * (Math.random() * 5);
+        
+        if (X1 > 855) break;
+        var obstacle1 = new Obstacle(X1, Y1, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
+        this.mObstacles.addToSet(obstacle1);
+        
+        if (X2 > 855) break;
+        var obstacle2 = new Obstacle(X2, Y2, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
+        this.mObstacles.addToSet(obstacle2);
+        
+        if (X3 > 855) break;
+        var obstacle3 = new Obstacle(X3, Y3, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
+        this.mObstacles.addToSet(obstacle3);
+        
+        minPos = X3 + 10 + Math.random() * 20;
+        
+        sig = sig * -1;
     }
 
 
@@ -229,12 +250,17 @@ StartGame.prototype.initialize = function () {
 
 StartGame.prototype.drawWith = function (camera, shouldShowUI) {
     camera.setupViewProjection();
-
     
     if (shouldShowUI) {
-        
         this.sky.draw(camera);
         this.mMoon.draw(camera);
+    }
+
+    for (var i = 0; i < this.bgNum; i++) {
+        this.bgs[i].draw(camera);
+    }
+    
+    if (shouldShowUI) {
         
         var time = new Date();
         if (time - this.initTime > 7000) {
@@ -260,9 +286,7 @@ StartGame.prototype.drawWith = function (camera, shouldShowUI) {
         this.UIhealthBar.draw(camera);
     }
     
-    for (var i = 0; i < this.bgNum; i++) {
-        this.bgs[i].draw(camera);
-    }
+    
     
     this.mMonsters.draw(camera);
     this.mHero.draw(camera);
@@ -448,8 +472,8 @@ StartGame.prototype._initUI = function () {
     this.UITextGoal4 = new UIText('that spell "escape" in the correct order!', [550, 580], 2, 1, 0, [0.5, 1, 1, 1]);
     this.UITextBox = new UITextBox([320, 100], 5, 50, [1, 1, 1, 1], [0, 0, 0, 1], null, this);
     
-    this.UITextArrows = new UIText("Use ARROWS to move", [950, 90], 2, 1, 0, [1, 1, 1, 1]);
-    this.UITextSpace = new UIText("Use SPACE for magic", [950, 70], 2, 1, 0, [1, 1, 1, 1]);
+    this.UITextArrows = new UIText("Use ARROWS to move", [950, 95], 2, 1, 0, [1, 1, 1, 1]);
+    this.UITextSpace = new UIText("Use SPACE for magic", [950, 65], 2, 1, 0, [1, 1, 1, 1]);
 
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 760, 3], [180, 40], 3);
     this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 65], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
