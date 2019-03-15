@@ -19,6 +19,7 @@ function WonGame() {
     
     // The camera to view the scene
     this.mCamera = null;
+    this.mSmallCamera = null;
     this.UIButton = null;
     this.LevelSelect = null;
     this.UIText = null;
@@ -49,14 +50,24 @@ WonGame.prototype.initialize = function () {
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
         100,                     // width of camera
-        [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
+        [0, 0, 1100, 800]         // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([48/255, 54/255, 84/255, 1]);
+    
+    // Step B: set up the small camera
+    this.mSmallCamera = new Camera(
+        vec2.fromValues(400, 40),    // will be updated at each cycle to point to hero
+        800,
+        [0, 810, 1100, 100],         // viewport (orgX, orgY, width, height)
+        2     
+    );
+    this.mSmallCamera.setBackgroundColor([0.18, 0.21, 0.33, 1]);
+    
             // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
 
-    this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[400,300],[320,160],"Go Again",6,[1,1,1,1],[0,0,0,1]);
-    this.UIText = new UIText("You survived!",[400,500],8,1,0,[1,1,1,1]);
+    this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[550,400],[400,180],"Go Again",6,[1,1,1,1],[0,0,0,1]);
+    this.UIText = new UIText("You survived!",[550,650],8,1,0,[1,1,1,1]);
     
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
@@ -81,6 +92,8 @@ WonGame.prototype.draw = function () {
     //this.PhysicsButton.draw(this.mCamera);
     this.StartButton.draw(this.mCamera);
     this.UIText.draw(this.mCamera);
+    
+    this.mSmallCamera.setupViewProjection();
 };
 
 WonGame.prototype.update = function () {

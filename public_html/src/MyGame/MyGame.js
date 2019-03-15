@@ -19,6 +19,7 @@ function MyGame() {
     
     // The camera to view the scene
     this.mCamera = null;
+    this.mSmallCamera = null;
     this.ParticleButton = null;
     this.PhysicsButton = null;
     this.UIButton = null;
@@ -57,16 +58,26 @@ MyGame.prototype.initialize = function () {
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
         100,                     // width of camera
-        [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
+        [0, 0, 1100, 800]         // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([48/255, 54/255, 84/255, 1]);
+    
+    // Step B: set up the small camera
+    this.mSmallCamera = new Camera(
+        vec2.fromValues(400, 40),    // will be updated at each cycle to point to hero
+        800,
+        [0, 810, 1100, 100],         // viewport (orgX, orgY, width, height)
+        2     
+    );
+    this.mSmallCamera.setBackgroundColor([0.18, 0.21, 0.33, 1]);
+    
             // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
     
     this.ParticleButton = new UIButton(this.kUIButton,this.particleSelect,this,[400,400],[600,100],"Particle Demos",8,[1,1,1,1],[0,0,0,1]);
     this.PhysicsButton = new UIButton(this.kUIButton,this.physicsSelect,this,[400,200],[500,100],"Physics Demo",8,[1,1,1,1],[0,0,0,1]);
-    this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[400,300],[320,160],"",8,[1,1,1,1],[0,0,0,1]);
-    this.UIText = new UIText("Magic Run",[400,500],8,1,0,[1,1,1,1]);
+    this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[550,400],[320,160],"",8,[1,1,1,1],[0,0,0,1]);
+    this.UIText = new UIText("Magic Run",[550,700],8,1,0,[1,1,1,1]);
     
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
@@ -91,6 +102,9 @@ MyGame.prototype.draw = function () {
     //this.PhysicsButton.draw(this.mCamera);
     this.StartButton.draw(this.mCamera);
     this.UIText.draw(this.mCamera);
+    
+    this.mSmallCamera.setupViewProjection();
+ 
 };
 
 MyGame.prototype.update = function () {

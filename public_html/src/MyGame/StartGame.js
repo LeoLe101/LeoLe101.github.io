@@ -38,6 +38,7 @@ function StartGame() {
 
     // The camera to view the scene
     this.mCamera = null;
+    this.mSmallCamera = null;
     this.bg = null;
     this.bgs = null;
     this.sky = null;
@@ -58,7 +59,7 @@ function StartGame() {
     this.currTime = new Date();
     this.time = 0;
 
-    this.bgNum = 10;
+    this.bgNum = 6;
 
     // Hero
     this.mHero = null;
@@ -149,13 +150,24 @@ StartGame.prototype.unloadScene = function () {
 
 StartGame.prototype.initialize = function () {
 
-    // Step A: set up the cameras
+    // Step A: set up the main camera
     this.mCamera = new Camera(
         vec2.fromValues(50, 40), // position of the camera
         100,                     // width of camera
-        [0, 0, 800, 600]         // viewport (orgX, orgY, width, height)
+        [0, 0, 1100, 800]         // viewport (orgX, orgY, width, height)
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
+    // sets the background to gray
+    gEngine.DefaultResources.setGlobalAmbientIntensity(3);
+    
+    // Step B: set up the small camera
+    this.mSmallCamera = new Camera(
+        vec2.fromValues(430, 40),    // will be updated at each cycle to point to hero
+        860,
+        [0, 810, 1100, 100],         // viewport (orgX, orgY, width, height)
+        2     
+    );
+    this.mSmallCamera.setBackgroundColor([0.18, 0.21, 0.33, 1]);
     // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
 
@@ -169,7 +181,7 @@ StartGame.prototype.initialize = function () {
     this._initBackGround();
 
     // init hero
-    var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 2;
+    var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 4 - 3;
     this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet, this.UIhealthBar);
     this.mHeroStartPos = this.mHero.getXform().getXPos();
     // init bullet set
@@ -184,19 +196,9 @@ StartGame.prototype.initialize = function () {
 
     this.mObstacles = new ObstacleSet();
 
-    /*this.mBush = new LightRenderable(this.kBush);
-    this.mBush.getXform().setSize(48, 25);
-    this.mBush.getXform().setPosition(80, 29);
-    this.bushDelta = this.mBush.getXform().getXPos() - this.mCamera.getWCCenter()[0];
-
-    this.mBigBush = new LightRenderable(this.kBush);
-    this.mBigBush.getXform().setSize(48, 30);
-    this.mBigBush.getXform().setPosition(80, 31);*/
-    
-
     for (var i = 0; i < this.kLetters.length; i++){
         //setting small letters
-        var newLetter = new UITexture(this.kLetters[i], [270 + i*40, 40], [30, 30]);
+        var newLetter = new UITexture(this.kLetters[i], [270 + i*40, 65], [30, 30]);
         this.smallLetters.push(newLetter);
         this.smallLetters[i].makeLight();
 
@@ -212,7 +214,7 @@ StartGame.prototype.initialize = function () {
     //100*10 = 1000
 
     var minPos = 30;
-    for (var i = 0; i < 50; i++) {
+    for (var i = 0; i < 40; i++) {
         var randX = minPos + Math.random() * 50;
         var Y = 29;
         if (0.3 < Math.random() <= 0.6) Y = 32;
@@ -225,55 +227,67 @@ StartGame.prototype.initialize = function () {
 
 };
 
+StartGame.prototype.drawWith = function (camera, shouldShowUI) {
+    camera.setupViewProjection();
+
+    
+    if (shouldShowUI) {
+        
+        this.sky.draw(camera);
+        this.mMoon.draw(camera);
+        
+        var time = new Date();
+        if (time - this.initTime > 7000) {
+            this.UITextGoal3.draw(camera);
+            this.UITextGoal4.draw(camera);
+        } else if (time - this.initTime > 4000) {
+            this.UITextGoal2.draw(camera);
+        } else if (time - this.initTime > 0) {
+            this.UITextGoal1.draw(camera);
+        }
+
+        this.UITextArrows.draw(camera);
+        this.UITextSpace .draw(camera);
+        
+        this.UIText.draw(camera);
+        //this.UITextDistance.draw(camera);
+
+        if (this.mEnterCheat) {
+            this.UITextBox.draw(camera);
+        }
+        
+        this.backButton.draw(camera);
+        this.UIhealthBar.draw(camera);
+    }
+    
+    for (var i = 0; i < this.bgNum; i++) {
+        this.bgs[i].draw(camera);
+    }
+    
+    this.mMonsters.draw(camera);
+    this.mHero.draw(camera);
+
+    this.mBulletSet.draw(camera);
+
+    this.mObstacles.draw(camera);
+    
+    //drawing letters
+    for (var i = 0; i < this.kLetters.length; i++){
+        this.letters[i].draw(camera);
+        if (shouldShowUI) this.smallLetters[i].draw(camera);
+    }
+
+};
+
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
 StartGame.prototype.draw = function () {
     // Step A: clear the canvas
     gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
 
-    this.mCamera.setupViewProjection();
-    this.sky.draw(this.mCamera);
-
-    for (var i = 0; i < this.bgNum; i++) {
-        this.bgs[i].draw(this.mCamera);
-    }
-
-    this.UIText.draw(this.mCamera);
-    this.UITextDistance.draw(this.mCamera);
-
-    if (this.mEnterCheat) {
-        this.UITextBox.draw(this.mCamera);
-    }
-
-    this.backButton.draw(this.mCamera);
-    this.UIhealthBar.draw(this.mCamera);
-
-    var time = new Date();
-    if (time - this.initTime > 7000) {
-        this.UITextGoal3.draw(this.mCamera);
-        this.UITextGoal4.draw(this.mCamera);
-    } else if (time - this.initTime > 4000) {
-        this.UITextGoal2.draw(this.mCamera);
-    } else if (time - this.initTime > 0) {
-        this.UITextGoal1.draw(this.mCamera);
-    }
+    this.drawWith(this.mSmallCamera, false);
+    this.drawWith(this.mCamera, true);
     
-    this.UITextArrows.draw(this.mCamera);
-    this.UITextSpace .draw(this.mCamera);
-
-    this.mMonsters.draw(this.mCamera);
-    this.mHero.draw(this.mCamera);
-
-    this.mMoon.draw(this.mCamera);
-    this.mBulletSet.draw(this.mCamera);
-
-    this.mObstacles.draw(this.mCamera);
-    
-    //drawing letters
-    for (var i = 0; i < this.kLetters.length; i++){
-        this.smallLetters[i].draw(this.mCamera);
-        this.letters[i].draw(this.mCamera);
-    }
 
 };
 
@@ -288,12 +302,15 @@ StartGame.prototype.update = function () {
     this.UITextDistance.update();
     this.UITextDistance.setText("Distance: " + this.distTravel + " / 1400");
     
+    this.mCamera.update();
+    this.mSmallCamera.update();
+    
     var allLettersFound = true;
     for (var i = 0; i < this.kLetters.length; i++){
         this.letters[i].update();
         if (!this.smallLetters[i].isNormalColor()) allLettersFound = false;
     }
-    if (allLettersFound == true) this.wonGame = true;
+    if (allLettersFound === true) this.wonGame = true;
 
     // #region ----------------- Moon Interpolation -----------------
     this.mMoon.update();
@@ -305,23 +322,17 @@ StartGame.prototype.update = function () {
             this.mMoon.getXform().getYPos());
         this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0],
             this.sky.getXform().getYPos());
-        /*this.mBush.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.bushDelta,
-            this.mBush.getXform().getYPos());
-        this.mBigBush.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.bushDelta,
-            this.mBigBush.getXform().getYPos());*/
-
+            
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
     }
 
     /*if (this.mHero.getXform().getXPos() >= maxX) {
         this.wonGame = true;
     }*/
-
     
     // ----------------- Update Moon Light -----------------
     var moonLight = vec2.clone(this.mMoon.getXform().getPosition());
     this.mGlobalLightSet.getLightAt(1).set2DPosition(moonLight);
-    this.mCamera.update();
     // #endregion
 
     // #region ----------------- Hero Support -------------------
@@ -429,26 +440,26 @@ StartGame.prototype.backSelect = function () {
 };
 
 StartGame.prototype._initUI = function () {
-    this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
-    this.UITextDistance = new UIText("Distance: ", [700, 580], 2, 1, 0, [1, 1, 1, 1]);
-    this.UITextGoal1 = new UIText("Oh no! I forgot the spell to escape this forest!", [400, 480], 3, 1, 0, [1, 0.5, 1, 1]);
-    this.UITextGoal2 = new UIText("Can you help me remember it again?", [400, 480], 3, 1, 0, [1, 0.5, 1, 1]);
-    this.UITextGoal3 = new UIText("To help Delu remember, collect the letters", [400, 500], 3, 1, 0, [0.5, 1, 1, 1]);
-    this.UITextGoal4 = new UIText('that spell "escape" in the correct order!', [400, 460], 3, 1, 0, [0.5, 1, 1, 1]);
+
+    this.UITextDistance = new UIText("Distance: ", [950, 780], 2, 1, 0, [1, 1, 1, 1]);
+    this.UITextGoal1 = new UIText("Oh no! I forgot the spell to escape this forest!", [550, 600], 2, 1, 0, [1, 0.5, 1, 1]);
+    this.UITextGoal2 = new UIText("Can you help me remember it again?", [550, 600], 2, 1, 0, [1, 0.5, 1, 1]);
+    this.UITextGoal3 = new UIText("To help Delu remember, collect the letters", [550, 620], 2, 1, 0, [0.5, 1, 1, 1]);
+    this.UITextGoal4 = new UIText('that spell "escape" in the correct order!', [550, 580], 2, 1, 0, [0.5, 1, 1, 1]);
     this.UITextBox = new UITextBox([320, 100], 5, 50, [1, 1, 1, 1], [0, 0, 0, 1], null, this);
     
-    this.UITextArrows = new UIText("Use ARROWS to move", [680, 60], 2, 1, 0, [1, 1, 1, 1]);
-    this.UITextSpace = new UIText("Use SPACE for magic", [680, 40], 2, 1, 0, [1, 1, 1, 1]);
+    this.UITextArrows = new UIText("Use ARROWS to move", [950, 90], 2, 1, 0, [1, 1, 1, 1]);
+    this.UITextSpace = new UIText("Use SPACE for magic", [950, 70], 2, 1, 0, [1, 1, 1, 1]);
 
-    this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 560, 3], [180, 40], 3);
-    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 40], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
+    this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 760, 3], [180, 40], 3);
+    this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 65], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
     // For testing
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([1, 1, 1, 1]);
     this.mMsg.getXform().setPosition(50, 30);
     this.mMsg.setTextHeight(3);
-    this.UIText = new UIText("Magic Run", [400, 580], 4, 1, 0, [1, 1, 1, 1]);
+    this.UIText = new UIText("Magic Run", [550,780], 4, 1, 0, [1, 1, 1, 1]);
 };
 
 StartGame.prototype._initBackGround = function () {

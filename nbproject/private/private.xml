@@ -3,15 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/MyGame/Objects/MonsterSet.js</file>
-            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/MyGame/MyGame.js</file>
-            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/index.html</file>
-            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/MyGame/WonGame.js</file>
-            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/MyGame/EndGame.js</file>
-            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/Engine/Core/Engine_Physics.js</file>
+            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/MyGame/Objects/Letter.js</file>
+            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/Engine/UI/UITexture.js</file>
             <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/MyGame/StartGame.js</file>
             <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/MyGame/Objects/Hero.js</file>
-            <file>file:/Users/adrianapadilla/Documents/GitHub/MagicRun/public_html/src/Engine/RigidShapes/RigidShape.js</file>
         </group>
     </open-files>
 </project-private>
