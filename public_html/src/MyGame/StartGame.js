@@ -206,46 +206,74 @@ StartGame.prototype.initialize = function () {
         var newLetter = new Letter(30 + i*6, 21, this.kLetters[i], this.mHero, this.smallLetters[i]);
         this.letters.push(newLetter);
     }
+    
+    this.letters = this._shuffle(this.letters);
 
     //setting floor
     var obstacle = new Obstacle(50, 11, 100, 13.75, 0, .9, this.kObstacle, this.mHero, true);
     this.mObstacles.addToSet(obstacle);
 
+    var X = [0, 0, 0];
+    var Y = [0, 0, 0];
     var sig = 1;
     //creating platform obstacles: 39 of them
     var minPos = 30;
     for (var i = 0; i < 12; i++) {
-        var randX = minPos + Math.random() * 50;
-        //var Y = 29;
-        //if (0.3 < Math.random() <= 0.6) Y = 32;
-        //if (Math.random() > 0.6) Y = 35;
         
-        var X1 = minPos + Math.random() * 50;
-        var X2 = X1 + 15 + Math.random() * 20;
-        var X3 = X2 + 15 + Math.random() * 20;
+        X[0] = minPos + Math.random() * 50;
+        X[1] = X[0] + 15 + Math.random() * 20;
+        X[2] = X[1] + 15 + Math.random() * 20;
         
-        var Y1 = 29;
-        var Y2 = Y1 + Math.random() * 5;
-        var Y3 = Y2 + sig * (Math.random() * 5);
+        Y[0] = 30;
+        Y[1] = Y[0] + 5 + Math.random() * 5;
+        Y[2] = Math.max(Y[1] + sig * (Math.random() * 2), Y[0]);
         
-        if (X1 > 855) break;
-        var obstacle1 = new Obstacle(X1, Y1, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
+        var max = 2;
+        var min = 0;
+        var rand = Math.floor(Math.random() * (max - min + 1)) + min;
+        
+        if (i%2 === 0 && i < 11){
+            this.letters[i/2].getXform().setPosition(X[rand], Y[rand] + 4);
+        }
+        
+        if (X[0] > 855) break;
+        var obstacle1 = new Obstacle(X[0], Y[0], 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle1);
         
-        if (X2 > 855) break;
-        var obstacle2 = new Obstacle(X2, Y2, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
+        if (X[1] > 855) break;
+        var obstacle2 = new Obstacle(X[1], Y[1], 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle2);
         
-        if (X3 > 855) break;
-        var obstacle3 = new Obstacle(X3, Y3, 10, 3, 0, .9, this.kObstacle, this.mHero, false);
+        if (X[2] > 855) break;
+        var obstacle3 = new Obstacle(X[2], Y[2], 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle3);
         
-        minPos = X3 + 10 + Math.random() * 20;
+        minPos = X[2] + 10 + Math.random() * 20;
         
         sig = sig * -1;
     }
 
+    var max = 840;
+    var min = 50;
+    var rand = Math.random() * (max - min + 1) + min;
+    this.letters[5].getXform().setPosition(rand, 21);
+};
 
+StartGame.prototype._shuffle = function(array) {
+    var ctr = array.length, temp, index;
+
+// While there are elements in the array
+    while (ctr > 0) {
+// Pick a random index
+        index = Math.floor(Math.random() * ctr);
+// Decrease ctr by 1
+        ctr--;
+// And swap the last element with it
+        temp = array[ctr];
+        array[ctr] = array[index];
+        array[index] = temp;
+    }
+    return array;
 };
 
 StartGame.prototype.drawWith = function (camera, shouldShowUI) {
