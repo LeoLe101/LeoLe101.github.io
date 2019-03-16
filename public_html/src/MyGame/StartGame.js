@@ -54,6 +54,8 @@ function StartGame() {
     this.UITextGoal2 = null;
     this.UITextGoal3 = null;
     this.UITextGoal4 = null;
+    this.UITextHP = null;
+    this.UITextEN = null;
 
     this.cameraFlip = false;
     this.endGame = false;
@@ -312,6 +314,8 @@ StartGame.prototype.drawWith = function (camera, shouldShowUI) {
             this.UITextGoal1.draw(camera);
         }
 
+        this.UITextHP.draw(camera);
+        this.UITextEN.draw(camera);
         this.UITextArrows.draw(camera);
         this.UITextSpace.draw(camera);
 
@@ -514,8 +518,10 @@ StartGame.prototype._initUI = function () {
     this.UITextArrows = new UIText("Use ARROWS to move", [950, 95], 2, 1, 0, [1, 1, 1, 1]);
     this.UITextSpace = new UIText("Use SPACE for magic", [950, 65], 2, 1, 0, [1, 1, 1, 1]);
 
-    this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 760, 3], [180, 40], 3);
-    this.UIEnergyBar = new UIHealthBar(this.kHealthBar, [100, 760, 3], [180, 40], 3);
+    this.UITextHP = new UIText("HP", [50, 760], 2, 1, 0, [1, 0.5, 1, 1]);
+    this.UIhealthBar = new UIHealthBar(this.kHealthBar, [150, 760, 3], [180, 40], 3);
+    this.UITextEN = new UIText("Energy", [50, 660], 2, 1, 0, [1, 0.5, 1, 1]);
+    this.UIEnergyBar = new UIHealthBar(this.kHealthBar, [150, 660, 3], [180, 40], 3);
     this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 65], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
     // For testing
