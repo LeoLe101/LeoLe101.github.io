@@ -5,10 +5,16 @@
  */
 
 
-function Letter(atX, atY, spriteTexture, hero, smallLetter) {
+function Letter(atX, atY, spriteTexture, hero, smallLetter, name) {
     
     this.kWidth = 5.5;
     this.kHeight = 5.5;
+    
+    this.name = name;
+    this.letterNames = ["E1","S2","C3","A4","P5","E6"];
+    
+    this.letterVisible = true;
+    this.gameEnded = false;
     
     this.mHero = hero;
     this.mSmallLetter = smallLetter;
@@ -34,6 +40,8 @@ Letter.prototype.draw = function (aCamera) {
 Letter.prototype.update = function () {
     this.mLetter.update();
     
+    if (!this.letterVisible) return this.gameEnded;
+    
     var heroX = this.mHero.getXform().getXPos();
     var heroY = this.mHero.getXform().getYPos();
     
@@ -43,5 +51,17 @@ Letter.prototype.update = function () {
     if ( Math.abs(heroX -letterX) < this.kWidth/2 && Math.abs(heroY -letterY) < this.kHeight/2) {
         this.shouldDraw = false;
         this.mSmallLetter.makeNormal();
+        console.log (this.name);
+        console.log (this.letterNames[this.mHero.foundLetters]);
+        if (this.name === this.letterNames[this.mHero.foundLetters]){ 
+            this.mHero.foundLetters++;
+            this.letterVisible = false;
+            return false; 
+        } else {
+            //end game
+            this.gameEnded = true;
+            return true;
+        } 
     }
+    return false;
 };

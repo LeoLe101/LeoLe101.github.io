@@ -87,6 +87,7 @@ function StartGame() {
     //letters
     this.letters = [];
     this.smallLetters = [];
+    this.letterNames = ["E1","S2","C3","A4","P5","E6"];
 
     this.mObstacles = null;
 
@@ -203,7 +204,7 @@ StartGame.prototype.initialize = function () {
         this.smallLetters[i].makeLight();
 
         //setting large letters
-        var newLetter = new Letter(30 + i*6, 21, this.kLetters[i], this.mHero, this.smallLetters[i]);
+        var newLetter = new Letter(30 + i*6, 21, this.kLetters[i], this.mHero, this.smallLetters[i], this.letterNames[i]);
         this.letters.push(newLetter);
     }
     
@@ -363,7 +364,7 @@ StartGame.prototype.update = function () {
     
     var allLettersFound = true;
     for (var i = 0; i < this.kLetters.length; i++){
-        this.letters[i].update();
+        if (!this.endGame) this.endGame = this.letters[i].update();
         if (!this.smallLetters[i].isNormalColor()) allLettersFound = false;
     }
     if (allLettersFound === true) this.wonGame = true;

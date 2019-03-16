@@ -75,7 +75,7 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
     this.getXform().changeRate(0.0015);
 
     //add rigidbody
-    var r = new RigidCircle(this.getXform(), 6.5);
+    var r = new RigidCircle(this.getXform(), 2);
     r.setMass(0);
     r.setRestitution(0.5);
     this.setRigidBody(r);

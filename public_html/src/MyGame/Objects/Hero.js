@@ -11,6 +11,8 @@ var delta = 0.4;
 
 function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBar) {
     
+    this.foundLetters = 0;
+    
     var max = 4;
     this.keySettings = Math.floor(Math.random() * (max + 1));
     
