@@ -69,7 +69,7 @@ EndGame.prototype.initialize = function () {
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
 
     this.StartButton = new UIButton(this.kUIButton, this.startSelect, this, [550, 400], [380, 190], "Restart", 6, [1, 1, 1, 1], [0, 0, 0, 1]);
-    this.UIText = new UIText("Game Over!", [550, 650], 8, 1, 0, [1, 1, 1, 1]);
+    this.UIText = new UIText("Game over!", [550, 650], 8, 1, 0, [1, 1, 1, 1]);
     this.UITextDistTravel = new UIText("Distance Travelled: " + this.distTravel, [550, 420], 5, 1, 0, [1, 1, 1, 1]);
 
     this.bg = new LightRenderable(this.kBG);

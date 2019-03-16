@@ -83,6 +83,7 @@ function StartGame() {
     // Moon
     this.mMoon = null;
     this.moonDelta = 0;
+    this.skyDelta = 0;
     this.moonChangeRate = 0;
 
     //Bush
@@ -198,6 +199,7 @@ StartGame.prototype.initialize = function () {
     this.mMoon = new Moon(this.kMoon, this.mGlobalLightSet);
 
     this.moonDelta = this.mMoon.getXform().getXPos() - this.mCamera.getWCCenter()[0];
+    this.skyDelta = 0;
     this.moonChangeRate = 0.05;
 
     this.mObstacles = new ObstacleSet();
@@ -382,8 +384,7 @@ StartGame.prototype.update = function () {
 
         this.mMoon.getXform().setPosition(this.mCamera.getWCCenter()[0] + this.moonDelta,
             this.mMoon.getXform().getYPos());
-        this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0],
-            this.sky.getXform().getYPos());
+        this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0] - this.skyDelta, this.sky.getXform().getYPos());
 
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
     }

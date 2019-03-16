@@ -67,7 +67,7 @@ WonGame.prototype.initialize = function () {
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
 
     this.StartButton =  new UIButton(this.kUIButton,this.startSelect,this,[550,400],[400,180],"Go Again",6,[1,1,1,1],[0,0,0,1]);
-    this.UIText = new UIText("You WON!",[550,650],8,1,0,[1,1,1,1]);
+    this.UIText = new UIText("You helped Delu escape!",[550,650],6,1,0,[1,1,1,1]);
     
     this.bg = new LightRenderable(this.kBG);
     this.bg.getXform().setSize(150, 75);
