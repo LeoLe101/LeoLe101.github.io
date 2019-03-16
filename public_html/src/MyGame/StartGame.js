@@ -12,7 +12,7 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function StartGame() {
-    this.kHealthBar = "assets/UI/healthbar.png";
+    this.kHealthBar = "assets/UI/healthbar_green.png";
     this.kUIButton = "assets/Game/button.png";
     this.kBG = "assets/Game/forest.png";
     this.kBG_i = "assets/Game/forest_i.png";
