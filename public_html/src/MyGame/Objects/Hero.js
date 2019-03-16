@@ -9,13 +9,13 @@
 var kWASDDelta = 0.9;
 var delta = 0.4;
 
-function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBar) {
-    
+function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBar, energyBar) {
+
     this.foundLetters = 0;
-    
+
     var max = 4;
     this.keySettings = Math.floor(Math.random() * (max + 1));
-    
+
     this.kDelta = 0.2;
 
     this.kWidth = 8.78;
@@ -27,13 +27,16 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBa
     this.mHero.getXform().setSize(this.kWidth, this.kHeight);
 
     this.healthBar = healthBar.getCurrentHP();
+    this.energyBar = energyBar.getCurrentHP();
     this.gotHit = false;
+    this.canShoot = true;
 
     this.spriteTexture = spriteTexture;
     this.spriteTexture_i = spriteTexture_i;
 
     this.groundY = atY;
-
+    this.prevTime = new Date();
+    this.currTime = new Date();
     this.minX = 5;
     this.maxX = maxX - 5;
 
@@ -62,7 +65,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBa
     this.getXform().changeRate(0.1);
 
     //add rigidbody
-    var r = new RigidRectangle(this.getXform(), this.kWidth/2.5, this.kHeight);
+    var r = new RigidRectangle(this.getXform(), this.kWidth / 2.5, this.kHeight);
     r.setMass(20);
     r.setRestitution(50);
 
@@ -73,7 +76,7 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBa
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
-Hero.prototype.update = function (healthBar) {
+Hero.prototype.update = function (healthBar, energyBar) {
 
     GameObject.prototype.update.call(this); // Move the Hero forward
     this.mHero.updateAnimation();
@@ -97,12 +100,30 @@ Hero.prototype.update = function (healthBar) {
         healthBar.incCurrentHP(-10);
         this.gotHit = false;
     }
+
+    if (energyBar.getCurrentHP() <= 0) {
+        this.canShoot = false;
+    } else {
+        this.canShoot = true;
+    }
+
 };
 
 Hero.prototype.hitByMonster = function (delta) {
-    // this.getXform().incXPosBy(-5);
     this.healthBar -= delta;
     this.gotHit = true;
+};
+
+Hero.prototype.rechargeBullet = function (delta, energyBar) {
+    energyBar.incCurrentHP(delta);
+};
+
+Hero.prototype.shootBullet = function (delta, energyBar) {
+    energyBar.incCurrentHP(-delta);
+};
+
+Hero.prototype.ableToShoot = function () {
+    return this.canShoot;
 };
 
 Hero.prototype.deleteYet = function () {
@@ -153,7 +174,7 @@ Hero.prototype.getDirection = function () {
 Hero.prototype.keyControl = function () {
 
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
-        this.goUp();   
+        this.goUp();
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
         this.goDown();
@@ -197,7 +218,7 @@ Hero.prototype.goRight = function () {
     }
 };
 
-    
+
 Hero.prototype._createPointLight = function (atX, atY) {
     var lgt = new Light();
     lgt.setLightType(0);

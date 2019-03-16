@@ -13,6 +13,7 @@
 
 function StartGame() {
     this.kHealthBar = "assets/UI/healthbar_green.png";
+    this.kEnergyBar = "assets/UI/healthbar_yellow.png";
     this.kUIButton = "assets/Game/button.png";
     this.kBG = "assets/Game/forest.png";
     this.kBG_i = "assets/Game/forest_i.png";
@@ -64,6 +65,8 @@ function StartGame() {
     this.initTime = new Date();
     this.prevTime = new Date();
     this.currTime = new Date();
+    this.prevTime1 = new Date();
+    this.currTime1 = new Date();
     this.time = 0;
 
     this.bgNum = 6;
@@ -110,6 +113,7 @@ gEngine.Core.inheritPrototype(StartGame, Scene);
 
 StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kHealthBar);
+    gEngine.Textures.loadTexture(this.kEnergyBar);
     gEngine.Textures.loadTexture(this.kUIButton);
     gEngine.Textures.loadTexture(this.kBG);
     gEngine.Textures.loadTexture(this.kBG_i);
@@ -127,6 +131,7 @@ StartGame.prototype.loadScene = function () {
 
 StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kHealthBar);
+    gEngine.Textures.unloadTexture(this.kEnergyBar);
     gEngine.Textures.unloadTexture(this.kUIButton);
     gEngine.Textures.unloadTexture(this.kBG);
     gEngine.Textures.unloadTexture(this.kBG_i);
@@ -191,7 +196,7 @@ StartGame.prototype.initialize = function () {
 
     // init hero
     var maxX = this.bgs[this.bgNum - 1].getXform().getXPos() + this.bgs[this.bgNum - 1].getXform().getWidth() / 4 - 3;
-    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet, this.UIhealthBar);
+    this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet, this.UIhealthBar, this.UIEnergyBar);
     this.mHeroStartPos = this.mHero.getXform().getXPos();
     // init bullet set
     this.mBulletSet = new MagicBulletSet();
@@ -328,6 +333,7 @@ StartGame.prototype.drawWith = function (camera, shouldShowUI) {
 
         this.backButton.draw(camera);
         this.UIhealthBar.draw(camera);
+        this.UIEnergyBar.draw(camera);
     }
 
 
@@ -366,6 +372,7 @@ StartGame.prototype.update = function () {
     this.mObstacles.update();
     this.backButton.update();
     this.UIhealthBar.update();
+    this.UIEnergyBar.update();
     this.UITextBox.update(this.mCamera);
     this.UITextDistance.update();
     this.UITextDistance.setText("Distance: " + this.distTravel + " / 1400");
@@ -407,10 +414,13 @@ StartGame.prototype.update = function () {
         //this.mHeroAbleToShoot = !this.mHeroAbleToShoot;
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space) && this.mHeroAbleToShoot) {
-        var heroXPos = this.mHero.getXform().getXPos();
-        var heroYPos = this.mHero.getXform().getYPos();
-        var bullet = new MagicBullet(this.mHero.getDirection(), heroXPos + 2, heroYPos - 2);
-        this.mBulletSet.addToSet(bullet);
+        if (this.mHero.ableToShoot()) {
+            var heroXPos = this.mHero.getXform().getXPos();
+            var heroYPos = this.mHero.getXform().getYPos();
+            var bullet = new MagicBullet(this.mHero.getDirection(), heroXPos + 2, heroYPos - 2);
+            this.mBulletSet.addToSet(bullet);
+            this.mHero.shootBullet(50, this.UIEnergyBar);
+        }
     }
     this.mBulletSet.update();
     this.mBulletSet.delete(this.mCamera); // check if the bullet should be deleted or nah.
@@ -423,7 +433,12 @@ StartGame.prototype.update = function () {
     if (this.mHero.deleteYet()) {
         this.endGame = true;
     } else {
-        this.mHero.update(this.UIhealthBar); // only update when hero is still alive
+        this.mHero.update(this.UIhealthBar, this.UIEnergyBar); // only update when hero is still alive
+        this.currTime1 = new Date();
+        if (this.currTime1 - this.prevTime1 >= 4000) {
+            this.mHero.rechargeBullet(10, this.UIEnergyBar);
+            this.prevTime1 = this.currTime1;
+        }
     }
     // #endregion
 
@@ -518,10 +533,10 @@ StartGame.prototype._initUI = function () {
     this.UITextArrows = new UIText("Use ARROWS to move", [950, 95], 2, 1, 0, [1, 1, 1, 1]);
     this.UITextSpace = new UIText("Use SPACE for magic", [950, 65], 2, 1, 0, [1, 1, 1, 1]);
 
-    this.UITextHP = new UIText("HP", [50, 760], 2, 1, 0, [1, 0.5, 1, 1]);
-    this.UIhealthBar = new UIHealthBar(this.kHealthBar, [150, 760, 3], [180, 40], 3);
-    this.UITextEN = new UIText("Energy", [50, 660], 2, 1, 0, [1, 0.5, 1, 1]);
-    this.UIEnergyBar = new UIHealthBar(this.kHealthBar, [150, 660, 3], [180, 40], 3);
+    this.UITextHP = new UIText("HP", [60, 775], 2, 1, 0, [1, 0.5, 1, 1]);
+    this.UIhealthBar = new UIHealthBar(this.kHealthBar, [180, 760, 3], [180, 40], 3);
+    this.UITextEN = new UIText("Energy", [50, 715], 2, 1, 0, [1, 0.5, 1, 1]);
+    this.UIEnergyBar = new UIHealthBar(this.kEnergyBar, [180, 700, 3], [180, 40], 3);
     this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 65], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
     // For testing
