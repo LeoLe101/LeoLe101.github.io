@@ -22,15 +22,15 @@ function StartGame() {
     this.kMoon = "assets/Game/moon.png";
     this.kObstacle = "assets/Game/obstacle.png";
     //this.kBush = "assets/Game/bush.png";
-    
+
     //letters
     this.kLetters = ["assets/Game/Letters/1_E.png",
-                    "assets/Game/Letters/2_S.png",
-                    "assets/Game/Letters/3_C.png",
-                    "assets/Game/Letters/4_A.png",
-                    "assets/Game/Letters/5_P.png",
-                    "assets/Game/Letters/6_E.png"]
-                
+        "assets/Game/Letters/2_S.png",
+        "assets/Game/Letters/3_C.png",
+        "assets/Game/Letters/4_A.png",
+        "assets/Game/Letters/5_P.png",
+        "assets/Game/Letters/6_E.png"]
+
     // Level and Cheats
     this.LevelSelect = null;
     this.mEnterCheat = false;
@@ -48,7 +48,12 @@ function StartGame() {
     this.UITextBox = null;
     this.UITextBox1 = null;
     this.UIhealthBar = null;
+    this.UIEnergyBar = null;
     this.backButton = null;
+    this.UITextGoal1 = null;
+    this.UITextGoal2 = null;
+    this.UITextGoal3 = null;
+    this.UITextGoal4 = null;
 
     this.cameraFlip = false;
     this.endGame = false;
@@ -83,11 +88,11 @@ function StartGame() {
     //Bush
     //this.mBush = null;
     //this.mBigBush = null;
-    
+
     //letters
     this.letters = [];
     this.smallLetters = [];
-    this.letterNames = ["E1","S2","C3","A4","P5","E6"];
+    this.letterNames = ["E1", "S2", "C3", "A4", "P5", "E6"];
 
     this.mObstacles = null;
 
@@ -111,11 +116,11 @@ StartGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kObstacle);
     gEngine.Textures.loadTexture(this.kSky);
     //gEngine.Textures.loadTexture(this.kBush);
-    
-    for (var i = 0; i < this.kLetters.length; i++){
+
+    for (var i = 0; i < this.kLetters.length; i++) {
         gEngine.Textures.loadTexture(this.kLetters[i]);
     }
- };
+};
 
 StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kHealthBar);
@@ -128,8 +133,8 @@ StartGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kObstacle);
     gEngine.Textures.unloadTexture(this.kSky);
     //gEngine.Textures.unloadTexture(this.kBush);
-    
-    for (var i = 0; i < this.kLetters.length; i++){
+
+    for (var i = 0; i < this.kLetters.length; i++) {
         gEngine.Textures.unloadTexture(this.kLetters[i]);
     }
 
@@ -160,13 +165,13 @@ StartGame.prototype.initialize = function () {
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
     // sets the background to gray
     gEngine.DefaultResources.setGlobalAmbientIntensity(3);
-    
+
     // Step B: set up the small camera
     this.mSmallCamera = new Camera(
         vec2.fromValues(430, 40),    // will be updated at each cycle to point to hero
         860,
         [0, 810, 1100, 100],         // viewport (orgX, orgY, width, height)
-        2     
+        2
     );
     this.mSmallCamera.setBackgroundColor([0.18, 0.21, 0.33, 1]);
     // sets the background to gray
@@ -197,17 +202,17 @@ StartGame.prototype.initialize = function () {
 
     this.mObstacles = new ObstacleSet();
 
-    for (var i = 0; i < this.kLetters.length; i++){
+    for (var i = 0; i < this.kLetters.length; i++) {
         //setting small letters
-        var newLetter = new UITexture(this.kLetters[i], [270 + i*40, 65], [30, 30]);
+        var newLetter = new UITexture(this.kLetters[i], [270 + i * 40, 65], [30, 30]);
         this.smallLetters.push(newLetter);
         this.smallLetters[i].makeLight();
 
         //setting large letters
-        var newLetter = new Letter(30 + i*6, 21, this.kLetters[i], this.mHero, this.smallLetters[i], this.letterNames[i]);
+        var newLetter = new Letter(30 + i * 6, 21, this.kLetters[i], this.mHero, this.smallLetters[i], this.letterNames[i]);
         this.letters.push(newLetter);
     }
-    
+
     this.letters = this._shuffle(this.letters);
 
     //setting floor
@@ -221,42 +226,42 @@ StartGame.prototype.initialize = function () {
     //creating platform obstacles: 39 of them
     var minPos = 30;
     for (var i = 0; i < 12; i++) {
-        
+
         X[0] = minPos + Math.random() * 50;
         X[1] = Math.max(X[0] + 13 + Math.random() * 20, X[0] + 11);
         X[2] = Math.max(X[1] + 13 + Math.random() * 20, X[1] + 11);
-        
+
         Y[0] = 30;
         Y[1] = Y[0] + 5 + Math.random() * 5;
         Y[2] = Math.max(Y[1] + sig * (Math.random() * 2), Y[0]);
-        
+
         var max = 2;
         var min = 0;
         var rand = Math.floor(Math.random() * (max - min + 1)) + min;
-        
+
         if (X[0] > 855) break;
         var obstacle1 = new Obstacle(X[0], Y[0], 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle1);
-        
+
         if (X[1] > 855) break;
         var obstacle2 = new Obstacle(X[1], Y[1], 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle2);
-        
+
         if (X[2] > 855) break;
         var obstacle3 = new Obstacle(X[2], Y[2], 10, 3, 0, .9, this.kObstacle, this.mHero, false);
         this.mObstacles.addToSet(obstacle3);
-        
+
         minPos = X[2] + 15 + Math.random() * 25;
-        
+
         sig = sig * -1;
-        
-        if (i%2 === 0){
+
+        if (i % 2 === 0) {
             this.letters[j].getXform().setPosition(X[rand], Y[rand] + 4);
             j++;
         }
     }
-   
-    for (j; j < 6; j++){
+
+    for (j; j < 6; j++) {
         var max = 840;
         var min = 50;
         var rand = Math.random() * (max - min + 1) + min;
@@ -264,16 +269,16 @@ StartGame.prototype.initialize = function () {
     }
 };
 
-StartGame.prototype._shuffle = function(array) {
+StartGame.prototype._shuffle = function (array) {
     var ctr = array.length, temp, index;
 
-// While there are elements in the array
+    // While there are elements in the array
     while (ctr > 0) {
-// Pick a random index
+        // Pick a random index
         index = Math.floor(Math.random() * ctr);
-// Decrease ctr by 1
+        // Decrease ctr by 1
         ctr--;
-// And swap the last element with it
+        // And swap the last element with it
         temp = array[ctr];
         array[ctr] = array[index];
         array[index] = temp;
@@ -283,7 +288,7 @@ StartGame.prototype._shuffle = function(array) {
 
 StartGame.prototype.drawWith = function (camera, shouldShowUI) {
     camera.setupViewProjection();
-    
+
     if (shouldShowUI) {
         this.sky.draw(camera);
         this.mMoon.draw(camera);
@@ -292,9 +297,9 @@ StartGame.prototype.drawWith = function (camera, shouldShowUI) {
     for (var i = 0; i < this.bgNum; i++) {
         this.bgs[i].draw(camera);
     }
-    
+
     if (shouldShowUI) {
-        
+
         var time = new Date();
         if (time - this.initTime > 7000) {
             this.UITextGoal3.draw(camera);
@@ -306,30 +311,30 @@ StartGame.prototype.drawWith = function (camera, shouldShowUI) {
         }
 
         this.UITextArrows.draw(camera);
-        this.UITextSpace .draw(camera);
-        
+        this.UITextSpace.draw(camera);
+
         this.UIText.draw(camera);
         //this.UITextDistance.draw(camera);
 
         if (this.mEnterCheat) {
             this.UITextBox.draw(camera);
         }
-        
+
         this.backButton.draw(camera);
         this.UIhealthBar.draw(camera);
     }
-    
-    
-    
+
+
+
     this.mMonsters.draw(camera);
     this.mHero.draw(camera);
 
     this.mBulletSet.draw(camera);
 
     this.mObstacles.draw(camera);
-    
+
     //drawing letters
-    for (var i = 0; i < this.kLetters.length; i++){
+    for (var i = 0; i < this.kLetters.length; i++) {
         this.letters[i].draw(camera);
         if (shouldShowUI) this.smallLetters[i].draw(camera);
     }
@@ -344,7 +349,7 @@ StartGame.prototype.draw = function () {
 
     this.drawWith(this.mSmallCamera, false);
     this.drawWith(this.mCamera, true);
-    
+
 
 };
 
@@ -358,12 +363,12 @@ StartGame.prototype.update = function () {
     this.UITextBox.update(this.mCamera);
     this.UITextDistance.update();
     this.UITextDistance.setText("Distance: " + this.distTravel + " / 1400");
-    
+
     this.mCamera.update();
     this.mSmallCamera.update();
-    
+
     var allLettersFound = true;
-    for (var i = 0; i < this.kLetters.length; i++){
+    for (var i = 0; i < this.kLetters.length; i++) {
         if (!this.endGame) this.endGame = this.letters[i].update();
         if (!this.smallLetters[i].isNormalColor()) allLettersFound = false;
     }
@@ -379,14 +384,14 @@ StartGame.prototype.update = function () {
             this.mMoon.getXform().getYPos());
         this.sky.getXform().setPosition(this.mCamera.getWCCenter()[0],
             this.sky.getXform().getYPos());
-            
+
         this.mObstacles.mSet[0].getXform().setXPos(this.mHero.getXform().getXPos());
     }
 
     /*if (this.mHero.getXform().getXPos() >= maxX) {
         this.wonGame = true;
     }*/
-    
+
     // ----------------- Update Moon Light -----------------
     var moonLight = vec2.clone(this.mMoon.getXform().getPosition());
     this.mGlobalLightSet.getLightAt(1).set2DPosition(moonLight);
@@ -465,7 +470,7 @@ StartGame.prototype.update = function () {
     }
     // #endregion
 
-    // Cheat
+    // #region ----------------- Cheat -----------------
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Enter)) {
         if (!this.mEnterCheat) {
             this.mEnterCheat = true;
@@ -485,7 +490,7 @@ StartGame.prototype.update = function () {
         this.endGame = true;
         this.mEnterCheat = false;
     }
-
+    // #endregion
 };
 
 StartGame.prototype.UITextBoxTest = function () {
@@ -504,11 +509,12 @@ StartGame.prototype._initUI = function () {
     this.UITextGoal3 = new UIText("To help Delu remember, collect the letters", [550, 620], 2, 1, 0, [0.5, 1, 1, 1]);
     this.UITextGoal4 = new UIText('that spell "escape" in the correct order!', [550, 580], 2, 1, 0, [0.5, 1, 1, 1]);
     this.UITextBox = new UITextBox([320, 100], 5, 50, [1, 1, 1, 1], [0, 0, 0, 1], null, this);
-    
+
     this.UITextArrows = new UIText("Use ARROWS to move", [950, 95], 2, 1, 0, [1, 1, 1, 1]);
     this.UITextSpace = new UIText("Use SPACE for magic", [950, 65], 2, 1, 0, [1, 1, 1, 1]);
 
     this.UIhealthBar = new UIHealthBar(this.kHealthBar, [100, 760, 3], [180, 40], 3);
+    this.UIEnergyBar = new UIHealthBar(this.kHealthBar, [100, 760, 3], [180, 40], 3);
     this.backButton = new UIButton(this.kUIButton, this.backSelect, this, [80, 65], [120, 60], "Menu", 3, [1, 1, 1, 1], [1, 1, 1, 1]);
 
     // For testing
@@ -516,7 +522,7 @@ StartGame.prototype._initUI = function () {
     this.mMsg.setColor([1, 1, 1, 1]);
     this.mMsg.getXform().setPosition(50, 30);
     this.mMsg.setTextHeight(3);
-    this.UIText = new UIText("Magic Run", [550,780], 4, 1, 0, [1, 1, 1, 1]);
+    this.UIText = new UIText("Magic Run", [550, 780], 4, 1, 0, [1, 1, 1, 1]);
 };
 
 StartGame.prototype._initBackGround = function () {
