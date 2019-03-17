@@ -101,7 +101,7 @@ Hero.prototype.update = function (healthBar, energyBar) {
         this.gotHit = false;
     }
 
-    if (energyBar.getCurrentHP() <= 0) {
+    if (energyBar.getCurrentHP() <= 30) {
         this.canShoot = false;
     } else {
         this.canShoot = true;

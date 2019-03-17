@@ -103,6 +103,7 @@ function StartGame() {
     this.mObstacles = null;
 
     this.mMsg = null;
+    this.mSpecialMonsterNum = 0;
     this.mRestart = false;
     this.mWin = false;
     this.distTravel = 0;
@@ -342,7 +343,7 @@ StartGame.prototype.drawWith = function (camera, shouldShowUI) {
     this.mHero.draw(camera);
 
     this.mBulletSet.draw(camera);
-
+    this.mMsg.draw(camera);
     this.mObstacles.draw(camera);
 
     //drawing letters
@@ -419,7 +420,7 @@ StartGame.prototype.update = function () {
             var heroYPos = this.mHero.getXform().getYPos();
             var bullet = new MagicBullet(this.mHero.getDirection(), heroXPos + 2, heroYPos - 2);
             this.mBulletSet.addToSet(bullet);
-            this.mHero.shootBullet(50, this.UIEnergyBar);
+            this.mHero.shootBullet(30, this.UIEnergyBar);
         }
     }
     this.mBulletSet.update();
@@ -436,7 +437,7 @@ StartGame.prototype.update = function () {
         this.mHero.update(this.UIhealthBar, this.UIEnergyBar); // only update when hero is still alive
         this.currTime1 = new Date();
         if (this.currTime1 - this.prevTime1 >= 4000) {
-            this.mHero.rechargeBullet(10, this.UIEnergyBar);
+            this.mHero.rechargeBullet(20, this.UIEnergyBar);
             this.prevTime1 = this.currTime1;
         }
     }
@@ -448,7 +449,12 @@ StartGame.prototype.update = function () {
     if (this.currTime - this.prevTime >= this.time) {
         var monsterType = Math.floor(Math.random() * Math.floor(4));
         var monsterOrigin = this.mCamera.getWCCenter()[0] + this.mCamera.getWCWidth() / 2 + 5;
-        var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 22.7, monsterType);
+        if (monsterType == 0) {
+            this.mSpecialMonsterNum += 1;
+            var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 22.7, monsterType);
+        } else {
+            var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 22.7, monsterType);
+        }
         this.mMonsters.addToSet(monster);
         this.prevTime = this.currTime;
         this.time = 3000 + Math.random() * 4000;
@@ -484,9 +490,9 @@ StartGame.prototype.update = function () {
         }
     }
     else {
-        // this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
-        // var msg = "Bullet=" + this.mBulletSet.size() + " Monsters=" + this.mMonsters.size();
-        // this.mMsg.setText(msg)
+        this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
+        var msg = "Bullet=" + this.mBulletSet.size() + " Sp Monsters=" + this.mSpecialMonsterNum;
+        this.mMsg.setText(msg)
     }
     // #endregion
 

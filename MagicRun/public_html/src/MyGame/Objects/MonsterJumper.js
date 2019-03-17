@@ -6,7 +6,7 @@
 
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
-function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
+function MonsterJumper(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
     this.kRefWidth = 80;
     this.kRefHeight = 130;
     this.kDelta = 0.6;
@@ -28,12 +28,9 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
     this.currX = atX;
     this.currTime = new Date();
     this.prevTime = new Date();
-    this.time = 3000 + Math.random() * 5000;
-    this.goDown = false;
-    this.jump = false;
 
-    this.mMonsterState = Monster.eMonsterState.eRunRight;
-    this.mPreviousMonsterState = Monster.eMonsterState.eRunRight;
+    this.mMonsterState = MonsterJumper.eMonsterState.eRunRight;
+    this.mPreviousMonsterState = MonsterJumper.eMonsterState.eRunRight;
 
     this.mMonster = new SpriteAnimateRenderable(spriteTexture);
     this.mMonster.setColor([1, 1, 1, 0]);
@@ -90,13 +87,13 @@ function Monster(spriteTexture, spriteTexture_i, hero, atX, atY, type) {
 }
 gEngine.Core.inheritPrototype(Monster, GameObject);
 
-Monster.prototype.update = function () {
-    var xform = this.getXform();
+MonsterJumper.prototype.update = function () {
 
     GameObject.prototype.update.call(this); // Move the Hero forward
     this.mMonster.updateAnimation();
 
     var heroXform = this.mHero.getXform();
+    var Xform = this.getXform();
 
     this.generalUpdate();
 
@@ -107,11 +104,11 @@ Monster.prototype.update = function () {
     if (this.mShake !== null)
         this.localShake = this.mShake;
 
-    this.currX = xform.getXPos();
+    this.currX = this.getXform().getXPos();
     if (this.currX < this.prevX) {
-        this.mMonsterState = Monster.eMonsterState.eRunRight;
+        this.mMonsterState = MonsterJumper.eMonsterState.eRunRight;
     } else {
-        this.mMonsterState = Monster.eMonsterState.eRunLeft;
+        this.mMonsterState = MonsterJumper.eMonsterState.eRunLeft;
     }
     this.prevX = this.currX;
 
@@ -124,68 +121,46 @@ Monster.prototype.update = function () {
         }
     }
 
-    if ((this.mType === 0) && !this.jump) {
-        this.randomJump();
-    }
-
-    this.doTheJump();
+    this.randomJump();
 
     this.changeAnimation();
 
 };
 
-Monster.prototype.hitByBullet = function (delta) {
+MonsterJumper.prototype.randomJump = function () {
+    this.currTime = new Date();
+    if (this.currTime - this.prevTime >= 2000) {
+        var xform = this.getXform();
+        xform.incYPosBy(0.9);
+        this.prevTime = this.currTime;
+        console.log("Mons Jump!");
+    }
+}
+
+MonsterJumper.prototype.hitByBullet = function (delta) {
     this.healthBar -= delta;
     this.gotHit = true;
 };
 
-Monster.prototype.doTheJump = function () {
-    var xform = this.getXform();
-    if (this.jump) {
-        if ((xform.getYPos() <= 30) && !this.goDown) {
-            xform.incYPosBy(0.3);
-            if ((xform.getYPos() >= 30)) {
-                this.goDown = true;
-            }
-        } else {
-            if ((xform.getYPos() >= this.groundY) && this.goDown) {
-                xform.incYPosBy(-0.3);
-            } else if (xform.getYPos() <= this.groundY) {
-                this.jump = false;
-                this.goDown = false;
-            }
-        }
-    }
-}
-
-Monster.prototype.shouldDelete = function () {
+MonsterJumper.prototype.shouldDelete = function () {
     return this.shouldDestroy;
 };
 
-Monster.prototype.destroy = function () {
+MonsterJumper.prototype.destroy = function () {
     this.shouldDestroy = true;
 };
 
-Monster.eMonsterState = Object.freeze({
+MonsterJumper.eMonsterState = Object.freeze({
     eRunRight: 0,
     eRunLeft: 1
 });
 
-Monster.prototype.randomJump = function () {
-    this.currTime = new Date();
-    if (this.currTime - this.prevTime >= this.time) {
-        this.jump = true;
-        this.prevTime = this.currTime;
-        this.time = 1000 + Math.random() * 8000;
-    }
-}
-
-Monster.prototype.changeAnimation = function () {
+MonsterJumper.prototype.changeAnimation = function () {
 
     if (this.mMonsterState !== this.mPreviousMonsterState) {
         this.mPreviousMonsterState = this.mMonsterState;
         switch (this.mMonsterState) {
-            case Monster.eMonsterState.eRunLeft:
+            case MonsterJumper.eMonsterState.eRunLeft:
                 this.mMonster.getXform().setSize(-this.kWidth, this.kHeight);
                 this.mMonster.setAnimationSpeed(3);
                 if (this.mType === 0) {
@@ -198,7 +173,7 @@ Monster.prototype.changeAnimation = function () {
                     this.mMonster.setSpriteSequence(215, 43, 69.3, 100, 18, 0);
                 }
                 break;
-            case Monster.eMonsterState.eRunRight:
+            case MonsterJumper.eMonsterState.eRunRight:
                 this.mMonster.getXform().setSize(this.kWidth, this.kHeight);
                 this.mMonster.setAnimationSpeed(3);
                 if (this.mType === 0) {
