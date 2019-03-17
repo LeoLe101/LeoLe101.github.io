@@ -67,7 +67,10 @@ function StartGame() {
     this.currTime = new Date();
     this.prevTime1 = new Date();
     this.currTime1 = new Date();
+    this.prevTime2 = new Date();
+    this.currTime2 = new Date();
     this.time = 0;
+    this.time1 = 0;
 
     this.bgNum = 6;
 
@@ -77,10 +80,12 @@ function StartGame() {
     this.mHeroAbleToShoot = true;
 
     // Magic Bullet
-    this.mBulletSet = null;
+    this.mHeroBulletSet = null;
+    this.mMonsterBulletSet = null;
 
     // Monsters
     this.mMonsters = null;
+    this.mShooterIndex = 0;
 
     // Light Set
     this.mGlobalLightSet = null;
@@ -200,7 +205,8 @@ StartGame.prototype.initialize = function () {
     this.mHero = new Hero(this.kCharacters, this.kCharacters_i, 10, 21, maxX, this.mGlobalLightSet, this.UIhealthBar, this.UIEnergyBar);
     this.mHeroStartPos = this.mHero.getXform().getXPos();
     // init bullet set
-    this.mBulletSet = new MagicBulletSet();
+    this.mHeroBulletSet = new MagicBulletSet();
+    this.mMonsterBulletSet = new MagicBulletSet();
 
     // init monster
     this.mMonsters = new MonsterSet();
@@ -342,7 +348,8 @@ StartGame.prototype.drawWith = function (camera, shouldShowUI) {
     this.mMonsters.draw(camera);
     this.mHero.draw(camera);
 
-    this.mBulletSet.draw(camera);
+    this.mHeroBulletSet.draw(camera);
+    this.mMonsterBulletSet.draw(camera);
     this.mMsg.draw(camera);
     this.mObstacles.draw(camera);
 
@@ -419,12 +426,12 @@ StartGame.prototype.update = function () {
             var heroXPos = this.mHero.getXform().getXPos();
             var heroYPos = this.mHero.getXform().getYPos();
             var bullet = new MagicBullet(this.mHero.getDirection(), heroXPos + 2, heroYPos - 2);
-            this.mBulletSet.addToSet(bullet);
+            this.mHeroBulletSet.addToSet(bullet);
             this.mHero.shootBullet(30, this.UIEnergyBar);
         }
     }
-    this.mBulletSet.update();
-    this.mBulletSet.delete(this.mCamera); // check if the bullet should be deleted or nah.
+    this.mHeroBulletSet.update();
+    this.mHeroBulletSet.delete(this.mCamera); // check if the bullet should be deleted or nah.
 
     // ----------------- Update Hero Light -----------------
     var heroLight = vec2.clone(this.mHero.getXform().getPosition());
@@ -450,7 +457,8 @@ StartGame.prototype.update = function () {
         var monsterType = Math.floor(Math.random() * Math.floor(4));
         var monsterOrigin = this.mCamera.getWCCenter()[0] + this.mCamera.getWCWidth() / 2 + 5;
         if (monsterType == 0) {
-            this.mSpecialMonsterNum += 1;
+            var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 22.7, monsterType);
+        } else if (monsterType == 3) {
             var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 22.7, monsterType);
         } else {
             var monster = new Monster(this.kCharacters, this.kCharacters_i, this.mHero, monsterOrigin, 22.7, monsterType);
@@ -463,10 +471,27 @@ StartGame.prototype.update = function () {
     this.mMonsters.delete(this.mCamera);
     // Check if collision with anything
     var h = [];
-    this.mMonsters.pixelTouches(this.mHero, this.mBulletSet, h);
+    this.mMonsters.pixelTouches(this.mHero, this.mHeroBulletSet, h);
 
+    // ----------------- Randomly Monster Shoot bullet -----------------
+    this.currTime2 = new Date();
+    if (this.currTime2 - this.prevTime2 >= this.time1) {
+        var monsIndex = Math.floor(Math.random() * (this.mMonsters.size()));
+        console.log("monster shooter index", monsIndex);
+        if (this.mMonsters.getObjectAt(monsIndex)) {
+            var monsterXPos = this.mMonsters.getObjectAt(monsIndex).getXform().getXPos();
+            var monsterYPos = this.mMonsters.getObjectAt(monsIndex).getXform().getYPos();
+            var bullet = new MonsterBullet(this.mMonsters.getObjectAt(monsIndex).getDirection(), monsterXPos + 2, monsterYPos - 3);
+            this.mMonsterBulletSet.addToSet(bullet);
+        }
+        // console.log("shooted", bullet);
+        this.prevTime2 = this.currTime2;
+        this.time1 = 1000 + Math.random() * 2000;
+    }
+    this.mMonsterBulletSet.update();
+    this.mMonsterBulletSet.delete(this.mCamera); // check if the bullet should be deleted or nah.
+    this.mHero.pixelTouches(this.mMonsterBulletSet);
     // #endregion
-
 
     // #region ----------------- End Game -----------------
     if (this.endGame) {
@@ -491,7 +516,7 @@ StartGame.prototype.update = function () {
     }
     else {
         this.mMsg.getXform().setPosition(this.mHero.getXform().getPosition()[0], this.mHero.getXform().getPosition()[1] + 20);
-        var msg = "Bullet=" + this.mBulletSet.size() + " Sp Monsters=" + this.mSpecialMonsterNum;
+        var msg = "Bullet=" + this.mHeroBulletSet.size() + " Sp Monsters=";
         this.mMsg.setText(msg)
     }
     // #endregion

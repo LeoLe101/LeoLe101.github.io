@@ -158,6 +158,11 @@ Monster.prototype.doTheJump = function () {
     }
 }
 
+Monster.prototype.getDirection = function () {
+    if (this.mMonsterState === Monster.eMonsterState.eRunRight) return 0;
+    return 1;
+}
+
 Monster.prototype.shouldDelete = function () {
     return this.shouldDestroy;
 };

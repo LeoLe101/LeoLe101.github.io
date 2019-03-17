@@ -71,6 +71,7 @@ gEngine.ParticleSystem = (function () {
                     mCircleCollider.adjustPositionBy(rPInfo.getNormal(), rPInfo.getDepth());
             }
         }
+        return mCircleCollider.boundTest(rectShape)
     };
 
     /**

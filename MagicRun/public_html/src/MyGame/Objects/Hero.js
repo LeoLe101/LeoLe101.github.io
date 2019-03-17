@@ -66,11 +66,12 @@ function Hero(spriteTexture, spriteTexture_i, atX, atY, maxX, lightSet, healthBa
 
     //add rigidbody
     var r = new RigidRectangle(this.getXform(), this.kWidth / 2.5, this.kHeight);
-    r.setMass(20);
-    r.setRestitution(50);
+    // var r = new RigidCircle(this.getXform(), 3);
+    r.setMass(10);
+    r.setRestitution(100);
+    this.setRigidBody(r);
 
     this.localShake = null;
-    this.setRigidBody(r);
     //this.toggleDrawRenderable();
     //this.toggleDrawRigidShape();
 }
@@ -215,6 +216,17 @@ Hero.prototype.goRight = function () {
     this.mHeroState = Hero.eHeroState.eRunRight;
     if (xform.getXPos() <= this.maxX) {
         xform.incXPosBy(delta);
+    }
+};
+
+Hero.prototype.pixelTouches = function (bSet) {
+    var j;
+    for (j = 0; j < bSet.size(); j++) {
+        if (bSet.getObjectAt(j).getFire().processCollision(this)) {
+            bSet.getSet()[j].shouldSplash();
+            this.shake(0.4, 0.4, 20, 30);
+            this.hitByMonster(20);
+        }
     }
 };
 
