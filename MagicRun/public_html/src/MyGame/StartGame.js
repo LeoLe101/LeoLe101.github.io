@@ -350,7 +350,7 @@ StartGame.prototype.drawWith = function (camera, shouldShowUI) {
 
     this.mHeroBulletSet.draw(camera);
     this.mMonsterBulletSet.draw(camera);
-    this.mMsg.draw(camera);
+    //this.mMsg.draw(camera);
     this.mObstacles.draw(camera);
 
     //drawing letters
@@ -479,10 +479,12 @@ StartGame.prototype.update = function () {
         var monsIndex = Math.floor(Math.random() * (this.mMonsters.size()));
         console.log("monster shooter index", monsIndex);
         if (this.mMonsters.getObjectAt(monsIndex)) {
-            var monsterXPos = this.mMonsters.getObjectAt(monsIndex).getXform().getXPos();
-            var monsterYPos = this.mMonsters.getObjectAt(monsIndex).getXform().getYPos();
-            var bullet = new MonsterBullet(this.mMonsters.getObjectAt(monsIndex).getDirection(), monsterXPos + 2, monsterYPos - 3);
-            this.mMonsterBulletSet.addToSet(bullet);
+            if (this.mMonsters.getObjectAt(monsIndex).mType === 3) {
+                var monsterXPos = this.mMonsters.getObjectAt(monsIndex).getXform().getXPos();
+                var monsterYPos = this.mMonsters.getObjectAt(monsIndex).getXform().getYPos();
+                var bullet = new MonsterBullet(this.mMonsters.getObjectAt(monsIndex).getDirection(), monsterXPos + 2, monsterYPos - 3);
+                this.mMonsterBulletSet.addToSet(bullet);
+            }
         }
         // console.log("shooted", bullet);
         this.prevTime2 = this.currTime2;
